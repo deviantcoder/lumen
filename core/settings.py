@@ -25,6 +25,7 @@ INSTALLED_APPS = [
 
     # project apps
     'apps.accounts.apps.AccountsConfig',
+    'apps.profiles.apps.ProfilesConfig',
 ]
 
 MIDDLEWARE = [
