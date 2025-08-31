@@ -1,0 +1,152 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="story-container">
+                <div class="d-flex overflow-auto hide-scrollbar">
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/11.jpg" alt="Your story">
+                        </div>
+                        <span class="story-username">Your story</span>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User 1">
+                        </div>
+                        <span class="story-username">johndoe</span>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/21.jpg" alt="User 2">
+                        </div>
+                        <span class="story-username">janedoe</span>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/17.jpg" alt="User 3">
+                        </div>
+                        <span class="story-username">alextech</span>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User 4">
+                        </div>
+                        <span class="story-username">techlover</span>
+                    </div>
+                </div>
+            </div>
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-user">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="post-user-avatar" alt="User avatar">
+                        <a href="#" class="post-username">technews</a>
+                    </div>
+                    <button class="post-more">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                </div>
+                <img src="https://picsum.photos/720/1280" class="post-image" alt="Post image">
+                <div class="post-actions">
+                    <div class="post-action-left">
+                        <button class="post-action-btn"><i class="bi bi-heart"></i></button>
+                        <button class="post-action-btn"><i class="bi bi-chat"></i></button>
+                        <button class="post-action-btn"><i class="bi bi-send"></i></button>
+                    </div>
+                    <button class="post-action-btn"><i class="bi bi-bookmark"></i></button>
+                </div>
+                <div class="post-likes">12,345 likes</div>
+                <div class="post-caption">
+                    <a href="#" class="post-caption-username">technews</a>
+                    New AI breakthrough promises to revolutionize healthcare diagnostics. Researchers have developed an AI system that can detect early-stage diseases with 95% accuracy.
+                </div>
+                <div class="post-comments">View all 128 comments</div>
+                <div class="post-time">4 hours ago</div>
+                <div class="post-comment-input">
+                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+                    <button class="comment-post">Post</button>
+                </div>
+            </div>                
+        </div>
+        <div class="col-lg-4 desktop-only">
+            <div class="sticky-top" style="top: 76px; padding-left: 24px;">
+                <div class="d-flex align-items-center mb-4">
+                    <img src="https://randomuser.me/api/portraits/women/11.jpg" class="profile-img me-3" style="width: 56px; height: 56px;" alt="Profile">
+                    <div>
+                        <a href="#" class="text-decoration-none fw-bold">johndoe</a>
+                        <p class="text-muted mb-0">John Doe</p>
+                    </div>
+                </div>
+                <div class="suggestions-title">
+                    <h6>Suggestions For You</h6>
+                    <a href="#">See All</a>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-user">
+                        <img src="https://randomuser.me/api/portraits/women/67.jpg" class="suggestion-avatar" alt="User avatar">
+                        <div class="suggestion-info">
+                            <a href="#" class="suggestion-username">techgeek</a>
+                            <span class="suggestion-detail">Followed by janesmith + 12 more</span>
+                        </div>
+                    </div>
+                    <button class="suggestion-follow">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-user">
+                        <img src="https://randomuser.me/api/portraits/men/10.jpg" class="suggestion-avatar" alt="User avatar">
+                        <div class="suggestion-info">
+                            <a href="#" class="suggestion-username">webdev</a>
+                            <span class="suggestion-detail">Followed by alextech + 8 more</span>
+                        </div>
+                    </div>
+                    <button class="suggestion-follow">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-user">
+                        <img src="https://randomuser.me/api/portraits/men/34.jpg" class="suggestion-avatar" alt="User avatar">
+                        <div class="suggestion-info">
+                            <a href="#" class="suggestion-username">designhub</a>
+                            <span class="suggestion-detail">Followed by johndoe + 15 more</span>
+                        </div>
+                    </div>
+                    <button class="suggestion-follow">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-user">
+                        <img src="https://randomuser.me/api/portraits/women/40.jpg" class="suggestion-avatar" alt="User avatar">
+                        <div class="suggestion-info">
+                            <a href="#" class="suggestion-username">coderlife</a>
+                            <span class="suggestion-detail">Followed by techgeek + 20 more</span>
+                        </div>
+                    </div>
+                    <button class="suggestion-follow">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-user">
+                        <img src="https://randomuser.me/api/portraits/women/73.jpg" class="suggestion-avatar" alt="User avatar">
+                        <div class="suggestion-info">
+                            <a href="#" class="suggestion-username">startupdaily</a>
+                            <span class="suggestion-detail">Followed by webdev + 5 more</span>
+                        </div>
+                    </div>
+                    <button class="suggestion-follow">Follow</button>
+                </div>
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Help</a>
+                    <a href="#">API</a>
+                    <a href="#">Jobs</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+                <div class="copyright">
+                    © 2025 Lumen
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'includes/mobile_nav.html' %}
+{% endblock content %}
