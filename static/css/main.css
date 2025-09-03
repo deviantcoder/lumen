@@ -283,6 +283,10 @@ body {
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+.bg-blurred {
+    background: rgba(1, 2, 2, 0.3) !important;
+    backdrop-filter: blur(10px) !important;
+}
 @media (min-width: 992px) {
     .post-image {
         max-height: 600px;

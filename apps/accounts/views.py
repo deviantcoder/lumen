@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -29,3 +29,7 @@ class LoginUserView(LoginView):
     def form_invalid(self, form):
         messages.warning(self.request, 'Invalid email, username or password.')
         return super().form_invalid(form)
+
+
+class LogoutUserView(LogoutView):
+    pass
