@@ -1,0 +1,73 @@
+{% extends '_base.html' %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head_title %}
+    Sign In
+{% endblock head_title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 d-none d-md-flex flex-column align-items-center justify-content-center">
+            <div class="col-12 text-center mb-4">
+                <h1 class="display-4 gradient-text">See everyday moments from your close friends.</h1>
+            </div>
+            <div class="position-relative">
+                <img src="{% static 'img/img1.png' %}" alt="Login image" class="img-fluid rounded-4" style="max-height: 400px;">
+            </div>
+        </div>
+        <div class="col-md-5 col-lg-4">
+            <div class="card shadow rounded-5 p-4 border-0">
+                <div class="card-body text-center">
+                    <h3 class="card-title mb-4 fw-bold text-white">Sign In</h3>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="mb-3 text-start">
+                            <i class="bi bi-person-fill me-2"></i> 
+                            {{ form.username|add_label_class:"form-label fw-semibold" }}
+                            {% render_field form.username class="form-control p-3 rounded-4" placeholder="Enter your username" %}
+                        </div>
+                        <div class="mb-3 text-start">
+                            <i class="bi bi-lock-fill me-2"></i> 
+                            {{ form.password|add_label_class:"form-label fw-semibold" }}
+                            {% render_field form.password class="form-control p-3 rounded-4" placeholder="Enter your password" %}
+                        </div>
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary w-100 mt-2 rounded-pill p-2 fw-bold">Sign In</button>
+                    </form>
+                    <div class="mt-4 text-muted small">
+                        <p>
+                            Don't have an account? <a href="" class="text-decoration-none fw-bold text-primary">Sign up</a>
+                        </p>
+                        <p><a href="" class="text-decoration-none fw-bold text-primary">Forgot password?</a></p>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="py-3 border-top mt-5">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-center align-items-center footer-links">
+            <a href="#" class="text-decoration-none text-muted mx-2 footer-link">About</a>
+            <a href="#" class="text-decoration-none text-muted mx-2 footer-link">Help</a>
+            <a href="#" class="text-decoration-none text-muted mx-2 footer-link">API</a>
+            <a href="#" class="text-decoration-none text-muted mx-2 footer-link">Privacy</a>
+            <a href="#" class="text-decoration-none text-muted mx-2 footer-link">Terms</a>
+            <div class="w-100 text-center mt-2 copyright">
+                <span class="text-muted footer-link">© 2025 Lumen</span>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock content %}

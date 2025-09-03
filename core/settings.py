@@ -23,6 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 3rd party
+    'widget_tweaks',
+
     # project apps
     'apps.accounts.apps.AccountsConfig',
     'apps.profiles.apps.ProfilesConfig',
@@ -116,3 +119,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # auth
 
 AUTH_USER_MODEL = 'accounts.User'
+
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

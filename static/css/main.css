@@ -277,6 +277,12 @@ body {
     background: rgba(1, 2, 2, 0.3) !important;
     backdrop-filter: blur(10px) !important;
 }
+.gradient-text {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 @media (min-width: 992px) {
     .post-image {
         max-height: 600px;
@@ -289,9 +295,6 @@ body {
 @media (max-width: 992px) {
     body {
         padding-bottom: 60px;
-    }
-    .search-input {
-        display: none;
     }
     .desktop-only {
         display: none;
