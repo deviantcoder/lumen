@@ -10,6 +10,8 @@ class User(AbstractUser):
     email = models.EmailField(max_length=200, unique=True)
     email_verified = models.BooleanField(default=False)
 
+    full_name = models.CharField(max_length=100, null=True, blank=True)
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 d-none d-md-flex flex-column align-items-center justify-content-center">
             <div class="col-12 text-center mb-4">
-                <h1 class="display-4 gradient-text">See everyday moments from your close friends.</h1>
+                <h1 class="display-4 gradient-text">Sign in to stay connected.</h1>
             </div>
             <div class="position-relative">
                 <img src="{% static 'img/img1.png' %}" alt="Login image" class="img-fluid rounded-4" style="max-height: 400px;">
@@ -22,7 +22,7 @@
             <div class="card shadow rounded-5 p-4 border-0">
                 <div class="card-body text-center">
                     <h3 class="card-title mb-4 fw-bold text-white">Sign In</h3>
-                    <form method="POST" action="">
+                    <form method="POST" action="{% url 'accounts:login' %}">
                         {% csrf_token %}
                         <div class="mb-3 text-start">
                             <i class="bi bi-person-fill me-2"></i> 
@@ -47,7 +47,7 @@
                     </form>
                     <div class="mt-4 text-muted small">
                         <p>
-                            Don't have an account? <a href="" class="text-decoration-none fw-bold text-primary">Sign up</a>
+                            Don't have an account? <a href="{% url 'accounts:signup' %}" class="text-decoration-none fw-bold text-primary">Sign up</a>
                         </p>
                         <p><a href="" class="text-decoration-none fw-bold text-primary">Forgot password?</a></p>
                     </div>

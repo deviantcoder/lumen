@@ -1,7 +1,11 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
         <a class="navbar-brand fw-bold text-white" href="/">
-            <i class="bi bi-lightning-charge-fill me-2"></i>Lumen
+            <div class="d-flex align-items-center">
+                <img src="{% static 'img/logo.png' %}" class="navbar-logo me-3"></img>
+                <span>Lumen</span>
+            </div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -39,7 +43,7 @@
                         <a class="btn btn-outline-primary rounded-pill" href="{% url 'accounts:login' %}">Sign In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary rounded-pill" href="#">Sign Up</a>
+                        <a class="btn btn-primary rounded-pill" href="{% url 'accounts:signup' %}">Sign Up</a>
                     </li>
                 {% endif %}
             </ul>
