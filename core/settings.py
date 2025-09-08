@@ -10,7 +10,9 @@ SECRET_KEY = config('SECRET_KEY', cast=str)
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+DOMAIN = config('DOMAIN', 'http://localhost:8000')
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -123,3 +125,16 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST', cast=str, default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', cast=str, default='587')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool, default=False)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', cast=str)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', cast=str)
+
+EMAIL_RESEND_COOLDOWN = 5 # minutes

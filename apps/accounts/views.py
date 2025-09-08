@@ -1,11 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth import logout
+from django.contrib.auth import logout, get_user_model, login
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views import generic
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_decode
 
 from .forms import LoginForm, SignupForm
+from .utils import send_activation_email
+
+
+User = get_user_model()
 
 
 class LoginUserView(LoginView):
@@ -53,11 +59,48 @@ class SignupUserView(generic.CreateView):
         user = form.instance
 
         if user is not None:
-            # send verification email
-            return redirect('/')
+            send_activation_email(user)
+            return render(
+                self.request,
+                'accounts/activation/activation_email_sent.html',
+                context={'sent': True}
+            )
         
     def form_invalid(self, form):
         for field, errors in form.errors.items():
             for error in errors:
                 messages.warning(self.request, f'{field.capitalize()}: {error}.')
         return super().form_invalid(form)
+
+
+def activate_account(request, uidb64, token):
+    if request.user.is_authenticated and request.user.email_verified:
+        return redirect('/')
+
+    token_generator = PasswordResetTokenGenerator()
+
+    try:
+        public_id_bytes = urlsafe_base64_decode(uidb64)
+        public_id = public_id_bytes.decode('utf-8')
+        
+        user = get_object_or_404(User, public_id=public_id)
+    except Exception as e:
+        user = None
+
+    if user is not None and token_generator.check_token(user, token):
+        user.is_active = True
+        user.email_verified = True
+
+        user.save()
+
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        messages.success(request, 'Successfully activated your account.')
+        
+        return redirect('/')
+
+    return render(
+        request,
+        'accounts/activation/activation_email_failed.html',
+        context={'sent': True}
+    )

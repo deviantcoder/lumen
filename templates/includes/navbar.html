@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <form class="d-flex me-auto my-2 my-lg-0">
                 <input class="form-control me-2 rounded-5 search-input border-0" type="search" placeholder="Search..." aria-label="Search">
-                <button class="btn btn-sm btn-light rounded-5" type="submit">Search</button>
+                <button class="btn btn-sm btn-light rounded-5 fw-bold" type="submit">Search</button>
             </form>
             <ul class="navbar-nav ms-auto align-items-center flex-row">
                 {% if user.is_authenticated %}
@@ -40,10 +40,10 @@
                     </li>
                 {% else %}
                     <li class="nav-item me-2">
-                        <a class="btn btn-outline-primary rounded-pill" href="{% url 'accounts:login' %}">Sign In</a>
+                        <a class="btn btn-outline-primary rounded-pill fw-bold" href="{% url 'accounts:login' %}">Sign In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary rounded-pill" href="{% url 'accounts:signup' %}">Sign Up</a>
+                        <a class="btn btn-primary rounded-pill fw-bold" href="{% url 'accounts:signup' %}">Sign Up</a>
                     </li>
                 {% endif %}
             </ul>
