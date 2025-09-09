@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-md-5 col-lg-4">
-            <div class="card shadow rounded-5 p-4 border-0">
+            <div class="card rounded-5 p-4 border-0 bg-transparent">
                 <div class="card-body text-center">
                     <h3 class="card-title mb-4 fw-bold text-white">Sign In</h3>
                     <form method="POST" action="{% url 'accounts:login' %}">
@@ -43,13 +43,13 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         {% endif %}
-                        <button type="submit" class="btn btn-primary w-100 mt-2 rounded-pill p-2 fw-bold">Sign In</button>
+                        <button type="submit" class="btn btn-outline-light w-100 mt-2 rounded-pill p-3 fw-bold">Sign In</button>
                     </form>
                     <div class="mt-4 text-muted small">
                         <p>
                             Don't have an account? <a href="{% url 'accounts:signup' %}" class="text-decoration-none fw-bold text-primary">Sign up</a>
                         </p>
-                        <p><a href="" class="text-decoration-none fw-bold text-primary">Forgot password?</a></p>
+                        <p><a href="{% url 'reset_password' %}" class="text-decoration-none fw-bold text-primary">Forgot password?</a></p>
                     </div>
                     {% include 'accounts/social_auth/social_options.html' %}
                 </div> 
