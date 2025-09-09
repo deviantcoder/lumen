@@ -26,7 +26,7 @@ class LoginUserView(LoginView):
 
         user = self.request.user
 
-        if user.email_verified:
+        if user.account_activated:
             messages.success(self.request, 'Welcome back!')
             return redirect(self.get_success_url())
         else:
@@ -92,7 +92,7 @@ def activate_account(request, uidb64, token):
 
     if user is not None and account_activation_token_generator.check_token(user, token):
         user.is_active = True
-        user.email_verified = True
+        user.account_activated = True
         user.save()
 
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')

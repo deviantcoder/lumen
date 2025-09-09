@@ -8,7 +8,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=50, unique=True)
 
     email = models.EmailField(max_length=200, unique=True)
-    email_verified = models.BooleanField(default=False)
+    account_activated = models.BooleanField(default=False)
 
     last_activation_email_sent = models.DateTimeField(null=True, blank=True)
 
