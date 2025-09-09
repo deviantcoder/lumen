@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('accounts/', include('apps.accounts.urls')),
+    path('accounts/social/', include('social_django.urls', namespace='social')),
 
     path('', TemplateView.as_view(template_name='feed.html'), name='home'),
 ]

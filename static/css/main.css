@@ -7,6 +7,8 @@
     --primary-button: #0095f6;
     --primary-button-hover: #1877f2;
     --link: #e0f1ff;
+    --mint-gradient: linear-gradient(45deg, #4facfe, #00f2fe, #43e97b, #38f9d7, #667eea);
+    --frosted-ice-gradient: linear-gradient(45deg, #1a2a3a, #27445c, #3b6078, #4e7c92, #6a9fb5);
 }
 body {
     background-color: var(--primary-bg);
@@ -66,7 +68,7 @@ body {
     height: 68px;
     border-radius: 50%;
     padding: 3px;
-    background: linear-gradient(45deg, #4facfe, #00f2fe, #43e97b, #38f9d7, #667eea);
+    background: var(--mint-gradient);
     margin-bottom: 8px;
 }
 .story-avatar img {
@@ -282,7 +284,7 @@ body {
     backdrop-filter: blur(10px) !important;
 }
 .gradient-text {
-    background: linear-gradient(45deg, #4facfe, #00f2fe, #43e97b, #38f9d7, #667eea);
+    background: var(--mint-gradient);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -290,6 +292,9 @@ body {
 .bg-blurred {
     background: rgba(1, 2, 2, 0.3) !important;
     backdrop-filter: blur(10px) !important;
+}
+.bg-frosted-ice-gradient {
+    background: var(--frosted-ice-gradient) !important;
 }
 @media (min-width: 992px) {
     .post-image {
