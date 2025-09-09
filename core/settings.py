@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # project apps
     'apps.accounts.apps.AccountsConfig',
     'apps.profiles.apps.ProfilesConfig',
+    'apps.posts.apps.PostsConfig',
 ]
 
 MIDDLEWARE = [
