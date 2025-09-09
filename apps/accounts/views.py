@@ -9,6 +9,7 @@ from django.utils.http import urlsafe_base64_decode
 
 from .forms import LoginForm, SignupForm
 from .utils import send_activation_email
+from .tokens import account_activation_token_generator
 
 
 User = get_user_model()
@@ -31,7 +32,7 @@ class LoginUserView(LoginView):
         else:
             messages.warning(self.request, 'Please verify your email before logging in.')
             logout(self.request)
-            return redirect('home')
+            return redirect(reverse_lazy('home'))
     
     def form_invalid(self, form):
         messages.warning(self.request, 'Invalid email, username or password.')
@@ -39,7 +40,11 @@ class LoginUserView(LoginView):
 
 
 class LogoutUserView(LogoutView):
-    pass
+    next_page = reverse_lazy('home')
+
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(request, "You've been logged out.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class SignupUserView(generic.CreateView):
@@ -49,22 +54,22 @@ class SignupUserView(generic.CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect(reverse_lazy('home'))
 
         return super().dispatch(request, *args, **kwargs)
     
     def form_valid(self, form):
         response = super().form_valid(form)
-
         user = form.instance
 
-        if user is not None:
+        if user:
             send_activation_email(user)
             return render(
                 self.request,
                 'accounts/activation/activation_email_sent.html',
                 context={'sent': True}
             )
+        return response
         
     def form_invalid(self, form):
         for field, errors in form.errors.items():
@@ -75,32 +80,28 @@ class SignupUserView(generic.CreateView):
 
 def activate_account(request, uidb64, token):
     if request.user.is_authenticated and request.user.email_verified:
-        return redirect('/')
-
-    token_generator = PasswordResetTokenGenerator()
+        return redirect(reverse_lazy('home'))
 
     try:
         public_id_bytes = urlsafe_base64_decode(uidb64)
         public_id = public_id_bytes.decode('utf-8')
         
         user = get_object_or_404(User, public_id=public_id)
-    except Exception as e:
+    except (User.DoesNotExist, ValueError, UnicodeDecodeError):
         user = None
 
-    if user is not None and token_generator.check_token(user, token):
+    if user is not None and account_activation_token_generator.check_token(user, token):
         user.is_active = True
         user.email_verified = True
-
         user.save()
 
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, 'Successfully activated your account.')
-        
         return redirect('/')
 
+    messages.warning(request, 'Activation link is invalid or expired.')
+    
     return render(
         request,
         'accounts/activation/activation_email_failed.html',
-        context={'sent': True}
     )

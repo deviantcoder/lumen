@@ -4,12 +4,13 @@ import datetime
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.conf import settings
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+
+from .tokens import account_activation_token_generator
 
 
 logger = logging.getLogger(__name__)
@@ -28,10 +29,8 @@ def send_activation_email(user: User):
                     logger.info(f'Activation email for @{user.username} skipped due to cooldown.')
                     return False
 
-            token_generator = PasswordResetTokenGenerator()
-
             public_id = urlsafe_base64_encode(force_bytes(user.public_id))
-            token = token_generator.make_token(user)
+            token = account_activation_token_generator.make_token(user)
 
             activation_url = getattr(settings, 'DOMAIN', '127.0.0.1') + reverse(
                 'accounts:activate_account',
