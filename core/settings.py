@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 3rd party
+    'social_django',
     'widget_tweaks',
 
     # project apps
@@ -41,6 +42,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # 3rd party
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -121,6 +125,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # auth
 
 AUTH_USER_MODEL = 'accounts.User'
+
+AUTHENTICATION_BACKENDS = [
+    'apps.accounts.backends.UsernameOrEmailLoginBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'

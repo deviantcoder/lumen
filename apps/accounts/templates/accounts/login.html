@@ -26,7 +26,7 @@
                         {% csrf_token %}
                         <div class="mb-3 text-start">
                             <i class="bi bi-person-fill me-2"></i> 
-                            {{ form.username|add_label_class:"form-label fw-semibold" }}
+                            <label class="form-label fw-semibold" for="username">Username or email:</label>
                             {% render_field form.username class="form-control p-3 rounded-4" placeholder="Enter your username" %}
                         </div>
                         <div class="mb-3 text-start">

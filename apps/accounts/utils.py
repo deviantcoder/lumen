@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-def send_activation_email(user: User):
+def send_activation_email(user):
     try:
         if user:
             if user.last_activation_email_sent:
