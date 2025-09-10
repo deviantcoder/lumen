@@ -2,14 +2,14 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 
-from utils.images import base_upload_to, ALLOWED_EXTENSIONS
+from utils.files import base_upload_to, ALLOWED_IMAGE_EXTENSIONS
 
 
 User = get_user_model()
 
 
-def upload_to(filename, instance):
-    return base_upload_to(filename, instance)
+def upload_to(instance, filename):
+    return base_upload_to(instance, filename, base_dir='profiles', id_attr='user.public_id')
 
 
 class Profile(models.Model):
@@ -20,7 +20,7 @@ class Profile(models.Model):
     image = models.ImageField(
         upload_to=upload_to,
         validators=[
-            FileExtensionValidator(ALLOWED_EXTENSIONS),
+            FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS),
         ]
     )
 

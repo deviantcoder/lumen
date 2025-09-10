@@ -2,6 +2,11 @@ import shortuuid
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import FileExtensionValidator
+
+from utils.files import (
+    ALLOWED_VIDEO_EXTENSIONS, ALLOWED_IMAGE_EXTENSIONS, base_upload_to
+)
 
 
 User = get_user_model()
@@ -9,6 +14,10 @@ User = get_user_model()
 
 def generate_public_id():
     return shortuuid.uuid()
+
+
+def upload_to(instance, filename):
+    return base_upload_to(instance, filename, base_dir='posts')
 
 
 class Post(models.Model):
@@ -35,3 +44,33 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.author.username}: {self.caption[:20]}'
+
+
+class PostMedia(models.Model):
+
+    class MEDIA_TYPES(models.TextChoices):
+        IMAGE = ('image', 'Image')
+        VIDEO = ('video', 'Video')
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='media')
+
+    file = models.FileField(
+        upload_to=upload_to,
+        validators=[
+            FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS + ALLOWED_VIDEO_EXTENSIONS),
+            # file size validator
+        ]
+    )
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPES.choices, default=MEDIA_TYPES.IMAGE)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('post',)
+        verbose_name = 'Post Media File'
+        verbose_name_plural = 'Post Media Files'
+
+    def __str__(self):
+        return f'{self.post} (media)'
+
+    
