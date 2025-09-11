@@ -6,6 +6,8 @@ from PIL import Image
 from io import BytesIO
 
 from django.core.files import File
+from django.conf import settings
+from django.core.exceptions import ValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -52,3 +54,11 @@ def compress_image(file):
     except Exception as e:
         logger.warning(f'Image compression failed: {e}')
         return file
+
+
+def validate_file_size(file):
+    max_size_mb = getattr(settings, 'MAX_MEDIA_SIZE', 50)
+    max_size_bytes = max_size_mb * 1024 * 1024
+    
+    if file.size > max_size_bytes:
+        raise ValidationError(f'File size cannot exceed {max_size_mb}')

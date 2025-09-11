@@ -173,3 +173,8 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', cast=str)
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', cast=str)
 
 EMAIL_RESEND_COOLDOWN = 5 # minutes
+
+
+# Files config
+
+MAX_MEDIA_SIZE = 50 # MB

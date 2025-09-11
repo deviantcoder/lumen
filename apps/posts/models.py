@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 
 from utils.files import (
-    ALLOWED_VIDEO_EXTENSIONS, ALLOWED_IMAGE_EXTENSIONS, base_upload_to
+    ALLOWED_VIDEO_EXTENSIONS, ALLOWED_IMAGE_EXTENSIONS, base_upload_to, validate_file_size
 )
 
 
@@ -58,7 +58,7 @@ class PostMedia(models.Model):
         upload_to=upload_to,
         validators=[
             FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS + ALLOWED_VIDEO_EXTENSIONS),
-            # file size validator
+            validate_file_size,
         ]
     )
     media_type = models.CharField(max_length=10, choices=MEDIA_TYPES.choices, default=MEDIA_TYPES.IMAGE)

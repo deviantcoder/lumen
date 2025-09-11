@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 
 from utils.files import (
-    base_upload_to, ALLOWED_IMAGE_EXTENSIONS, compress_image
+    base_upload_to, ALLOWED_IMAGE_EXTENSIONS, validate_file_size
 )
 
 
@@ -27,6 +27,7 @@ class Profile(models.Model):
         upload_to=upload_to,
         validators=[
             FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS),
+            validate_file_size,
         ],
         null=True, blank=True
     )
