@@ -17,7 +17,7 @@ def generate_public_id():
 
 
 def upload_to(instance, filename):
-    return base_upload_to(instance, filename, base_dir='posts')
+    return base_upload_to(instance, filename, base_dir='posts', id_attr='post.public_id')
 
 
 class Post(models.Model):

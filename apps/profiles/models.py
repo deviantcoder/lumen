@@ -1,9 +1,15 @@
+import logging
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 
-from utils.files import base_upload_to, ALLOWED_IMAGE_EXTENSIONS
+from utils.files import (
+    base_upload_to, ALLOWED_IMAGE_EXTENSIONS, compress_image
+)
 
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -21,7 +27,8 @@ class Profile(models.Model):
         upload_to=upload_to,
         validators=[
             FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS),
-        ]
+        ],
+        null=True, blank=True
     )
 
     bio = models.TextField(max_length=500, null=True, blank=True)
@@ -38,3 +45,23 @@ class Profile(models.Model):
     
     def __str__(self):
         return f'{self.user.username} (profile)'
+    
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+
+        if not is_new and self.image:
+            try:
+                old_instance = Profile.objects.get(pk=self.pk)
+                if old_instance.image == self.image:
+                    super().save(*args, **kwargs)
+                    return
+            except Profile.DoesNotExist:
+                logger.warning('Profile does not exist')
+
+        if self.image:
+            try:
+                self.image = compress_image(self.image)
+            except Exception as e:
+                logger.error(f'Image compression failed for: {self.user.username}, {e}')
+
+        super().save(*args, **kwargs)
