@@ -47,21 +47,4 @@ class Profile(models.Model):
         return f'{self.user.username} (profile)'
     
     def save(self, *args, **kwargs):
-        is_new = self._state.adding
-
-        if not is_new and self.image:
-            try:
-                old_instance = Profile.objects.get(pk=self.pk)
-                if old_instance.image == self.image:
-                    super().save(*args, **kwargs)
-                    return
-            except Profile.DoesNotExist:
-                logger.warning('Profile does not exist')
-
-        if self.image:
-            try:
-                self.image = compress_image(self.image)
-            except Exception as e:
-                logger.error(f'Image compression failed for: {self.user.username}, {e}')
-
         super().save(*args, **kwargs)
