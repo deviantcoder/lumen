@@ -10,6 +10,8 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls')),
     path('accounts/social/', include('social_django.urls', namespace='social')),
 
+    path('posts/', include('apps.posts.urls')),
+
     path('', TemplateView.as_view(template_name='feed.html'), name='home'),
 
     # password reset

@@ -18,7 +18,19 @@
             <ul class="navbar-nav ms-auto align-items-center flex-row">
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link nav-icon" href="#"><i class="bi bi-house"></i></a></li>
-                    <li class="nav-item"><a class="nav-link nav-icon" href="#"><i class="bi bi-plus-square"></i></a></li>
+                    
+                    <li class="nav-item">
+                        <a
+                            href=""
+                            hx-get="{% url 'posts:create_post' %}"
+                            hx-target="#modal-body"
+                            hx-swap="innerHTML"
+                            class="nav-link nav-icon"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal"
+                        ><i class="bi bi-plus-square"></i></a>
+                    </li>
+                    
                     <li class="nav-item"><a class="nav-link nav-icon" href="#"><i class="bi bi-app-indicator"></i></a></li>
                     <li class="nav-item"><a class="nav-link nav-icon" href="#"><i class="bi bi-chat-heart"></i></a></li>
                     <li class="nav-item dropdown">

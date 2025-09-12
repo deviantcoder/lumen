@@ -1,0 +1,10 @@
+{% load widget_tweaks %}
+<form method="POST" action="{% url 'posts:create_post' %}">
+    {% csrf_token %}
+    <div class="mb-3 text-start">
+        <i class="bi bi-body-text me-2"></i> 
+        <label class="form-label fw-semibold" for="username">Caption:</label>
+        {% render_field form.caption class="form-control p-3 rounded-4" %}
+    </div>
+    <button type="submit" class="btn btn-outline-light w-100 mt-2 rounded-pill p-3 fw-bold">Create Post</button>
+</form>
