@@ -296,6 +296,20 @@ body {
 .bg-frosted-ice-gradient {
     background: var(--frosted-ice-gradient) !important;
 }
+
+.dropzone {
+    border: 2px dashed #666 !important;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    color: #aaa;
+    cursor: pointer;
+}
+.dropzone.dragover {
+    border-color: #4facfe;
+    color: #4facfe;
+}
+
 @media (min-width: 992px) {
     .post-image {
         max-height: 600px;

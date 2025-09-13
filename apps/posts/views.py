@@ -14,13 +14,13 @@ def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            files = form.cleaned_data.get('files', None)
-
             post = form.save(commit=False)
             post.author = request.user
             post.save()
 
-            if files is not None:
+            files = request.FILES.getlist('files')
+
+            if files:
                 for file in files:
                     PostMedia.objects.create(
                         post=post,
