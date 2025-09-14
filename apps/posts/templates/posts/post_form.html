@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 {% load static %}
-<form method="POST" action="{% url 'posts:create_post' %}" enctype="multipart/form-data">
+<form method="POST" action="{% url 'posts:create_post' %}" enctype="multipart/form-data" hx-on::after-settle="initializeDropzone()">
     {% csrf_token %}
     <div class="mb-3 text-start">
         <label class="form-label fw-semibold">Media:</label>
