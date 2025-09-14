@@ -49,3 +49,9 @@ class Profile(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+    @property
+    def image_or_default(self):
+        if self.image:
+            return self.image.url
+        return '/static/img/def.png'

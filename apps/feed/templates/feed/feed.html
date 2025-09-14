@@ -1,5 +1,7 @@
 {% extends '_base.html' %}
 
+{% load humanize %}
+
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
@@ -8,7 +10,7 @@
                 <div class="d-flex overflow-auto hide-scrollbar">
                     <div class="story-item">
                         <div class="story-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/11.jpg" alt="Your story">
+                            <img src="{{ user.profile.image_or_default }}" alt="Your story">
                         </div>
                         <span class="story-username">Your story</span>
                     </div>
@@ -38,45 +40,78 @@
                     </div>
                 </div>
             </div>
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-user">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="post-user-avatar" alt="User avatar">
-                        <a href="#" class="post-username">technews</a>
+            {% for post in posts %}
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-user">
+                            <img src="{{ post.author.profile.image_or_default }}" class="post-user-avatar" alt="User avatar">
+                            <a href="#" class="post-username">{{ post.author }}</a>
+                        </div>
+                        <button class="post-more">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
                     </div>
-                    <button class="post-more">
-                        <i class="bi bi-three-dots"></i>
-                    </button>
-                </div>
-                <img src="https://picsum.photos/720/1280" class="post-image" alt="Post image">
-                <div class="post-actions">
-                    <div class="post-action-left">
-                        <button class="post-action-btn"><i class="bi bi-heart"></i></button>
-                        <button class="post-action-btn"><i class="bi bi-chat"></i></button>
-                        <button class="post-action-btn"><i class="bi bi-send"></i></button>
+                    {% if not post.media.count > 1 %}
+                        <img src="{{ post.media.first.file.url }}" class="post-image" alt="Post image">
+                    {% else %}
+                        <div id="carousel-{{ post.id }}" class="carousel slide">
+                            <div class="carousel-indicators">
+                                {% for media in post.media.all %}
+                                    <button type="button" 
+                                            data-bs-target="#carousel-{{ post.id }}" 
+                                            data-bs-slide-to="{{ forloop.counter0 }}" 
+                                            class="{% if forloop.first %}active{% endif %}" 
+                                            aria-current="{% if forloop.first %}true{% endif %}" 
+                                            aria-label="Slide {{ forloop.counter }}">
+                                    </button>
+                                {% endfor %}
+                            </div>
+                            <div class="carousel-inner">
+                                {% for media in post.media.all %}
+                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                        <img src="{{ media.file.url }}" class="post-image" alt="Post image">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ post.id }}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ post.id }}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="post-actions">
+                        <div class="post-action-left">
+                            <button class="post-action-btn"><i class="bi bi-heart"></i></button>
+                            <button class="post-action-btn"><i class="bi bi-chat"></i></button>
+                            <button class="post-action-btn"><i class="bi bi-send"></i></button>
+                        </div>
+                        <button class="post-action-btn"><i class="bi bi-bookmark"></i></button>
                     </div>
-                    <button class="post-action-btn"><i class="bi bi-bookmark"></i></button>
+                    <div class="post-likes">12,345 likes</div>
+                    <div class="post-caption">
+                        <a href="#" class="post-caption-username text-decoration-none">{{ user.username }}</a>
+                        {{ post.caption }}
+                    </div>
+                    <div class="post-comments">View all 128 comments</div>
+                    <div class="post-time">{{ post.created|naturaltime }}</div>
+                    <div class="post-comment-input">
+                        <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+                        <button class="comment-post">Post</button>
+                    </div>
                 </div>
-                <div class="post-likes">12,345 likes</div>
-                <div class="post-caption">
-                    <a href="#" class="post-caption-username">technews</a>
-                    New AI breakthrough promises to revolutionize healthcare diagnostics. Researchers have developed an AI system that can detect early-stage diseases with 95% accuracy.
-                </div>
-                <div class="post-comments">View all 128 comments</div>
-                <div class="post-time">4 hours ago</div>
-                <div class="post-comment-input">
-                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                    <button class="comment-post">Post</button>
-                </div>
-            </div>                
+            {% endfor %}
         </div>
         <div class="col-lg-4 desktop-only">
             <div class="sticky-top" style="top: 76px; padding-left: 24px;">
                 <div class="d-flex align-items-center mb-4">
-                    <img src="https://randomuser.me/api/portraits/women/11.jpg" class="profile-img me-3" style="width: 56px; height: 56px;" alt="Profile">
+                    <img src="{{ user.profile.image_or_default }}" class="profile-img me-3" style="width: 56px; height: 56px;" alt="Profile">
                     <div>
-                        <a href="#" class="text-decoration-none fw-bold">johndoe</a>
-                        <p class="text-muted mb-0">John Doe</p>
+                        <a href="#" class="text-decoration-none fw-bold">{{ user.username }}</a>
+                        <p class="text-muted mb-0">{{ user.full_name }}</p>
                     </div>
                 </div>
                 <div class="suggestions-title">
@@ -147,5 +182,5 @@
         </div>
     </div>
 </div>
-{% include 'includes/mobile_nav.html' %}
+{% include 'feed/includes/mobile_nav.html' %}
 {% endblock content %}

@@ -298,7 +298,7 @@ body {
 }
 
 .dropzone {
-    border: 2px dashed #666 !important;
+    border: 2px dashed rgb(86, 86, 115) !important;
     border-radius: 10px;
     padding: 40px;
     text-align: center;
@@ -309,7 +309,13 @@ body {
     border-color: #4facfe;
     color: #4facfe;
 }
-
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%) brightness(95%) contrast(100%);
+}
+.carousel-indicators {
+    filter: invert(100%) brightness(95%) contrast(100%);
+}
 @media (min-width: 992px) {
     .post-image {
         max-height: 600px;
