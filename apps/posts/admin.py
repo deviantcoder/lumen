@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post, PostMedia
+from .models import Post, PostMedia, Tag
 
 
 class PostMediaInline(admin.StackedInline):
@@ -17,3 +17,9 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(PostMedia)
 class PostMediaAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    def get_prepopulated_fields(self, request, obj=None):
+        return {'slug': ('name',)}

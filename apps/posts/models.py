@@ -3,6 +3,8 @@ import shortuuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
+from django.utils.text import slugify
+from django.db import IntegrityError, transaction
 
 from utils.files import (
     ALLOWED_VIDEO_EXTENSIONS, ALLOWED_IMAGE_EXTENSIONS, base_upload_to, validate_file_size
@@ -29,6 +31,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     
     caption = models.TextField(max_length=500, null=True, blank=True)
+
+    tags = models.ManyToManyField('Tag', related_name='tags')
 
     status = models.CharField(max_length=10, choices=POST_STATUSES.choices, default=POST_STATUSES.ACTIVE)
 
@@ -73,4 +77,27 @@ class PostMedia(models.Model):
     def __str__(self):
         return f'{self.post} (media)'
 
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name.lower())
+            self.slug = base_slug
+
+        for _ in range(5):
+            try:
+                with transaction.atomic():
+                    super().save(*args, **kwargs)
+                return
+            except IntegrityError:
+                self.slug = f'{base_slug}-{shortuuid.uuid()[:8]}'
+        
+        raise IntegrityError(f'Could not generate unique slug for tag: {self.name}')
