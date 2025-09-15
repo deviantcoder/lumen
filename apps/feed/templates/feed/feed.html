@@ -5,34 +5,34 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
+        <div class="col-lg-6 col-md-10">
             <div class="story-container">
                 <div class="d-flex overflow-auto hide-scrollbar">
-                    <div class="story-item">
+                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
                         <div class="story-avatar">
                             <img src="{{ user.profile.image_or_default }}" alt="Your story">
                         </div>
                         <span class="story-username">Your story</span>
                     </div>
-                    <div class="story-item">
+                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
                         <div class="story-avatar">
                             <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User 1">
                         </div>
                         <span class="story-username">johndoe</span>
                     </div>
-                    <div class="story-item">
+                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
                         <div class="story-avatar">
                             <img src="https://randomuser.me/api/portraits/women/21.jpg" alt="User 2">
                         </div>
                         <span class="story-username">janedoe</span>
                     </div>
-                    <div class="story-item">
+                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
                         <div class="story-avatar">
                             <img src="https://randomuser.me/api/portraits/men/17.jpg" alt="User 3">
                         </div>
                         <span class="story-username">alextech</span>
                     </div>
-                    <div class="story-item">
+                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
                         <div class="story-avatar">
                             <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User 4">
                         </div>
@@ -42,17 +42,20 @@
             </div>
             {% for post in posts %}
                 <div class="post-card">
-                    <div class="post-header">
-                        <div class="post-user">
+                    <div class="d-flex align-items-center justify-content-between p-2">
+                        <div class="d-flex align-items-center">
                             <img src="{{ post.author.profile.image_or_default }}" class="post-user-avatar" alt="User avatar">
-                            <a href="#" class="post-username">{{ post.author }}</a>
+                            <a href="#" class="fw-bold text-white small text-decoration-none me-2">{{ post.author }}</a>
+                            <span class="text-muted small">• {{ post.created|naturaltime }}</span>
                         </div>
-                        <button class="post-more">
+                        <button class="btn border-0 cursor-pointer">
                             <i class="bi bi-three-dots"></i>
                         </button>
                     </div>
                     {% if not post.media.count > 1 %}
-                        <img src="{{ post.media.first.file.url }}" class="post-image" alt="Post image">
+                        <div class="post-image-wrapper">
+                            <img src="{{ post.media.first.file.url }}" class="post-image" alt="Post image">
+                        </div>
                     {% else %}
                         <div id="carousel-{{ post.id }}" class="carousel slide">
                             <div class="carousel-indicators">
@@ -69,7 +72,9 @@
                             <div class="carousel-inner">
                                 {% for media in post.media.all %}
                                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                        <img src="{{ media.file.url }}" class="post-image" alt="Post image">
+                                        <div class="post-image-wrapper">
+                                            <img src="{{ media.file.url }}" class="post-image" alt="Post image">
+                                        </div>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -83,90 +88,71 @@
                             </button>
                         </div>
                     {% endif %}
-                    <div class="post-actions">
-                        <div class="post-action-left">
-                            <button class="post-action-btn"><i class="bi bi-heart"></i></button>
-                            <button class="post-action-btn"><i class="bi bi-chat"></i></button>
-                            <button class="post-action-btn"><i class="bi bi-send"></i></button>
+                    <div class="p-2">
+                        <div class="d-flex justify-content-between p-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-heart"></i></button>
+                                <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-chat"></i></button>
+                                <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-send"></i></button>
+                            </div>
+                            <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-bookmark"></i></button>
                         </div>
-                        <button class="post-action-btn"><i class="bi bi-bookmark"></i></button>
-                    </div>
-                    <div class="post-likes">12,345 likes</div>
-                    <div class="post-caption">
-                        <a href="#" class="post-caption-username text-decoration-none">{{ user.username }}</a>
-                        {{ post.caption }}
-                    </div>
-                    <div class="post-comments">View all 128 comments</div>
-                    <div class="post-time">{{ post.created|naturaltime }}</div>
-                    <div class="post-comment-input">
-                        <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                        <button class="comment-post">Post</button>
+                        <div class="fw-bold mb-2 ps-2">12,345 likes</div>
+                        <div class="ps-2 mb-2">
+                            <a href="#" class="fw-bold me-2 text-decoration-none">{{ user.username }}</a>
+                            {{ post.caption }}
+                        </div>
+                        <div class="ps-2 mb-2 text-muted small">View all 128 comments</div>
+                        <div class="p-2 d-flex align-items-center">
+                            <input class="form-control border-0 bg-transparent" placeholder="Add a comment..."></input>
+                            <button class="btn text-primary fw-bold">Post</button>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        <div class="col-lg-4 desktop-only">
+        <div class="col-lg-4 desktop-only mt-3">
             <div class="sticky-top" style="top: 76px; padding-left: 24px;">
                 <div class="d-flex align-items-center mb-4">
                     <img src="{{ user.profile.image_or_default }}" class="profile-img me-3" style="width: 56px; height: 56px;" alt="Profile">
                     <div>
-                        <a href="#" class="text-decoration-none fw-bold">{{ user.username }}</a>
-                        <p class="text-muted mb-0">{{ user.full_name }}</p>
+                        <a href="#" class="text-decoration-none fw-bold text-white">{{ user.username }}</a>
+                        <p class="text-muted small mb-0">{{ user.full_name }}</p>
                     </div>
                 </div>
-                <div class="suggestions-title">
-                    <h6>Suggestions For You</h6>
-                    <a href="#">See All</a>
+                <div class="suggestions-title d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-muted fw-bold">Suggestions For You</h6>
+                    <a href="#" class="text-white text-decoration-none fw-bold small">See All</a>
                 </div>
-                <div class="suggestion-item">
-                    <div class="suggestion-user">
-                        <img src="https://randomuser.me/api/portraits/women/67.jpg" class="suggestion-avatar" alt="User avatar">
-                        <div class="suggestion-info">
-                            <a href="#" class="suggestion-username">techgeek</a>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/women/67.jpg" class="suggestion-avatar me-2" alt="User avatar">
+                        <div class="d-flex flex-column">
+                            <a href="#" class="fw-bold small text-white text-decoration-none">techgeek</a>
                             <span class="suggestion-detail">Followed by janesmith + 12 more</span>
                         </div>
                     </div>
-                    <button class="suggestion-follow">Follow</button>
+                    <button class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary cursor-pointer p-0">Follow</button>
                 </div>
-                <div class="suggestion-item">
-                    <div class="suggestion-user">
-                        <img src="https://randomuser.me/api/portraits/men/10.jpg" class="suggestion-avatar" alt="User avatar">
-                        <div class="suggestion-info">
-                            <a href="#" class="suggestion-username">webdev</a>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/men/10.jpg" class="suggestion-avatar me-2" alt="User avatar">
+                        <div class="d-flex flex-column">
+                            <a href="#" class="fw-bold small text-white text-decoration-none">webdev</a>
                             <span class="suggestion-detail">Followed by alextech + 8 more</span>
                         </div>
                     </div>
-                    <button class="suggestion-follow">Follow</button>
+                    <button class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary cursor-pointer p-0">Follow</button>
                 </div>
-                <div class="suggestion-item">
-                    <div class="suggestion-user">
-                        <img src="https://randomuser.me/api/portraits/men/34.jpg" class="suggestion-avatar" alt="User avatar">
-                        <div class="suggestion-info">
-                            <a href="#" class="suggestion-username">designhub</a>
-                            <span class="suggestion-detail">Followed by johndoe + 15 more</span>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/women/11.jpg" class="suggestion-avatar me-2" alt="User avatar">
+                        <div class="d-flex flex-column">
+                            <a href="#" class="fw-bold small text-white text-decoration-none">doomslayer</a>
+                            <span class="suggestion-detail">Followed by alextech + 8 more</span>
                         </div>
                     </div>
-                    <button class="suggestion-follow">Follow</button>
-                </div>
-                <div class="suggestion-item">
-                    <div class="suggestion-user">
-                        <img src="https://randomuser.me/api/portraits/women/40.jpg" class="suggestion-avatar" alt="User avatar">
-                        <div class="suggestion-info">
-                            <a href="#" class="suggestion-username">coderlife</a>
-                            <span class="suggestion-detail">Followed by techgeek + 20 more</span>
-                        </div>
-                    </div>
-                    <button class="suggestion-follow">Follow</button>
-                </div>
-                <div class="suggestion-item">
-                    <div class="suggestion-user">
-                        <img src="https://randomuser.me/api/portraits/women/73.jpg" class="suggestion-avatar" alt="User avatar">
-                        <div class="suggestion-info">
-                            <a href="#" class="suggestion-username">startupdaily</a>
-                            <span class="suggestion-detail">Followed by webdev + 5 more</span>
-                        </div>
-                    </div>
-                    <button class="suggestion-follow">Follow</button>
+                    <button class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary cursor-pointer p-0">Follow</button>
                 </div>
                 <div class="footer-links">
                     <a href="#">About</a>

@@ -1,0 +1,106 @@
+{% extends '_base.html' %}
+
+{% block head_title %}
+    Profile
+{% endblock head_title %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+
+    <div class="row mb-5 align-items-center text-center text-md-start">
+        <div class="col-md-4 text-center">
+            <img src="{{ profile.image_or_default }}" class="profile-img-lg rounded-circle" alt="Profile avatar">
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex flex-column mb-3 align-items-center align-items-md-start">
+                <h2 class="mb-2 mt-3 mt-md-0 text-center text-md-start">{{ profile.user.username }}</h2>
+                <div class="d-flex gap-2 justify-content-center justify-content-md-start mt-2 w-100">
+                    {% if profile.user == request.user %}
+                        <button class="btn btn-dark rounded-pill fw-bold flex-fill">
+                            <i class="bi bi-person-lines-fill me-2"></i>Edit Profile
+                        </button>
+                        <button class="btn btn-dark rounded-pill fw-bold flex-fill">
+                            <i class="bi bi-gear-wide me-2"></i>Settings
+                        </button>
+                    {% else %}
+                        <button class="btn btn-primary rounded-pill fw-bold flex-fill">
+                            <i class="bi bi-person-add me-2"></i>Follow
+                        </button>
+                        <button class="btn btn-dark rounded-pill fw-bold flex-fill">
+                            <i class="bi bi-chat-heart me-2"></i>Message
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="d-flex w-100 text-center text-md-start mt-4">
+                <div class="flex-fill d-flex gap-3 justify-content-center">
+                    <div class="bg-dark-subtle p-3 rounded-pill"><span class="fw-bold">125</span> <span class="text-muted">posts</span></div>
+                    <div class="bg-dark-subtle p-3 rounded-pill"><span class="fw-bold">1,452</span> <span class="text-muted">followers</span></div>
+                    <div class="bg-dark-subtle p-3 rounded-pill"><span class="fw-bold">872</span> <span class="text-muted">following</span></div>
+                </div>
+            </div>
+            <div class="text-center text-md-start mt-4">
+                {% if profile.user.full_name %}
+                    <div class="fw-bold">{{ profile.user.full_name }}</div>
+                {% endif %}
+                {% if profile.bio %}
+                    <p class="text-muted">{{ profile.bio }}</p>
+                {% endif %}
+                {% if profile.location %}
+                    <p class="text-muted"><i class="bi bi-geo-alt me-2"></i>{{ profile.location }}</p>
+                {% endif %}
+                {% if profile.url %}
+                    <a href="{{ profile.url }}" class="text-decoration-none">{{ profile.url }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="d-flex gap-3 mb-4 overflow-auto pb-2 d-flex justify-content-center">
+        <div class="story-item">
+            <div class="story-avatar">
+                <img src="https://picsum.photos/500/500?random=1" alt="Travel">
+            </div>
+            <span class="story-username">Travel</span>
+        </div>
+        <div class="story-item">
+            <div class="story-avatar">
+                <img src="https://picsum.photos/500/500?random=2" alt="Design">
+            </div>
+            <span class="story-username">Design</span>
+        </div>
+        <div class="story-item">
+            <div class="story-avatar">
+                <img src="https://picsum.photos/500/500?random=3" alt="Food">
+            </div>
+            <span class="story-username">Food</span>
+        </div>
+    </div>
+    <hr>
+    <ul class="nav nav-tabs justify-content-center mt-4 mb-4 border-0">
+        <li class="nav-item">
+            <a class="nav-link active border-0 rounded-5" href="#"><i class="bi bi-grid-3x3"></i> Posts</a>
+        </li>
+        {% if profile.user == request.user %}
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="bi bi-bookmark"></i> Saved</a>
+            </li>
+        {% endif %}
+    </ul>
+    <div class="posts-grid">
+        {% for post in posts %}
+            <div class="post-item position-relative overflow-hidden">
+                <a href="#post1">
+                    <img src="{{ post.media.first.file.url }}" class="w-100 h-100 object-fit-cover" alt="Post">
+                    <div class="post-overlay position-absolute top-0 start-0 end-0 bottom-0 d-flex justify-content-center align-items-center">
+                        <div class="d-flex gap-4 text-white fw-bold">
+                            <div><i class="bi bi-heart-fill me-1"></i> 245</div>
+                            <div><i class="bi bi-chat-fill me-1"></i> 32</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% include 'feed/includes/mobile_nav.html' %}
+{% endblock content %}
