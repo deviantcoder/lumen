@@ -3,8 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import PostForm
-from .models import PostMedia
-
+from .models import PostMedia, Tag
 
 
 @login_required
@@ -26,6 +25,14 @@ def create_post(request):
                         post=post,
                         file=file,
                     )
+            
+            tags = request.POST.get('tags', '')
+
+            if tags:
+                tags_list = [tag.strip().lower() for tag in tags.split('#') if tag.strip()]
+                for tag in set(tags_list):
+                    tag_obj, _ = Tag.objects.get_or_create(name=tag.lower())
+                    post.tags.add(tag_obj)
 
             messages.success(request, 'Post created!')
 
