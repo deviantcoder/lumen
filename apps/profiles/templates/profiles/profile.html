@@ -34,7 +34,7 @@
             </div>
             <div class="d-flex w-100 text-center text-md-start mt-4">
                 <div class="flex-fill d-flex gap-3 justify-content-center">
-                    <div class="bg-dark-subtle p-3 rounded-pill"><span class="fw-bold">125</span> <span class="text-muted">posts</span></div>
+                    <div class="bg-dark-subtle p-3 rounded-pill"><span class="fw-bold">{{ posts.count }}</span> <span class="text-muted">post{{ posts.count|pluralize:'s' }}</span></div>
                     <div class="bg-dark-subtle p-3 rounded-pill"><span class="fw-bold">1,452</span> <span class="text-muted">followers</span></div>
                     <div class="bg-dark-subtle p-3 rounded-pill"><span class="fw-bold">872</span> <span class="text-muted">following</span></div>
                 </div>
@@ -56,19 +56,19 @@
         </div>
     </div>
     <div class="d-flex gap-3 mb-4 overflow-auto pb-2 d-flex justify-content-center">
-        <div class="story-item">
+        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
             <div class="story-avatar">
                 <img src="https://picsum.photos/500/500?random=1" alt="Travel">
             </div>
             <span class="story-username">Travel</span>
         </div>
-        <div class="story-item">
+        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
             <div class="story-avatar">
                 <img src="https://picsum.photos/500/500?random=2" alt="Design">
             </div>
             <span class="story-username">Design</span>
         </div>
-        <div class="story-item">
+        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
             <div class="story-avatar">
                 <img src="https://picsum.photos/500/500?random=3" alt="Food">
             </div>

@@ -45,7 +45,7 @@
                     <div class="d-flex align-items-center justify-content-between p-2">
                         <div class="d-flex align-items-center">
                             <img src="{{ post.author.profile.image_or_default }}" class="post-user-avatar" alt="User avatar">
-                            <a href="#" class="fw-bold text-white small text-decoration-none me-2">{{ post.author }}</a>
+                            <a href="{% url 'profiles:profile' post.author.username %}" class="fw-bold text-white small text-decoration-none me-2">{{ post.author }}</a>
                             <span class="text-muted small">• {{ post.created|naturaltime }}</span>
                         </div>
                         <button class="btn border-0 cursor-pointer">
