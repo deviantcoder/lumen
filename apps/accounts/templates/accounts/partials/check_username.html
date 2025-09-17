@@ -1,0 +1,11 @@
+{% if available %}
+    <div class="text-success d-flex align-items-center">
+        <i class="bi bi-check-circle me-2"></i><span>Username is available</span>
+    </div>
+    <script>document.getElementById('submitBtn').classList.remove('disabled');</script>
+{% else %}
+    <div class="text-danger d-flex align-items-center">
+        <i class="bi bi-exclamation-circle me-2"></i><span>{{ username }}{{ msg }}</span>
+    </div>
+    <script>document.getElementById('submitBtn').classList.add('disabled');</script>
+{% endif %}

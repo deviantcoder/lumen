@@ -1,3 +1,5 @@
+import re
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import logout, get_user_model, login
@@ -105,3 +107,39 @@ def activate_account(request, uidb64, token):
         request,
         'accounts/activation/activation_email_failed.html',
     )
+
+
+def check_username(request):
+    LOWER_LIMIT = 5
+    UPPER_LIMIT = 25
+
+    pattern = r'^[a-zA-Z0-9_]+$'
+
+    username = request.GET.get('username', '').strip()
+
+    context = {
+        'available': True,
+        'msg': '',
+    }
+
+    if username:
+        if len(username) < LOWER_LIMIT:
+            context['available'] = False
+            context['msg'] = 'Too short (min 5 characters)'
+
+        if len(username) > UPPER_LIMIT:
+            context['available'] = False
+            context['msg'] = 'Too long (max 25 characters)'
+
+        if not re.match(pattern, username):
+            context['available'] = False
+            context['msg'] = 'Invalid characters. Only letters, digits and underscores allowed.'
+
+        if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
+            context['available'] = False
+            context['msg'] = 'Username is already taken'
+    else:
+        context['available'] = False
+        context['msg'] = 'Username cannot be empty'
+
+    return render(request, 'accounts/partials/check_username.html', context)
