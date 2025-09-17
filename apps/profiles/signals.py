@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 
 from .models import Profile
 
-from utils.files import compress_image
+from utils.files import compress_image, crop_image
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,10 @@ def compress_profile_image(sender, instance, **kwargs):
         logger.warning(f'Image compression failed: {e}')
 
     try:
-        instance.image = compress_image(instance.image)
+        cropped = crop_image(instance.image, size=500)
+        compressed = compress_image(cropped, quality=60)
+
+        instance.image = compressed
     except Exception as e:
         logger.warning(f'Image compression failed: {e}')
 

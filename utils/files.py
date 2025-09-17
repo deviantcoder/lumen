@@ -39,21 +39,54 @@ def base_upload_to(instance, filename, base_dir='uploads', id_attr='public_id'):
     return f'{base_dir}/{obj_id}/{new_filename}{ext}'
 
 
-def compress_image(file):
+def compress_image(file, quality: int = 60):
     try:
         with Image.open(file) as image:
             if image.mode in ('P', 'RGBA'):
                 image = image.convert('RGB')
             
-            image_io = BytesIO()
-            name = os.path.splitext('file')[0] + '.jpg'
-            image.save(image_io, format='JPEG', quality=60, optimize=True)
+            buffer = BytesIO()
+            name = os.path.splitext(file.name)[0] + '.jpg'
 
-            return File(image_io, name=name)
+            image.save(buffer, format='JPEG', quality=quality, optimize=True)
+
+            buffer.seek(0)
+
+            return File(buffer, name=name)
 
     except Exception as e:
         logger.warning(f'Image compression failed: {e}')
         return file
+
+
+def crop_image(file, size: int = 300):
+    try:
+        with Image.open(file) as image:
+            if image.mode in ('P', 'RGBA'):
+                image = image.convert('RGB')
+            
+            buffer = BytesIO()
+            name = os.path.splitext(file.name)[0] + '.jpg'
+
+            width, height = image.size
+
+            if width != height:
+                min_side = min(width, height)
+                left = (width - min_side) // 2
+                top = (height - min_side) // 2
+                right = left + min_side
+                bottom = top + min_side
+                image = image.crop((left, top, right, bottom))
+
+            image = image.resize((size, size), Image.LANCZOS)
+            image.save(buffer, format='JPEG')
+
+            buffer.seek(0)
+
+            return File(buffer, name=name)
+
+    except Exception as e:
+        logger.warning(f'Could not resize image: {e}')
 
 
 def validate_file_size(file):
