@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import PostForm
-from .models import PostMedia, Tag, Post, Like
+from .models import PostMedia, Tag, Post, Like, Save
 
 
 @login_required
@@ -55,5 +55,19 @@ def toggle_like(request, post_id):
         messages.success(request, 'Unliked the post.')
     else:
         messages.success(request, 'Liked the post.')
+
+    return redirect(request.META.get('HTTP_REFERER'), 'feed:feed')
+
+
+@login_required
+def toggle_save(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    save, created = Save.objects.get_or_create(user=request.user, post=post)
+
+    if not created:
+        save.delete()
+        messages.success(request, 'Unsaved the post.')
+    else:
+        messages.success(request, 'Saved the post.')
 
     return redirect(request.META.get('HTTP_REFERER'), 'feed:feed')

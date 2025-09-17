@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post, PostMedia, Tag, Like
+from .models import Post, PostMedia, Tag, Like, Save
 
 
 class PostMediaInline(admin.StackedInline):
@@ -36,6 +36,13 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'post', 'created'
+    )
+
+
+@admin.register(Save)
+class SaveAdmin(admin.ModelAdmin):
     list_display = (
         'user', 'post', 'created'
     )

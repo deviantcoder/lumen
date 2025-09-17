@@ -119,4 +119,20 @@ class Like(models.Model):
         verbose_name_plural = 'Likes'
 
     def __str__(self):
-        return f'{self.user}: {self.post}'
+        return f'{self.user}: {self.post[:20]}'
+
+
+class Save(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_posts')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='saves')
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created',)
+        unique_together = ('user', 'post')
+        verbose_name = 'Save'
+        verbose_name_plural = 'Saves'
+
+    def __str__(self):
+        return f'{self.user}: {self.post[:20]}'
