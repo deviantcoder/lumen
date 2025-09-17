@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Exists, OuterRef
 
 from .forms import PostForm
 from .models import PostMedia, Tag, Post, Like, Save
@@ -71,3 +72,23 @@ def toggle_save(request, post_id):
         messages.success(request, 'Saved the post.')
 
     return redirect(request.META.get('HTTP_REFERER'), 'feed:feed')
+
+
+@login_required
+def post_preview(request, post_id):
+    qs = Post.objects.annotate(
+        liked=Exists(
+            Like.objects.filter(user=request.user, post=OuterRef('pk'))
+        ),
+        saved=Exists(
+            Save.objects.filter(user=request.user, post=OuterRef('pk'))
+        )
+    )
+
+    post = get_object_or_404(qs, pk=post_id)
+
+    context = {
+        'post': post,
+    }
+
+    return render(request, 'posts/partials/post_preview.html', context)

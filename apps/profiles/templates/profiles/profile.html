@@ -88,8 +88,14 @@
     </ul>
     <div class="posts-grid">
         {% for post in posts %}
-            <div class="post-item position-relative overflow-hidden">
-                <a href="#post1">
+            <div class="post-item position-relative overflow-hidden rounded-4">
+                <a
+                    hx-get="{% url 'posts:post_preview' post.pk %}"
+                    hx-target="#modal-body"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal""
+                >
                     <img src="{{ post.media.first.file.url }}" class="w-100 h-100 object-fit-cover" alt="Post">
                     <div class="post-overlay position-absolute top-0 start-0 end-0 bottom-0 d-flex justify-content-center align-items-center">
                         <div class="d-flex gap-4 text-white fw-bold">
