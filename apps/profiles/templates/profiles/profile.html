@@ -82,7 +82,7 @@
         </li>
         {% if profile.user == request.user %}
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-bookmark"></i> Saved</a>
+                <a class="nav-link border rounded-5" href="#"><i class="bi bi-bookmark"></i> Saved</a>
             </li>
         {% endif %}
     </ul>
@@ -94,12 +94,12 @@
                     hx-target="#modal-body"
                     hx-swap="innerHTML"
                     data-bs-toggle="modal"
-                    data-bs-target="#modal""
+                    data-bs-target="#modal"
                 >
                     <img src="{{ post.media.first.file.url }}" class="w-100 h-100 object-fit-cover" alt="Post">
                     <div class="post-overlay position-absolute top-0 start-0 end-0 bottom-0 d-flex justify-content-center align-items-center">
                         <div class="d-flex gap-4 text-white fw-bold">
-                            <div><i class="bi bi-heart-fill me-1"></i> 245</div>
+                            <div><i class="bi bi-heart-fill me-1"></i> {{ post.likes.count }}</div>
                             <div><i class="bi bi-chat-fill me-1"></i> 32</div>
                         </div>
                     </div>

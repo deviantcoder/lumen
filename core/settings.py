@@ -13,6 +13,7 @@ DEBUG = True
 DOMAIN = config('DOMAIN', 'http://localhost:8000')
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ["https://*.ngrok.io", "https://*.ngrok-free.app"]
 
 
 # Application definition

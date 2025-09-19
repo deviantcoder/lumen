@@ -109,7 +109,7 @@
                                 {% endif %}
                             </a>
                         </div>
-                        <div class="fw-bold mb-2 ps-2">12,345 likes</div>
+                        <div class="fw-bold mb-2 ps-2">{{ post.likes.count }} like{{ post.likes.count|pluralize:'s' }}</div>
                         <div class="ps-2 mb-2">
                             <a href="#" class="fw-bold me-2 text-decoration-none">{{ user.username }}</a>
                             {{ post.caption }}
