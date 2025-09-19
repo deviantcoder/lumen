@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-between p-2">
+    <div class="d-flex align-items-center">
+        <form
+            hx-post="{% url 'posts:toggle_like' post.pk %}"
+            hx-target="#likes{{ post.pk }}"
+            hx-swap="innerHTML"
+        >
+            {% csrf_token %}
+            <div id="likes{{ post.pk }}">
+                <button type="submit" class="btn text-white cursor-pointer p-0 fs-4 border-0 me-2">
+                    {% if post.liked %}
+                        <i class="bi bi-heart-fill text-danger"></i>
+                    {% else %}
+                        <i class="bi bi-heart text-white"></i>
+                    {% endif %}
+                </button>
+                <span class="fw-bold">{{ post.likes.count }} like{{ post.likes.count|pluralize:'s' }}</span>
+            </div>
+        </form>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-chat"></i></button>
+        <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-send"></i></button>
+        <a href="{% url 'posts:toggle_save' post.pk %}" class="btn cursor-pointer p-0 fs-4 border-0">
+            {% if post.saved %}
+                <i class="bi bi-bookmark-fill text-white"></i>
+            {% else %}
+                <i class="bi bi-bookmark"></i>
+            {% endif %}
+        </a>
+    </div>
+</div>

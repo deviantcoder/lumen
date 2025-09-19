@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Exists, OuterRef
+from django.http import JsonResponse
 
 from .forms import PostForm
 from .models import PostMedia, Tag, Post, Like, Save
@@ -48,16 +49,18 @@ def create_post(request):
 
 @login_required
 def toggle_like(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    like, created = Like.objects.get_or_create(user=request.user, post=post)
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=post_id)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
-    if not created:
-        like.delete()
-        messages.success(request, 'Unliked the post.')
-    else:
-        messages.success(request, 'Liked the post.')
+        if not created:
+            like.delete()
+            post.liked = False
+        else:
+            post.liked = True
 
-    return redirect(request.META.get('HTTP_REFERER'), 'feed:feed')
+        return render(request, 'posts/partials/like_button.html', {'post': post})
+
 
 
 @login_required

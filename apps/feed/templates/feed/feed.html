@@ -60,12 +60,7 @@
                         <div id="carousel-{{ post.id }}" class="carousel slide">
                             <div class="carousel-indicators">
                                 {% for media in post.media.all %}
-                                    <button type="button" 
-                                            data-bs-target="#carousel-{{ post.id }}" 
-                                            data-bs-slide-to="{{ forloop.counter0 }}" 
-                                            class="{% if forloop.first %}active{% endif %}" 
-                                            aria-current="{% if forloop.first %}true{% endif %}" 
-                                            aria-label="Slide {{ forloop.counter }}">
+                                    <button type="button" data-bs-target="#carousel-{{ post.id }}" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% endif %}" aria-label="Slide {{ forloop.counter }}">
                                     </button>
                                 {% endfor %}
                             </div>
@@ -89,27 +84,7 @@
                         </div>
                     {% endif %}
                     <div class="p-2">
-                        <div class="d-flex justify-content-between p-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <a href="{% url 'posts:toggle_like' post.pk %}" class="text-white cursor-pointer p-0 fs-4 border-0">
-                                    {% if post.liked %}
-                                        <i class="bi bi-heart-fill text-danger"></i>
-                                    {% else %}
-                                        <i class="bi bi-heart text-white"></i>
-                                    {% endif %}
-                                </a>
-                                <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-chat"></i></button>
-                                <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-send"></i></button>
-                            </div>
-                            <a href="{% url 'posts:toggle_save' post.pk %}" class="btn cursor-pointer p-0 fs-4 border-0">
-                                {% if post.saved %}
-                                    <i class="bi bi-bookmark-fill text-white"></i>
-                                {% else %}
-                                    <i class="bi bi-bookmark"></i>
-                                {% endif %}
-                            </a>
-                        </div>
-                        <div class="fw-bold mb-2 ps-2">{{ post.likes.count }} like{{ post.likes.count|pluralize:'s' }}</div>
+                        {% include 'posts/includes/post_controls.html' %}
                         <div class="ps-2 mb-2">
                             <a href="#" class="fw-bold me-2 text-decoration-none">{{ user.username }}</a>
                             {{ post.caption }}
@@ -120,10 +95,6 @@
                             {% endfor %}
                         </div>
                         <div class="ps-2 mb-2 text-muted small">View all 128 comments</div>
-                        <!-- <div class="p-2 d-flex align-items-center">
-                            <input class="form-control border-0 bg-transparent" placeholder="Add a comment..."></input>
-                            <button class="btn text-primary fw-bold">Post</button>
-                        </div> -->
                     </div>
                 </div>
             {% endfor %}
