@@ -135,4 +135,4 @@ class Save(models.Model):
         verbose_name_plural = 'Saves'
 
     def __str__(self):
-        return f'{self.user}: {self.post[:20]}'
+        return f'{self.user}: {self.post.caption[:20]}'

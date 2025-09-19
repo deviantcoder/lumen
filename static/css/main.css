@@ -95,7 +95,7 @@ body {
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     margin-right: 1rem;
 }
 .nav-tabs .nav-link.active {
@@ -110,19 +110,6 @@ body {
 @media (max-width: 768px) {
     .posts-grid {
         gap: 3px;
-    }
-
-    .nav-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        justify-content: flex-start;
-        padding: 0 10px;
-    }
-
-    .nav-tabs .nav-link {
-        padding: 1rem;
-        margin-right: 0.5rem;
-        white-space: nowrap;
     }
 }
 .story-container {

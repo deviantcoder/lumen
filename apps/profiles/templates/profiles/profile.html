@@ -78,35 +78,44 @@
     <hr>
     <ul class="nav nav-tabs justify-content-center mt-4 mb-4 border-0">
         <li class="nav-item">
-            <a class="nav-link active border-0 rounded-5" href="#"><i class="bi bi-grid-3x3"></i> Posts</a>
+            <button type="button" name="posted" class="nav-link active border-0 rounded-5 hx-tab"
+                hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
+                hx-target="#posts"
+                hx-swap="innerHTML"
+                hx-trigger="click"
+            >
+                <i class="bi bi-grid-3x3"></i> Posts
+            </button>
         </li>
         {% if profile.user == request.user %}
             <li class="nav-item">
-                <a class="nav-link border rounded-5" href="#"><i class="bi bi-bookmark"></i> Saved</a>
+                <button type="button" name="saved" class="nav-link border-0 rounded-5 hx-tab"
+                    hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
+                    hx-target="#posts"
+                    hx-swap="innerHTML"
+                    hx-trigger="click"
+                >
+                    <i class="bi bi-bookmark"></i> Saved
+                </button>
             </li>
         {% endif %}
     </ul>
-    <div class="posts-grid">
-        {% for post in posts %}
-            <div class="post-item position-relative overflow-hidden rounded-4">
-                <a
-                    hx-get="{% url 'posts:post_preview' post.pk %}"
-                    hx-target="#modal-body"
-                    hx-swap="innerHTML"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modal"
-                >
-                    <img src="{{ post.media.first.file.url }}" class="w-100 h-100 object-fit-cover" alt="Post">
-                    <div class="post-overlay position-absolute top-0 start-0 end-0 bottom-0 d-flex justify-content-center align-items-center">
-                        <div class="d-flex gap-4 text-white fw-bold">
-                            <div><i class="bi bi-heart-fill me-1"></i> {{ post.likes.count }}</div>
-                            <div><i class="bi bi-chat-fill me-1"></i> 32</div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        {% endfor %}
+    <div class="posts-grid" id="posts"
+        hx-get="{% url 'profiles:get_user_posts' profile.user.username %}?tab=posted"
+        hx-target="#posts"
+        hx-swap="innerHTML"
+        hx-trigger="load"
+    >
     </div>
 </div>
+<script>
+document.querySelectorAll('.hx-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.hx-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+</script>
+
 {% include 'feed/includes/mobile_nav.html' %}
 {% endblock content %}
