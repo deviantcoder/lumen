@@ -14,6 +14,9 @@ DOMAIN = config('DOMAIN', 'http://localhost:8000')
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ["https://*.ngrok.io", "https://*.ngrok-free.app"]
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -30,6 +33,7 @@ INSTALLED_APPS = [
     # 3rd party
     'social_django',
     'widget_tweaks',
+    'debug_toolbar',
 
     # project apps
     'apps.accounts.apps.AccountsConfig',
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # 3rd party
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
