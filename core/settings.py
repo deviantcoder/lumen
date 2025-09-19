@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'social_django',
     'widget_tweaks',
     'debug_toolbar',
+    'django_htmx',
 
     # project apps
     'apps.accounts.apps.AccountsConfig',
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     # 3rd party
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'

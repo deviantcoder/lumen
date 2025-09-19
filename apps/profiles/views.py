@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 
 from apps.posts.models import Post
 
+from .forms import URLForm, BioForm
+
 
 User = get_user_model()
 
@@ -48,8 +50,55 @@ def get_user_posts(request, username):
 def edit_profile(request):
     profile = request.user.profile
 
+    url_form = URLForm(instance=profile)
+    bio_form = BioForm(instance=profile)
+
     context = {
         'profile': profile,
+        'url_form': url_form,
+        'bio_form': bio_form,
     }
 
     return render(request, 'profiles/edit_profile.html', context)
+
+
+@login_required
+def update_profile_image(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        new_image = request.FILES.get('image')
+
+        if new_image:
+            profile.image = new_image
+            profile.save(update_fields=['image'])
+
+            if request.htmx:
+                pass
+            return redirect('profiles:edit_profile')
+
+
+@login_required
+def update_profile_url(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        form = URLForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            if request.htmx:
+                pass
+            return redirect('profiles:edit_profile')
+
+
+@login_required
+def update_profile_bio(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        form = BioForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            if request.htmx:
+                pass
+            return redirect('profiles:edit_profile')

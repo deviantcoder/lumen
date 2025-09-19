@@ -1,5 +1,7 @@
 {% extends '_base.html' %}
 
+{% load widget_tweaks %}
+
 {% block head_title %}
     Edit Profile
 {% endblock head_title %}
@@ -12,14 +14,19 @@
     <h1 class="h4 fw-bold mb-4">Edit profile</h1>
     <div class="card border-0 d-flex flex-column flex-sm-row align-items-center justify-content-between mb-4 gap-3 p-2 px-3 rounded-4">
         <div class="d-flex align-items-center flex-grow-1">
-            <img src="{{ profile.image_or_default }}" 
-                class="rounded-circle me-3 me-sm-4" width="80" height="80" alt="Profile" style="min-width: 80px;">
+            <img src="{{ profile.image_or_default }}" class="rounded-circle me-3 me-sm-4 profile-img-md mint-gradient-ring" alt="Profile">
             <span class="fw-bold text-truncate">{{ profile.user.username }}</span>
         </div>
         <div class="w-100 w-sm-auto text-center text-sm-end">
-            <button class="btn btn-primary fw-bold rounded-4 px-3 px-sm-4" style="font-size: 0.9rem;">
-                Change photo
-            </button>
+            <form method="POST" action="{% url 'profiles:update_profile_image' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="image" class="d-none" id="imageInput" accept="image/*" onchange="this.form.submit();">
+                <button type="button" class="btn btn-sm btn-primary fw-bold rounded-3 px-3 px-sm-4"
+                    onclick="document.getElementById('imageInput').click();"
+                >
+                    Change photo
+                </button>
+            </form>
         </div>
     </div>
     <hr class="mb-4">
@@ -27,8 +34,11 @@
         <h2 class="h6 fw-bold mb-3">Website</h2>
         <div class="card border-0 rounded-4">
             <div class="card-body">
-                <input type="text" class="form-control mb-1 rounded-4" placeholder="Website link">
-                <button class="btn btn-primary fw-bold btn-sm rounded-3 mt-2 px-4">Update</button>
+                <form method="POST" action="{% url 'profiles:update_profile_url' %}">
+                    {% csrf_token %}
+                    {% render_field url_form.url class="form-control mb-1 rounded-4" %}
+                    <button type="submit" class="btn btn-primary fw-bold btn-sm rounded-3 mt-2 px-4">Update</button>
+                </form>
             </div>
         </div>
     </div>
@@ -37,8 +47,11 @@
         <h2 class="h6 fw-bold mb-3">Bio</h2>
         <div class="card border-0 rounded-4">
             <div class="card-body">
-                <textarea class="form-control rounded-4" id="bioTextarea" rows="3" placeholder="Enter your bio"></textarea>
-                <button class="btn btn-primary fw-bold btn-sm rounded-3 mt-2 px-4">Update</button>
+                <form method="POST" action="{% url 'profiles:update_profile_bio' %}">
+                    {% csrf_token %}
+                    {% render_field bio_form.bio class="form-control mb-1 rounded-4" rows=3 %}
+                    <button type="submit" class="btn btn-primary fw-bold btn-sm rounded-3 mt-2 px-4">Update</button>
+                </form>                
             </div>
         </div>
     </div>

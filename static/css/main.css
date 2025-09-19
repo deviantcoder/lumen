@@ -51,6 +51,12 @@ body {
     border-radius: 50%;
     object-fit: cover;
 }
+.profile-img-md {
+    width: 80;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 .profile-img-lg {
     width: 150px;
     height: 150px;
@@ -124,6 +130,10 @@ body {
     padding: 3px;
     background: var(--mint-gradient);
     margin-bottom: 8px;
+}
+.mint-gradient-ring {
+    padding: 3px;
+    background: var(--mint-gradient);
 }
 .story-avatar img {
     width: 100%;
