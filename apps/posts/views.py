@@ -62,7 +62,6 @@ def toggle_like(request, post_id):
         return render(request, 'posts/partials/like_button.html', {'post': post})
 
 
-
 @login_required
 def toggle_save(request, post_id):
     if request.method == 'POST':
