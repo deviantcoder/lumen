@@ -1,0 +1,7 @@
+<button type="submit" id="save{{ post.pk }}" class="btn cursor-pointer p-0 fs-4 border-0">
+    {% if post.saved %}
+        <i class="bi bi-bookmark-fill text-white"></i>
+    {% else %}
+        <i class="bi bi-bookmark"></i>
+    {% endif %}
+</button>

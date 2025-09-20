@@ -21,12 +21,21 @@
     <div class="d-flex align-items-center gap-3">
         <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-chat"></i></button>
         <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-send"></i></button>
-        <a href="{% url 'posts:toggle_save' post.pk %}" class="btn cursor-pointer p-0 fs-4 border-0">
-            {% if post.saved %}
-                <i class="bi bi-bookmark-fill text-white"></i>
-            {% else %}
-                <i class="bi bi-bookmark"></i>
-            {% endif %}
-        </a>
+        <form
+            hx-post="{% url 'posts:toggle_save' post.pk %}"
+            hx-target="#save{{ post.pk }}"
+            hx-swap="innerHTML"
+        >
+            {% csrf_token %}
+            <div id="save{{ post.pk }}">
+                <button type="submit" class="btn cursor-pointer p-0 fs-4 border-0">
+                    {% if post.saved %}
+                        <i class="bi bi-bookmark-fill text-white"></i>
+                    {% else %}
+                        <i class="bi bi-bookmark"></i>
+                    {% endif %}
+                </button>
+            </div>
+        </form>
     </div>
 </div>
