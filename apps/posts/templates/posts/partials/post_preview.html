@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load widget_tweaks %}
 
 <div class="row">
     <div class="col-md-6">
@@ -65,20 +66,30 @@
         </div>
     </div>
     <div class="col-md-6 d-flex flex-column ps-2" style="max-height: 90vh;">
-        <div class="flex-grow-1 mb-2 overflow-auto" style="max-height: calc(90vh - 70px);">
-            {% for i in "123456" %}
+        <div class="flex-grow-1 mb-2 overflow-auto" id="comments_for_{{ post.pk }}" style="max-height: calc(90vh - 70px);">
+            {% for comment in post.comments.all %}
                 <div class="d-flex align-items-start mb-2">
-                    <img src="https://i.pravatar.cc/40?img={{ forloop.counter }}" class="rounded-circle me-2" width="32" height="32" alt="avatar">
+                    <img src="{{ comment.user.profile.image_or_default }}" class="rounded-circle me-2" width="32" height="32" alt="avatar">
                     <div>
-                        <div class="fw-bold text-white small">user{{ forloop.counter }}</div>
-                        <div class="text-white small">This is a sample comment to see how it looks. 😊</div>
+                        <div class="fw-bold text-white small">{{ comment.user.username }}</div>
+                        <div class="text-white small">{{ comment.body }}</div>
                     </div>
+                </div>
+            {% empty %}
+                <div id="no_comments_for_{{ post.pk }}" class="d-flex justify-content-center">
+                    <span class="text-muted fw-bold small">Be the first one to comment...</span>
                 </div>
             {% endfor %}
         </div>
-        <form class="d-flex sticky-bottom p-2 bg-blurred border shadow-lg rounded-pill">
-            <input type="text" class="form-control rounded-pill me-2 p-2" placeholder="Add a comment...">
-            <button class="btn btn-primary rounded-pill px-3 fw-bold">Post</button>
+        <form method="POST" class="d-flex sticky-bottom p-2 bg-blurred border shadow-lg rounded-pill"
+            hx-post="{% url 'posts:add_comment' post.pk %}"
+            hx-target="#comments_for_{{ post.pk }}"
+            hx-swap="afterbegin"
+            hx-on="htmx:afterSwap: this.querySelector('textarea').value = ''"
+        >
+            {% csrf_token %}
+            {% render_field comment_form.body class="form-control rounded-pill me-2 p-2" %}
+            <button type="submit" class="btn btn-primary rounded-pill px-3 fw-bold">Post</button>
         </form>
     </div>
 </div>

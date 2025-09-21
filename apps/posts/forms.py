@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Post
+from .models import Post, Comment
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -32,3 +32,14 @@ class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['caption'].widget.attrs.update({'placeholder': 'Enter a post caption...'})
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('body', 'parent')
+        widgets = {
+            'body': forms.TextInput(attrs={'placeholder': 'Write a comment...'}),
+            'parent': forms.HiddenInput()
+        }
+    

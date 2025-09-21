@@ -1,0 +1,8 @@
+<div class="d-flex align-items-start mb-2">
+    <img src="{{ comment.user.profile.image_or_default }}" class="rounded-circle me-2" width="32" height="32" alt="avatar">
+    <div>
+        <div class="fw-bold text-white small">{{ comment.user.username }}</div>
+        <div class="text-white small">{{ comment.body }}</div>
+    </div>
+</div>
+<div id="no_comments_for_{{ comment.post.pk }}" hx-swap-oob="delete"></div>

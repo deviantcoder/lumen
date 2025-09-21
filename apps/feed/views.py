@@ -17,7 +17,8 @@ def feed(request):
         .prefetch_related(
             Prefetch('media'),
             Prefetch('tags'),
-            'likes'
+            'likes',
+            'comments',
         )
     )
 

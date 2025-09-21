@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db.models import Exists, OuterRef
 from django.http import JsonResponse
 
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from .models import PostMedia, Tag, Post, Like, Save
 
 
@@ -90,8 +90,27 @@ def post_preview(request, post_id):
 
     post = get_object_or_404(qs, pk=post_id)
 
+    comment_form = CommentForm()
+
     context = {
         'post': post,
+        'comment_form': comment_form,
     }
 
     return render(request, 'posts/partials/post_preview.html', context)
+
+
+@login_required
+def add_comment(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=post_id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+
+            comment.post = post
+            comment.user = request.user
+
+            comment.save()
+
+            return render(request, 'posts/partials/comment.html', {'comment': comment})

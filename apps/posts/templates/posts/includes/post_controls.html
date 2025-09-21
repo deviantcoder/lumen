@@ -1,49 +1,51 @@
-<div class="d-flex justify-content-between p-2">
-    <div class="d-flex align-items-center">
-        <form
-            hx-post="{% url 'posts:toggle_like' post.pk %}"
-            hx-target="#likes{{ post.pk }}"
-            hx-swap="innerHTML"
-        >
-            {% csrf_token %}
-            <div id="likes{{ post.pk }}">
-                <button type="submit" class="btn text-white cursor-pointer p-0 fs-4 border-0 me-2">
-                    {% if post.liked %}
-                        <i class="bi bi-heart-fill text-danger"></i>
-                    {% else %}
-                        <i class="bi bi-heart text-white"></i>
-                    {% endif %}
-                </button>
-                <span class="fw-bold">{{ post.likes.count }} like{{ post.likes.count|pluralize:'s' }}</span>
-            </div>
-        </form>
+<div class="p-2">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+            <form
+                hx-post="{% url 'posts:toggle_like' post.pk %}"
+                hx-target="#likes{{ post.pk }}"
+                hx-swap="innerHTML"
+            >
+                {% csrf_token %}
+                <div id="likes{{ post.pk }}">
+                    <button type="submit" class="btn text-white cursor-pointer p-0 fs-4 border-0">
+                        {% if post.liked %}
+                            <i class="bi bi-heart-fill text-danger"></i>
+                        {% else %}
+                            <i class="bi bi-heart text-white"></i>
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+            <a class="btn cursor-pointer p-0 fs-4 border-0"
+                hx-get="{% url 'posts:post_preview' post.pk %}"
+                hx-target="#modal-body"
+                hx-swap="innerHTML"
+                data-bs-toggle="modal"
+                data-bs-target="#modal"
+            ><i class="bi bi-chat"></i></a>
+            <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-send"></i></button>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <form
+                hx-post="{% url 'posts:toggle_save' post.pk %}"
+                hx-target="#save{{ post.pk }}"
+                hx-swap="innerHTML"
+            >
+                {% csrf_token %}
+                <div id="save{{ post.pk }}">
+                    <button type="submit" class="btn cursor-pointer p-0 fs-4 border-0">
+                        {% if post.saved %}
+                            <i class="bi bi-bookmark-fill text-white"></i>
+                        {% else %}
+                            <i class="bi bi-bookmark"></i>
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="d-flex align-items-center gap-3">
-        <a class="btn cursor-pointer p-0 fs-4 border-0"
-            hx-get="{% url 'posts:post_preview' post.pk %}"
-            hx-target="#modal-body"
-            hx-swap="innerHTML"
-            data-bs-toggle="modal"
-            data-bs-target="#modal"
-        >
-            <i class="bi bi-chat"></i>
-        </a>
-        <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-send"></i></button>
-        <form
-            hx-post="{% url 'posts:toggle_save' post.pk %}"
-            hx-target="#save{{ post.pk }}"
-            hx-swap="innerHTML"
-        >
-            {% csrf_token %}
-            <div id="save{{ post.pk }}">
-                <button type="submit" class="btn cursor-pointer p-0 fs-4 border-0">
-                    {% if post.saved %}
-                        <i class="bi bi-bookmark-fill text-white"></i>
-                    {% else %}
-                        <i class="bi bi-bookmark"></i>
-                    {% endif %}
-                </button>
-            </div>
-        </form>
-    </div>
+    {% with likes_count=post.likes.count %}
+        <span id="likes_count_for_{{ post.pk }}" class="fw-bold">{{ likes_count }} like{{ likes_count|pluralize:'s' }}</span>
+    {% endwith %}
 </div>
