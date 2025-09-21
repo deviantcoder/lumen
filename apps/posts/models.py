@@ -10,6 +10,8 @@ from utils.files import (
     ALLOWED_VIDEO_EXTENSIONS, ALLOWED_IMAGE_EXTENSIONS, base_upload_to, validate_file_size
 )
 
+from mptt.models import MPTTModel, TreeForeignKey
+
 
 User = get_user_model()
 
@@ -24,7 +26,7 @@ def upload_to(instance, filename):
 
 class Post(models.Model):
 
-    class POST_STATUSES(models.TextChoices):
+    class POST_STATUS(models.TextChoices):
         ACTIVE = ('active', 'Active')
         HIDDEN = ('hidden', 'Hidden')
 
@@ -32,7 +34,7 @@ class Post(models.Model):
     
     caption = models.TextField(max_length=500, null=True, blank=True)
     tags = models.ManyToManyField('Tag', related_name='tags')
-    status = models.CharField(max_length=10, choices=POST_STATUSES.choices, default=POST_STATUSES.ACTIVE)
+    status = models.CharField(max_length=10, choices=POST_STATUS.choices, default=POST_STATUS.ACTIVE)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -136,3 +138,25 @@ class Save(models.Model):
 
     def __str__(self):
         return f'{self.user}: {self.post.caption[:20]}'
+
+
+class Comment(MPTTModel): 
+    
+    class COMMENT_STATUS(models.TextChoices):
+        ACTIVE = ('active', 'Active')
+        HIDDEN = ('hidden', 'Hidden')
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='comments')
+
+    body = models.TextField(blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=COMMENT_STATUS.choices, default=COMMENT_STATUS.ACTIVE)
+
+    class MPTTMeta:
+        order_insertion_by = ['post']
+
+    def __str__(self):
+        return f'{self.user.username} - {self.post.caption[:20]} (comment)'

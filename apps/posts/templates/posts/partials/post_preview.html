@@ -50,25 +50,7 @@
                 </div>
             {% endif %}
             <div class="p-2">
-                <div class="d-flex justify-content-between p-2">
-                    <div class="d-flex align-items-center gap-3">
-                        <a href="{% url 'posts:toggle_like' post.pk %}" class="text-white cursor-pointer p-0 fs-4 border-0">
-                            {% if post.liked %}
-                                <i class="bi bi-heart-fill text-danger"></i>
-                            {% else %}
-                                <i class="bi bi-heart text-white"></i>
-                            {% endif %}
-                        </a>
-                        <button class="btn cursor-pointer p-0 fs-4 border-0"><i class="bi bi-send"></i></button>
-                    </div>
-                    <a href="{% url 'posts:toggle_save' post.pk %}" class="btn cursor-pointer p-0 fs-4 border-0">
-                        {% if post.saved %}
-                            <i class="bi bi-bookmark-fill text-white"></i>
-                        {% else %}
-                            <i class="bi bi-bookmark"></i>
-                        {% endif %}
-                    </a>
-                </div>
+                {% include 'posts/includes/post_controls.html' %}
                 <div class="fw-bold mb-2 ps-2">12,345 likes</div>
                 <div class="ps-2 mb-2">
                     <a href="#" class="fw-bold me-2 text-decoration-none">{{ user.username }}</a>

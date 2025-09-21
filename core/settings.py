@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'debug_toolbar',
     'django_htmx',
+    'mptt',
 
     # project apps
     'apps.accounts.apps.AccountsConfig',

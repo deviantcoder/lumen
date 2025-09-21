@@ -1,6 +1,10 @@
 from django.contrib import admin
 
-from .models import Post, PostMedia, Tag, Like, Save
+from .models import (
+    Post, PostMedia, Tag, Like, Save, Comment
+)
+
+from mptt.admin import MPTTModelAdmin
 
 
 class PostMediaInline(admin.StackedInline):
@@ -43,6 +47,13 @@ class LikeAdmin(admin.ModelAdmin):
 
 @admin.register(Save)
 class SaveAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'post', 'created'
+    )
+
+
+@admin.register(Comment)
+class CommentAdmin(MPTTModelAdmin):
     list_display = (
         'user', 'post', 'created'
     )
