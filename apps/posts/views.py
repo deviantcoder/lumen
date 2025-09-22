@@ -5,7 +5,7 @@ from django.db.models import Exists, OuterRef
 from django.http import JsonResponse
 
 from .forms import PostForm, CommentForm
-from .models import PostMedia, Tag, Post, Like, Save
+from .models import PostMedia, Tag, Post, Like, Save, Comment
 
 
 @login_required
@@ -101,6 +101,19 @@ def post_preview(request, post_id):
 
 
 @login_required
+def reply_form(request, post_id, comment_id):
+    parent_comment = get_object_or_404(Comment, pk=comment_id)
+    form = CommentForm(initial={'parent': parent_comment.pk})
+
+    context = {
+        'form': form,
+        'post': parent_comment.post,
+    }
+
+    return render(request, 'posts/partials/reply_form.html', context)
+
+
+@login_required
 def add_comment(request, post_id):
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
@@ -113,4 +126,4 @@ def add_comment(request, post_id):
 
             comment.save()
 
-            return render(request, 'posts/partials/comment.html', {'comment': comment})
+            return render(request, 'posts/partials/comment.html', {'node': comment})
