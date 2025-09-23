@@ -10,34 +10,18 @@
                 <div class="d-flex overflow-auto hide-scrollbar">
                     <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
                         <div class="story-avatar">
-                            <img src="{{ user.profile.image_or_default }}" alt="Your story">
+                            <img src="{{ request.user.profile.image_or_default }}" alt="Your story">
                         </div>
                         <span class="story-username">Your story</span>
                     </div>
-                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
-                        <div class="story-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User 1">
+                    {% for follow in request.user.following.all %}
+                        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
+                            <div class="story-avatar">
+                                <img src="{{ follow.user.profile.image_or_default }}" alt="Profile">
+                            </div>
+                            <span class="story-username">{{ follow.user.username }}</span>
                         </div>
-                        <span class="story-username">johndoe</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
-                        <div class="story-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/21.jpg" alt="User 2">
-                        </div>
-                        <span class="story-username">janedoe</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
-                        <div class="story-avatar">
-                            <img src="https://randomuser.me/api/portraits/men/17.jpg" alt="User 3">
-                        </div>
-                        <span class="story-username">alextech</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
-                        <div class="story-avatar">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User 4">
-                        </div>
-                        <span class="story-username">techlover</span>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
             {% include 'posts/includes/posts_list.html' %}
@@ -55,42 +39,24 @@
                     <h6 class="text-muted fw-bold">Suggestions For You</h6>
                     <a href="#" class="text-white text-decoration-none fw-bold small">See All</a>
                 </div>
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="d-flex align-items-center">
-                        <img src="https://randomuser.me/api/portraits/women/67.jpg" class="suggestion-avatar me-2" alt="User avatar">
-                        <div class="d-flex flex-column">
-                            <a href="#" class="fw-bold small text-white text-decoration-none">techgeek</a>
-                            <span class="suggestion-detail">Followed by janesmith + 12 more</span>
+                {% for follow in request.user.following.all %}
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ follow.user.profile.image_or_default }}" class="suggestion-avatar me-2" alt="User avatar">
+                            <div class="d-flex flex-column">
+                                <a href="#" class="fw-bold small text-white text-decoration-none">{{ follow.user.username }}</a>
+                                <span class="suggestion-detail">Followed by janesmith + 12 more</span>
+                            </div>
                         </div>
+                        <button class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary cursor-pointer p-0">Follow</button>
                     </div>
-                    <button class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary cursor-pointer p-0">Follow</button>
-                </div>
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="d-flex align-items-center">
-                        <img src="https://randomuser.me/api/portraits/men/10.jpg" class="suggestion-avatar me-2" alt="User avatar">
-                        <div class="d-flex flex-column">
-                            <a href="#" class="fw-bold small text-white text-decoration-none">webdev</a>
-                            <span class="suggestion-detail">Followed by alextech + 8 more</span>
-                        </div>
-                    </div>
-                    <button class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary cursor-pointer p-0">Follow</button>
-                </div>
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="d-flex align-items-center">
-                        <img src="https://randomuser.me/api/portraits/women/11.jpg" class="suggestion-avatar me-2" alt="User avatar">
-                        <div class="d-flex flex-column">
-                            <a href="#" class="fw-bold small text-white text-decoration-none">doomslayer</a>
-                            <span class="suggestion-detail">Followed by alextech + 8 more</span>
-                        </div>
-                    </div>
-                    <button class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary cursor-pointer p-0">Follow</button>
-                </div>
+                {% endfor %}
                 <div class="footer-links">
-                    <a href="#">About</a>
-                    <a href="#">Help</a>
-                    <a href="#">API</a>
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
+                    <a href="">About</a>
+                    <a href="">Help</a>
+                    <a href="">API</a>
+                    <a href="">Privacy</a>
+                    <a href="">Terms</a>
                 </div>
                 <div class="copyright">
                     © 2025 Lumen

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.profiles.apps.ProfilesConfig',
     'apps.posts.apps.PostsConfig',
     'apps.feed.apps.FeedConfig',
+    'apps.explore.apps.ExploreConfig',
 ]
 
 MIDDLEWARE = [

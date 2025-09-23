@@ -121,7 +121,7 @@ class Like(models.Model):
         verbose_name_plural = 'Likes'
 
     def __str__(self):
-        return f'{self.user}: {self.post[:20]}'
+        return f'{self.user}: {self.post.caption[:20]}'
 
 
 class Save(models.Model):
