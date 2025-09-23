@@ -47,7 +47,7 @@
                 <div class="d-flex align-items-center mb-4">
                     <img src="{{ user.profile.image_or_default }}" class="profile-img me-3" style="width: 56px; height: 56px;" alt="Profile">
                     <div>
-                        <a href="#" class="text-decoration-none fw-bold text-white">{{ user.username }}</a>
+                        <a href="{% url 'profiles:profile' user.username %}" class="text-decoration-none fw-bold text-white">{{ user.username }}</a>
                         <p class="text-muted small mb-0">{{ user.full_name }}</p>
                     </div>
                 </div>
