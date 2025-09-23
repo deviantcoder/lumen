@@ -55,3 +55,18 @@ class Profile(models.Model):
         if self.image:
             return self.image.url
         return '/static/img/def.png'
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Follow'
+        verbose_name_plural = 'Follows'
+        unique_together = ('user', 'follower')
+
+    def __str__(self):
+        return f'{self.follower.username} -> {self.user.username}'

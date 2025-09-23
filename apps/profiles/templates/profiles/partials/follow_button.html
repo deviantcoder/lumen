@@ -1,0 +1,16 @@
+<form method="POST" class="d-flex flex-fill"
+    hx-post="{% url 'profiles:toggle_follow' target_user.username %}"
+    hx-target="#follow-btn-{{ target_user.pk }}"
+    hx-swap="innerHTML"
+>
+    {% csrf_token %}
+    {% if is_following %}
+        <button type="submit" class="btn bg-dark-subtle rounded-pill fw-bold flex-fill">
+            <i class="bi bi-person-check me-2 fs-5"></i>Following
+        </button>
+    {% else %}
+        <button type="submit" class="btn btn-primary rounded-pill fw-bold flex-fill">
+            <i class="bi bi-person-add me-2 fs-5"></i>Follow
+        </button>
+    {% endif %}
+</form>

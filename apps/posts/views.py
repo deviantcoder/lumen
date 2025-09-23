@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Exists, OuterRef
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden
 
 from .forms import PostForm, CommentForm
 from .models import PostMedia, Tag, Post, Like, Save, Comment
@@ -49,6 +49,9 @@ def create_post(request):
 
 @login_required
 def toggle_like(request, post_id):
+    if request.method != 'POST':
+        return HttpResponseForbidden('POST required')
+
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -64,6 +67,9 @@ def toggle_like(request, post_id):
 
 @login_required
 def toggle_save(request, post_id):
+    if request.method != 'POST':
+        return HttpResponseForbidden('POST required')
+
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
         save, created = Save.objects.get_or_create(user=request.user, post=post)
@@ -115,6 +121,9 @@ def reply_form(request, post_id, comment_id):
 
 @login_required
 def add_comment(request, post_id):
+    if request.method != 'POST':
+        return HttpResponseForbidden('POST required')
+
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
         form = CommentForm(request.POST)

@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-
 from django.contrib.auth import get_user_model
+from django.http import HttpResponseForbidden
 
 from apps.posts.models import Post
 
 from .forms import URLForm, BioForm
+from .models import Follow
 
 
 User = get_user_model()
@@ -13,14 +14,24 @@ User = get_user_model()
 
 @login_required
 def profile(request, username: str):
-
-    if username == request.user.username:
-        user = request.user
     user = get_object_or_404(User, username=username)
+
+    is_following = None
+
+    if user != request.user:
+        is_following = Follow.objects.filter(
+            user=user, follower=request.user
+        ).exists()
+
+    following_count = Follow.objects.filter(follower=user).count()
+    followers_count = Follow.objects.filter(user=user).count()
 
     context = {
         'profile': user.profile,
         'posts': user.posts.all(),
+        'is_following': is_following,
+        'followers_count': followers_count,
+        'following_count': following_count,
     }
 
     return render(request, 'profiles/profile.html', context)
@@ -64,6 +75,9 @@ def edit_profile(request):
 
 @login_required
 def update_profile_image(request):
+    if request.method != 'POST':
+        return HttpResponseForbidden('POST required')
+
     profile = request.user.profile
 
     if request.method == 'POST':
@@ -80,6 +94,9 @@ def update_profile_image(request):
 
 @login_required
 def update_profile_url(request):
+    if request.method != 'POST':
+        return HttpResponseForbidden('POST required')
+
     profile = request.user.profile
 
     if request.method == 'POST':
@@ -93,6 +110,9 @@ def update_profile_url(request):
 
 @login_required
 def update_profile_bio(request):
+    if request.method != 'POST':
+        return HttpResponseForbidden('POST required')
+
     profile = request.user.profile
 
     if request.method == 'POST':
@@ -102,3 +122,30 @@ def update_profile_bio(request):
             if request.htmx:
                 pass
             return redirect('profiles:edit_profile')
+
+
+@login_required
+def toggle_follow(request, username):
+    if request.method != 'POST':
+        return HttpResponseForbidden('POST required')
+
+    if request.method == 'POST':
+        target_user = get_object_or_404(User, username=username)
+
+        if request.user == target_user:
+            return HttpResponseForbidden('You cannot follow yourself')
+
+        follow, created = Follow.objects.get_or_create(user=target_user, follower=request.user)
+
+        if not created:
+            follow.delete()
+            is_following = False
+        else:
+            is_following = True
+
+        context = {
+            'target_user': target_user,
+            'is_following': is_following,
+        }
+
+        return render(request, 'profiles/partials/follow_button.html', context)
