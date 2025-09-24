@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.posts.apps.PostsConfig',
     'apps.feed.apps.FeedConfig',
     'apps.explore.apps.ExploreConfig',
+    'apps.search.apps.SearchConfig',
 ]
 
 MIDDLEWARE = [
