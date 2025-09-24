@@ -54,7 +54,7 @@ def get_user_posts(request, username):
         'posts': posts,
     }
 
-    return render(request, 'profiles/partials/user_posts_list.html', context)
+    return render(request, 'posts/partials/posts_grid.html', context)
 
 
 @login_required

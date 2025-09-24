@@ -88,7 +88,7 @@ body {
 .post-overlay {
     background-color: rgba(0, 0, 0, 0.4);
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s;
 }
 .post-item:hover .post-overlay {
     opacity: 1;

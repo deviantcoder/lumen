@@ -1,6 +1,6 @@
 <div class="mobile-bottom-nav">
     <a href="/" class="mobile-nav-item active"><i class="bi bi-house-fill mobile-nav-icon"></i></a>
-    <a href="#" class="mobile-nav-item"><i class="bi bi-search mobile-nav-icon"></i></a>
+    <a href="{% url 'explore:explore' %}" class="mobile-nav-item"><i class="bi bi-compass mobile-nav-icon"></i></a>
     <a
         href=""
         hx-get="{% url 'posts:create_post' %}"

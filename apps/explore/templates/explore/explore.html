@@ -1,0 +1,21 @@
+{% extends '_base.html' %}
+{% load humanize %}
+
+{% block head_title %}
+    Explore
+{% endblock head_title %}
+
+{% block content %}
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="posts-grid" id="posts">
+                {% for post in posts %}
+                    {% include 'posts/partials/posts_grid.html' %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'feed/includes/mobile_nav.html' %}
+{% endblock content %}

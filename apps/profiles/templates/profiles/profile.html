@@ -100,7 +100,7 @@
         {% endif %}
     </ul>
     <div class="posts-grid" id="posts"
-        hx-get="{% url 'profiles:get_user_posts' profile.user.username %}?tab=posted"
+        hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
         hx-target="#posts"
         hx-swap="innerHTML"
         hx-trigger="load"

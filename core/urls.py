@@ -12,13 +12,13 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('', include('apps.feed.urls')),
+
     path('accounts/', include('apps.accounts.urls')),
     path('accounts/social/', include('social_django.urls', namespace='social')),
-
     path('posts/', include('apps.posts.urls')),
     path('profiles/', include('apps.profiles.urls')),
-
-    path('', include('apps.feed.urls')),
+    path('explore/', include('apps.explore.urls')),
 
     # password reset
     path(
