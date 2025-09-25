@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.feed.apps.FeedConfig',
     'apps.explore.apps.ExploreConfig',
     'apps.search.apps.SearchConfig',
+    'apps.chat.apps.ChatConfig',
 ]
 
 MIDDLEWARE = [
