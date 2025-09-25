@@ -232,6 +232,9 @@ body {
 .bg-frosted-ice-gradient {
     background: var(--frosted-ice-gradient) !important;
 }
+.bg-cold-grey {
+    background-color: #2a333a !important;
+}
 .dropzone {
     border: 2px dashed rgb(86, 86, 115) !important;
     border-radius: 10px;

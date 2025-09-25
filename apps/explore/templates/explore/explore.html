@@ -6,13 +6,14 @@
 {% endblock head_title %}
 
 {% block content %}
-<div class="container mt-3 mb-3">
+<div class="container mt-4 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-10">
+            <div class="mb-4">
+                {% include 'search/partials/search_form.html' %}
+            </div>
             <div class="posts-grid" id="posts">
-                {% for post in posts %}
-                    {% include 'posts/partials/posts_grid.html' %}
-                {% endfor %}
+                {% include 'posts/partials/posts_grid.html' %}
             </div>
         </div>
     </div>

@@ -1,0 +1,47 @@
+{% extends '_base.html' %}
+
+{% block head_title %}
+    Search
+{% endblock head_title %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="mb-4">
+                {% include 'search/partials/search_form.html' %}
+            </div>
+            {% if search_query %}
+                <h2 class="fw-bold mb-3 text-center">Search results for <span class="text-primary">“{{ search_query }}”</span></h2>
+            {% endif %}
+            <div class="mb-5">
+                {% if profiles %}
+                    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
+                        {% for profile in profiles %}
+                            <div class="col">
+                                <a href="{% url 'profiles:profile' profile.user.username %}" class="text-decoration-none text-center d-block">
+                                    <img src="{{ profile.image_or_default }}" alt="Profile picture" class="profile-img-md rounded-circle mb-1">
+                                    <div class="text-white small">{{ profile.user.username }}</div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted fw-bold">No profiles found.</p>
+                {% endif %}
+            </div>
+            <div>
+                {% if posts %}
+                    <div class="posts-grid" id="posts">
+                        {% include 'posts/partials/posts_grid.html' %}
+                    </div>
+                {% else %}
+                    <p class="text-muted fw-bold">No posts found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'feed/includes/mobile_nav.html' %}
+{% endblock content %}

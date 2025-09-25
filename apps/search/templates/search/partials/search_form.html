@@ -1,0 +1,5 @@
+<form method="GET" action="{% url 'search:search' %}" class="d-flex align-items-center gap-2">
+    <input class="form-control p-3 rounded-pill border-0 bg-cold-grey" 
+    name="query" type="text" value="{% if search_query %}{{search_query}}{% endif %}" placeholder="What are you looking for?">
+    <button type="submit" class="btn btn-light rounded-pill fw-bold p-3 px-4">Search</button>
+</form>

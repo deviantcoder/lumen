@@ -10,6 +10,7 @@ def explore(request):
     posts = (
         Post.objects.all()
         .select_related('author', 'author__profile')
+        .prefetch_related('media')
         .annotate(
             likes_count=Count('likes'),
             comments_count=Count('comments'),

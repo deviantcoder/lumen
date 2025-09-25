@@ -8,7 +8,7 @@
             >
                 {% csrf_token %}
                 <div id="likes{{ post.pk }}">
-                    <button type="submit" class="btn text-white cursor-pointer p-0 fs-4 border-0">
+                    <button id="like-btn-{{ post.pk }}" type="submit" class="btn text-white cursor-pointer p-0 fs-4 border-0">
                         {% if post.liked %}
                             <i class="bi bi-heart-fill text-danger"></i>
                         {% else %}
@@ -34,7 +34,7 @@
             >
                 {% csrf_token %}
                 <div id="save{{ post.pk }}">
-                    <button type="submit" class="btn cursor-pointer p-0 fs-4 border-0">
+                    <button id="save-btn-{{ post.pk }}" type="submit" class="btn cursor-pointer p-0 fs-4 border-0">
                         {% if post.saved %}
                             <i class="bi bi-bookmark-fill text-white"></i>
                         {% else %}
@@ -45,7 +45,5 @@
             </form>
         </div>
     </div>
-    {% with likes_count=post.likes.count %}
-        <span id="likes_count_for_{{ post.pk }}" class="fw-bold">{{ likes_count }} like{{ likes_count|pluralize:'s' }}</span>
-    {% endwith %}
+    <span id="likes_count_for_{{ post.pk }}" class="fw-bold">{{ post.likes.count }} like{{ post.likes.count|pluralize:'s' }}</span>
 </div>

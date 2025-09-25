@@ -19,6 +19,7 @@ urlpatterns = [
     path('posts/', include('apps.posts.urls')),
     path('profiles/', include('apps.profiles.urls')),
     path('explore/', include('apps.explore.urls')),
+    path('explore/search/', include('apps.search.urls')),
 
     # password reset
     path(
