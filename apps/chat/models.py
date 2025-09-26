@@ -1,3 +1,44 @@
-from django.db import models
+from uuid import uuid4
 
-# Create your models here.
+from django.db import models
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+
+class Chat(models.Model):
+
+    members = models.ManyToManyField(User, related_name='chats')
+
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid4, unique=True, editable=False, primary_key=True)
+
+    class Meta:
+        verbose_name = 'Chat'
+        verbose_name_plural = 'Chats'
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f'Chat: {', '.join([user.username for user in self.members.all()])}'
+
+
+class Message(models.Model):
+
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages_sent')
+    
+    content = models.TextField()
+
+    is_read = models.BooleanField(default=False)
+    
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Message'
+        verbose_name_plural = 'Messages'
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f'{self.sender.username}: {self.content[:20]}'
