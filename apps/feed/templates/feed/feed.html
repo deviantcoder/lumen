@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-76 pb-76">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10">
             <div class="story-container">
@@ -26,7 +26,7 @@
             </div>
             {% include 'posts/includes/posts_list.html' %}
         </div>
-        <div class="col-lg-4 desktop-only mt-3">
+        <div class="col-lg-4 desktop-only">
             <div class="sticky-top" style="top: 76px; padding-left: 24px;">
                 <div class="d-flex align-items-center mb-4">
                     <img src="{{ user.profile.image_or_default }}" class="profile-img me-3" style="width: 56px; height: 56px;" alt="Profile">

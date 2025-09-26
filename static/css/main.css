@@ -13,8 +13,16 @@
 body {
     background-color: var(--primary-bg);
     color: var(--text-primary);
-    padding-top: 60px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.mt-76 {
+    margin-top: 76px !important;
+}
+.pt-76 {
+    padding-top: 76px !important;
+}
+.pb-76 {
+    padding-bottom: 76px !important;
 }
 .navbar {
     background-color: var(--primary-bg);
@@ -52,8 +60,8 @@ body {
     object-fit: cover;
 }
 .profile-img-md {
-    width: 80;
-    height: 80px;
+    width: 65;
+    height: 65px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -119,7 +127,6 @@ body {
     }
 }
 .story-container {
-    padding: 16px 0;
     border-bottom: 1px solid var(--border);
     margin-bottom: 16px;
 }
@@ -219,6 +226,18 @@ body {
     background: rgba(1, 2, 2, 0.3) !important;
     backdrop-filter: blur(10px) !important;
 }
+.chat-message-input {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--primary-bg);
+    border-top: 1px solid var(--border);
+    z-index: 1000;
+    padding: 10px 0;
+    background: rgba(1, 2, 2, 0.3) !important;
+    backdrop-filter: blur(10px) !important;
+}
 .gradient-text {
     background: var(--mint-gradient);
     -webkit-background-clip: text;
@@ -255,9 +274,6 @@ body {
     filter: invert(100%) brightness(95%) contrast(100%);
 }
 @media (max-width: 992px) {
-    body {
-        padding-bottom: 60px;
-    }
     .desktop-only {
         display: none;
     }

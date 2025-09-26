@@ -12,6 +12,6 @@
     >
         <i class="bi bi-plus-square mobile-nav-icon"></i></a>
     <a href="#" class="mobile-nav-item"><i class="bi bi-app-indicator mobile-nav-icon"></i></a>
-    <a href="#" class="mobile-nav-item"><i class="bi bi-chat-heart mobile-nav-icon"></i></a>
+    <a href="{% url 'chat:inbox' %}" class="mobile-nav-item"><i class="bi bi-chat-heart mobile-nav-icon"></i></a>
     <a href="{% url 'profiles:profile' request.user.username %}" class="mobile-nav-item"><i class="bi bi-person-circle mobile-nav-icon"></i></a>
 </div>
