@@ -21,6 +21,9 @@ class Chat(models.Model):
 
     def __str__(self):
         return f'Chat: {', '.join([user.username for user in self.members.all()])}'
+    
+    def get_other_user(self, current_user):
+        return self.members.exclude(pk=current_user.pk).first()
 
 
 class Message(models.Model):
@@ -42,3 +45,7 @@ class Message(models.Model):
 
     def __str__(self):
         return f'{self.sender.username}: {self.content[:20]}'
+
+    @property
+    def time_sent(self):
+        return self.created.strftime('%H:%M')

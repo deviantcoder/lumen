@@ -25,9 +25,9 @@
                         <div class="d-flex flex-fill" id="follow-btn-{{ profile.user.pk }}">
                             {% include 'profiles/partials/follow_button.html' with target_user=profile.user %}
                         </div>
-                        <button class="btn btn-dark rounded-pill fw-bold flex-fill">
+                        <a href="{% url 'chat:start_chat' profile.user.username %}" class="btn btn-dark rounded-pill fw-bold flex-fill">
                             <i class="bi bi-chat-heart me-2 fs-5"></i>Message
-                        </button>
+                        </a>
                     {% endif %}
                 </div>
             </div>

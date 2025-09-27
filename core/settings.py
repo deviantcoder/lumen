@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # 3rd party
     'social_django',
     'widget_tweaks',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'django_htmx',
     'mptt',
     'channels',
@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # 3rd party
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
 ]
@@ -196,3 +196,12 @@ EMAIL_RESEND_COOLDOWN = 5 # minutes
 # Files config
 
 MAX_MEDIA_SIZE = 50 # MB
+
+# Channels config
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
