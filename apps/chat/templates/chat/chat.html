@@ -12,7 +12,8 @@
             <img src="{{ other_user.profile.image_or_default }}" class="profile-img me-2">
             <div class="d-flex align-items-center">
                 <a href="{% url 'profiles:profile' other_user.username %}" class="fw-semibold text-white text-decoration-none">{{ other_user.username }}</a>
-                <i class="bi bi-circle-fill ms-2 text-muted"></i>
+                <div id="online_status" class="d-flex align-items-center gap-1">
+                </div>
             </div>
         </div>
     </div>

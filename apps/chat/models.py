@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 
 User = get_user_model()
@@ -10,6 +11,8 @@ User = get_user_model()
 class Chat(models.Model):
 
     members = models.ManyToManyField(User, related_name='chats')
+
+    online_members = models.ManyToManyField(User, related_name='online', blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid4, unique=True, editable=False, primary_key=True)
@@ -48,4 +51,4 @@ class Message(models.Model):
 
     @property
     def time_sent(self):
-        return self.created.strftime('%H:%M')
+        return timezone.localtime(self.created).strftime('%H:%M')
