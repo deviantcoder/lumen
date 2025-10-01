@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-8">
             <div class="d-flex flex-column mb-3 align-items-center align-items-md-start">
-                <h2 class="mb-2 mt-3 mt-md-0 text-center text-md-start">{{ profile.user.username }}</h2>
+                <h2 class="mb-2 mt-3 mt-md-0 text-center text-md-start fw-bold gradient-text">@{{ profile.user.username }}</h2>
                 <div class="d-flex gap-2 justify-content-center justify-content-md-start mt-2 w-100">
                     {% if profile.user == request.user %}
                         <a href="{% url 'profiles:edit_profile' %}" class="btn btn-dark rounded-pill fw-bold flex-fill">

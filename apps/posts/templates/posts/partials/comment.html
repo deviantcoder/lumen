@@ -1,6 +1,6 @@
 {% load humanize %}
 
-<div id="comment-{{ node.pk }}" class="d-flex mb-3">
+<div id="comment-{{ node.pk }}" class="d-flex mb-3 bg-cold-grey rounded-5 p-2">
     <img src="{{ node.user.profile.image_or_default }}" class="rounded-circle me-2" width="32" height="32" alt="avatar">
     <div>
         <span class="fw-bold text-white small">{{ node.user.username }}</span>

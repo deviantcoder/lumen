@@ -22,6 +22,9 @@ urlpatterns = [
     path('explore/search/', include('apps.search.urls')),
     path('chats/', include('apps.chat.urls')),
 
+    # pages
+    path('about/', TemplateView.as_view(template_name='pages/about.html'), name='about'),
+
     # password reset
     path(
         'reset_password/',

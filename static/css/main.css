@@ -6,6 +6,7 @@
     --border: #262626;
     --primary-button: #0095f6;
     --primary-button-hover: #1877f2;
+    --warm-gradient: linear-gradient(135deg, #4a1c6d 0%, #8b2c5c 50%, #c94b4b 100%);
     --link: #e0f1ff;
     --mint-gradient: linear-gradient(45deg, #4facfe, #00f2fe, #43e97b, #38f9d7, #667eea);
     --frosted-ice-gradient: linear-gradient(45deg, #1a2a3a, #27445c, #3b6078, #4e7c92, #6a9fb5);
@@ -13,7 +14,8 @@
 body {
     background-color: var(--primary-bg);
     color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
+    font-family: 'Quicksand', sans-serif;
 }
 .mt-76 {
     margin-top: 76px !important;
@@ -253,6 +255,9 @@ body {
 }
 .bg-cold-grey {
     background-color: #2a333a !important;
+}
+.bg-warm-gradient {
+    background: var(--warm-gradient) !important;
 }
 .dropzone {
     border: 2px dashed rgb(86, 86, 115) !important;

@@ -5,24 +5,7 @@
 <div class="col-md-6 d-flex flex-column ps-2" style="max-height: 85vh;">
     <div class="flex-grow-1 mb-2 overflow-auto" id="comments_for_{{ post.pk }}" style="max-height: calc(90vh - 70px);">
         {% recursetree post.comments.all %}
-            <div id="comment-{{ node.pk }}" class="d-flex mb-3">
-                <img src="{{ node.user.profile.image_or_default }}" class="rounded-circle me-2" width="32" height="32" alt="avatar">
-                <div>
-                    <span class="fw-bold text-white small">{{ node.user.username }}</span>
-                    <span class="text-white small">{{ node.body }}</span>
-                    {% if node.level < 4 %}
-                        <div class="d-flex gap-3 mt-1">
-                            <span class="text-muted small">{{ node.created|naturaltime }}</span>
-                            <a href="" class="fw-bold text-muted text-decoration-none small"
-                                hx-get="{% url 'posts:reply_form' node.post.pk node.pk %}"
-                                hx-target="#reply-form-container-{{ node.pk }}"
-                                hx-swap="innerHTML"
-                            >Reply</a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div id="reply-form-container-{{ node.pk }}" class="ms-5"></div>
+            {% include 'posts/partials/comment.html' %}
             {% if not node.is_leaf_node %}
                 <div class="ms-5">
                     {{ children }}
