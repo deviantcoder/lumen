@@ -36,20 +36,33 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
-        content = text_data_json.get('content')
+        content = text_data_json.get('content', '')
 
-        message = await self.create_message(
-            self.chat, self.user, content
-        )
+        if 'typing' in text_data_json:
 
-        event = {
-            'type': 'message_handler',
-            'message_id': message.pk,
-        }
+            event = {
+                'type': 'typing_event_handler',
+                'user_id': self.user.id,
+                'typing': bool(text_data_json.get('typing', False))
+            }
 
-        await self.channel_layer.group_send(
-            self.chat_id, event
-        )
+            await self.channel_layer.group_send(
+                self.chat_id, event
+            )
+
+            return
+
+        if content and content.strip():
+            message = await self.create_message(
+                self.chat, self.user, content
+            )
+            event = {
+                'type': 'message_handler',
+                'message_id': message.pk,
+            }
+            await self.channel_layer.group_send(
+                self.chat_id, event
+            )
 
     async def message_handler(self, event):
         message_id = event.get('message_id')
@@ -79,6 +92,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.send(text_data=html)
+
+    async def typing_event_handler(self, event):
+        if event.get('user_id') == self.user.id:
+            return
+
+        context = {
+            'type': 'typing',
+            'typing': event.get('typing', False),
+        }
+
+        await self.send(text_data=json.dumps(context))
 
     # ----------- DB helpers -----------
 
