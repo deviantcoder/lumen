@@ -14,7 +14,11 @@ def inbox(request):
     user_chats = request.user.chats.all()
 
     chats = [
-        {'chat': chat, 'other_user': chat.get_other_user(request.user)}
+        {
+            'chat': chat,
+            'other_user': chat.get_other_user(request.user),
+            'last_message': chat.messages.order_by('created').last()
+        }
         for chat in user_chats
     ]
     

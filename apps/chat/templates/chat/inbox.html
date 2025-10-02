@@ -18,9 +18,16 @@
                         <img src="{{ item.other_user.profile.image_or_default }}" class="profile-img-md me-2" alt="User avatar">
                         <div class="flex-grow-1">
                             <div class="fw-semibold text-white">{{ item.other_user.username }}</div>
-                            <small class="text-muted">You: Last message preview goes here...</small>
+                            <small class="text-muted">
+                                {% if item.last_message.sender == request.user %}
+                                    You:
+                                {% else %}
+                                    @{{ item.last_message.sender.username }}:
+                                {% endif %}
+                                {{ item.last_message.content|slice:80 }}...
+                            </small>
                         </div>
-                        <small class="text-muted">12:01</small>
+                        <small class="text-muted">{{ item.last_message.time_sent }}</small>
                     </a>
                 {% endfor %}
             </div>

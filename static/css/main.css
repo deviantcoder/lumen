@@ -128,17 +128,16 @@ body {
         gap: 3px;
     }
 }
-.story-container {
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
-}
 .story-avatar {
     width: 78px;
     height: 78px;
-    border-radius: 50%;
+    border-radius: 25%;
     padding: 3px;
     background: var(--mint-gradient);
     margin-bottom: 8px;
+}
+.story-avatar.me {
+    background: var(--warm-gradient);
 }
 .mint-gradient-ring {
     padding: 3px;
@@ -147,9 +146,9 @@ body {
 .story-avatar img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    border-radius: 25%;
     object-fit: cover;
-    border: 3px solid var(--primary-bg);
+    border: 5px solid var(--primary-bg);
 }
 .story-username {
     font-size: 0.75rem;
