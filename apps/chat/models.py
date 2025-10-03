@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
+from apps.posts.models import Post
+
 
 User = get_user_model()
 
@@ -31,12 +33,19 @@ class Chat(models.Model):
 
 class Message(models.Model):
 
+    class MESSAGE_TYPES(models.TextChoices):
+        TEXT = ('text', 'Text')
+        POST = ('post', 'Post')
+
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages_sent')
     
     content = models.TextField()
 
     is_read = models.BooleanField(default=False)
+
+    message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES.choices, default=MESSAGE_TYPES.TEXT)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True, related_name='reposted')
     
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

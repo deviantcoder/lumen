@@ -258,6 +258,20 @@ body {
 .bg-warm-gradient {
     background: var(--warm-gradient) !important;
 }
+.bg-mint-gradient {
+    background: var(--mint-gradient) !important;
+}
+.select-user {
+    cursor: pointer;
+    transition: transform 0.8s ease;
+}
+.select-user.selected {
+    transform: scale(1.08);
+}
+.select-user.selected .user-avatar {
+    border: 3px solid #8b2c5c;
+    padding: 2px;
+}
 .dropzone {
     border: 2px dashed rgb(86, 86, 115) !important;
     border-radius: 10px;

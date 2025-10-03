@@ -1,19 +1,57 @@
-{% if message.sender == user %}
-    <div class="d-flex justify-content-end mb-2">
-        <div class="d-flex flex-column px-3 py-2 rounded-4 bg-frosted-ice-gradient text-white" style="max-width: 70%; word-wrap: break-word;">
-            <span>
+<div class="d-flex {% if message.sender == user %}justify-content-end{% endif %} mb-2">
+    <div 
+        class="d-flex flex-column
+        {% if message.message_type == 'text' %}px-3 py-2{% endif %} rounded-4 
+        {% if message.message_type == 'text' %}
+            {% if message.sender == user %}
+                bg-frosted-ice-gradient
+            {% else %}
+                bg-warm-gradient
+            {% endif %}
+        {% endif %} 
+        text-white"
+        style="max-width: 80%; word-wrap: break-word;"
+    >
+        {% if message.message_type == 'text' %}
+            <span class="mb-1">
                 {{ message.content }}
             </span>
-            <span class="text-muted small align-self-end">{{ message.time_sent }}</span>
+        {% elif message.message_type == 'post' %}
+            {% with post=message.post %}
+                <a  href=""
+                    hx-get="{% url 'posts:post_preview' post.pk %}"
+                    hx-target="#modal-body"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal"
+                    class="text-decoration-none"
+                >
+                    <div class="card
+                        {% if message.sender == user %}
+                            bg-frosted-ice-gradient
+                        {% else %}
+                            bg-warm-gradient
+                        {% endif %}
+                        border-0 rounded-4 mb-1">
+                        <div class="card-header border-0">
+                            <img src="{{ post.author.profile.image_or_default }}" class="profile-img">
+                            <span class="text-white small fw-bold">@{{ post.author.username }}</span>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="ratio ratio-1x1" style="width: 500px; max-width: 100%;">
+                                <img src="{{ post.media.first.file.url }}" class="w-100 h-100 object-fit-cover rounded-bottom-4" alt="Post">
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endwith %}
+        {% endif %}
+        <div 
+        {% if message.sender == user %}
+            class="align-self-end"
+        {% endif %}
+        >
+            <span class="text-muted small bg-blurred py-1 px-2 rounded-pill">{{ message.time_sent }}</span>
         </div>
     </div>
-{% else %}
-    <div class="d-flex mb-2">
-        <div class="d-flex flex-column px-3 py-2 rounded-4 bg-warm-gradient text-white" style="max-width: 70%; word-wrap: break-word;">
-            <span>
-                {{ message.content }}
-            </span>
-            <span class="text-muted small">{{ message.time_sent }}</span>
-        </div>
-    </div>
-{% endif %}
+</div>

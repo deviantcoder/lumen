@@ -2,10 +2,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Exists, OuterRef
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
+from django.contrib.auth import get_user_model
 
 from .forms import PostForm, CommentForm
 from .models import PostMedia, Tag, Post, Like, Save, Comment
+
+from apps.profiles.models import Follow
+from apps.chat.models import Message, Chat
+
+
+User = get_user_model()
 
 
 @login_required
@@ -136,3 +143,52 @@ def add_comment(request, post_id):
             comment.save()
 
             return render(request, 'posts/partials/comment.html', {'node': comment})
+
+
+@login_required
+def share_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    mutuals = User.objects.annotate(
+        followed_=Exists(
+            Follow.objects.filter(follower=request.user, user=OuterRef('pk'))
+        ),
+        # following_=Exists(
+        #     Follow.objects.filter(follower=OuterRef('pk'), user=request.user)
+        # )
+    ).filter(
+        followed_=True,
+        # following_=True
+    ).select_related('profile')
+
+    context = {
+        'mutuals': mutuals,\
+        'post': post,
+    }
+
+    return render(request, 'posts/partials/share.html', context)
+
+
+@login_required
+def send_post_to_chat(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=post_id)
+        usernames = request.POST.get('recipients', '').split(',')
+
+        recipients = User.objects.filter(username__in=usernames)
+
+        for user in recipients:
+            chat = Chat.objects.filter(members=request.user).filter(members=user).first()
+
+            if not chat:
+                chat = Chat.objects.create()
+                chat.members.add(request.user, user)
+
+            Message.objects.create(
+                message_type=Message.MESSAGE_TYPES.POST,
+                chat=chat,
+                sender=request.user,
+                post=post
+            )
+
+        return render(request, 'posts/partials/share_success.html')

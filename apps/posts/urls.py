@@ -13,4 +13,6 @@ urlpatterns = [
     path('<int:post_id>/preview/', views.post_preview, name='post_preview'),
     path('<int:post_id>/add-comment/', views.add_comment, name='add_comment'),
     path('<int:post_id>/reply-form/<int:comment_id>/', views.reply_form, name='reply_form'),
+    path('<int:post_id>/share/', views.share_post, name='share_post'),
+    path('<int:post_id>/share/chat/', views.send_post_to_chat, name='send_post_to_chat'),
 ]
