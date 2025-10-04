@@ -1,0 +1,15 @@
+<div class="list-group list-group-flush">
+    <div class="ps-3">
+        <span class="fw-bold fs-3">Followers</span>
+    </div>
+    {% for follower in followers %}
+        <a href="{% url 'profiles:profile' follower.username %}" class="list-group-item list-group-item-action d-flex align-items-center py-2 bg-transparent border-0">
+            <img src="{{ follower.profile.image_or_default }}" alt="{{ follower.username }}'s avatar" 
+                 class="rounded-circle me-3 profile-img-md">
+            <div>
+                <div class="fw-semibold">{{ follower.username }}</div>
+                <small class="text-muted">{{ follower.get_full_name }}</small>
+            </div>
+        </a>
+    {% endfor %}
+</div>

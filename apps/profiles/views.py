@@ -149,3 +149,31 @@ def toggle_follow(request, username):
         }
 
         return render(request, 'profiles/partials/follow_button.html', context)
+
+
+@login_required
+def get_followers(request, username):
+    user = get_object_or_404(User, username=username)
+    followers_ids = user.followers.values_list('follower__pk', flat=True)
+
+    followers = User.objects.filter(pk__in=followers_ids)
+
+    context = {
+        'followers': followers,
+    }
+
+    return render(request, 'profiles/partials/followers.html', context)
+
+
+@login_required
+def get_following(request, username):
+    user = get_object_or_404(User, username=username)
+    following_ids = user.following.values_list('user__pk', flat=True)
+
+    following = User.objects.filter(pk__in=following_ids)
+
+    context = {
+        'following': following,
+    }
+
+    return render(request, 'profiles/partials/following.html', context)

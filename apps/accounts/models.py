@@ -26,3 +26,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    @property
+    def get_full_name(self):
+        return self.full_name if self.full_name else self.username
