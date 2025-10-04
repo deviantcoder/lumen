@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseForbidden
+from django.views.decorators.http import require_http_methods
 
 from apps.posts.models import Post
 
@@ -73,11 +74,9 @@ def edit_profile(request):
     return render(request, 'profiles/edit_profile.html', context)
 
 
+@require_http_methods(['POST'])
 @login_required
 def update_profile_image(request):
-    if request.method != 'POST':
-        return HttpResponseForbidden('POST required')
-
     profile = request.user.profile
 
     if request.method == 'POST':
@@ -92,11 +91,9 @@ def update_profile_image(request):
             return redirect('profiles:edit_profile')
 
 
+@require_http_methods(['POST'])
 @login_required
 def update_profile_url(request):
-    if request.method != 'POST':
-        return HttpResponseForbidden('POST required')
-
     profile = request.user.profile
 
     if request.method == 'POST':
@@ -108,11 +105,9 @@ def update_profile_url(request):
             return redirect('profiles:edit_profile')
 
 
+@require_http_methods(['POST'])
 @login_required
 def update_profile_bio(request):
-    if request.method != 'POST':
-        return HttpResponseForbidden('POST required')
-
     profile = request.user.profile
 
     if request.method == 'POST':
@@ -124,11 +119,9 @@ def update_profile_bio(request):
             return redirect('profiles:edit_profile')
 
 
+@require_http_methods(['POST'])
 @login_required
 def toggle_follow(request, username):
-    if request.method != 'POST':
-        return HttpResponseForbidden('POST required')
-
     if request.method == 'POST':
         target_user = get_object_or_404(User, username=username)
 

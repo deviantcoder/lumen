@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Exists, OuterRef
-from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth import get_user_model
+from django.views.decorators.http import require_http_methods
 
 from .forms import PostForm, CommentForm
 from .models import PostMedia, Tag, Post, Like, Save, Comment
@@ -54,11 +54,9 @@ def create_post(request):
     return render(request, 'posts/post_form.html', context)
 
 
+@require_http_methods(['POST'])
 @login_required
 def toggle_like(request, post_id):
-    if request.method != 'POST':
-        return HttpResponseForbidden('POST required')
-
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -72,11 +70,9 @@ def toggle_like(request, post_id):
         return render(request, 'posts/partials/like_button.html', {'post': post})
 
 
+@require_http_methods(['POST'])
 @login_required
 def toggle_save(request, post_id):
-    if request.method != 'POST':
-        return HttpResponseForbidden('POST required')
-
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
         save, created = Save.objects.get_or_create(user=request.user, post=post)
@@ -126,11 +122,9 @@ def reply_form(request, post_id, comment_id):
     return render(request, 'posts/partials/reply_form.html', context)
 
 
+@require_http_methods(['POST'])
 @login_required
 def add_comment(request, post_id):
-    if request.method != 'POST':
-        return HttpResponseForbidden('POST required')
-
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
         form = CommentForm(request.POST)
@@ -153,22 +147,19 @@ def share_post(request, post_id):
         followed_=Exists(
             Follow.objects.filter(follower=request.user, user=OuterRef('pk'))
         ),
-        # following_=Exists(
-        #     Follow.objects.filter(follower=OuterRef('pk'), user=request.user)
-        # )
     ).filter(
         followed_=True,
-        # following_=True
     ).select_related('profile')
 
     context = {
-        'mutuals': mutuals,\
+        'mutuals': mutuals,
         'post': post,
     }
 
     return render(request, 'posts/partials/share.html', context)
 
 
+@require_http_methods(['POST'])
 @login_required
 def send_post_to_chat(request, post_id):
     if request.method == 'POST':
