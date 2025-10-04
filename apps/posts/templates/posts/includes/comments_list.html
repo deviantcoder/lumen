@@ -17,7 +17,7 @@
         hx-post="{% url 'posts:add_comment' post.pk %}"
         hx-target="#comments_for_{{ post.pk }}"
         hx-swap="afterbegin"
-        hx-on="htmx:afterSwap: this.querySelector('textarea').value = ''"
+        _="on htmx:afterRequest reset() me"
     >
         {% csrf_token %}
         {% render_field comment_form.body class="form-control rounded-pill me-2 p-2" %}
