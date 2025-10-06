@@ -13,9 +13,19 @@
             </button>
         </div>
         {% if not post.media.count > 1 %}
-            <div class="post-image-wrapper">
-                <img src="{{ post.media.first.file.url }}" class="post-image" alt="Post image">
-            </div>
+            {% with media=post.media.first %}
+                {% if media.media_type == 'image' %}
+                    <div class="post-image-wrapper">
+                        <img src="{{ media.file.url }}" class="post-image" alt="Post image">
+                    </div>
+                {% else %}
+                    <div class="post-video-wrapper">
+                        <video class="post-video" controls preload="metadata">
+                            <source src="{{ media.file.url }}" type="video/mp4">
+                        </video>
+                    </div>
+                {% endif %}
+            {% endwith %}
         {% else %}
             <div id="carousel-{{ post.id }}" class="carousel slide">
                 <div class="carousel-indicators">
@@ -27,9 +37,17 @@
                 <div class="carousel-inner">
                     {% for media in post.media.all %}
                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <div class="post-image-wrapper">
-                                <img src="{{ media.file.url }}" class="post-image" alt="Post image">
-                            </div>
+                            {% if media.media_type == 'image' %}
+                                <div class="post-image-wrapper">
+                                    <img src="{{ media.file.url }}" class="post-image" alt="Post image">
+                                </div>
+                            {% else %}
+                                <div class="post-video-wrapper">
+                                    <video class="post-video" controls preload="metadata">
+                                        <source src="{{ media.file.url }}" type="video/mp4">
+                                    </video>
+                                </div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

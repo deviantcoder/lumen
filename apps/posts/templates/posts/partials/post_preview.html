@@ -16,7 +16,7 @@
             </div>
             {% if not post.media.count > 1 %}
                 <div class="post-image-wrapper">
-                    <img src="{{ post.media.first.file.url }}" class="post-image" alt="Post image">
+                    <img src="{{ post.media.first.file.url }}" class="post-image rounded-4" alt="Post image">
                 </div>
             {% else %}
                 <div id="carousel-{{ post.id }}" class="carousel slide">
@@ -35,7 +35,7 @@
                         {% for media in post.media.all %}
                             <div class="carousel-item {% if forloop.first %}active{% endif %}">
                                 <div class="post-image-wrapper">
-                                    <img src="{{ media.file.url }}" class="post-image" alt="Post image">
+                                    <img src="{{ media.file.url }}" class="post-image rounded-4" alt="Post image">
                                 </div>
                             </div>
                         {% endfor %}

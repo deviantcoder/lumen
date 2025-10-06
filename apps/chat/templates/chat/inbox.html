@@ -19,12 +19,20 @@
                         <div class="flex-grow-1">
                             <div class="fw-semibold text-white">{{ item.other_user.username }}</div>
                             <small class="text-muted">
-                                {% if item.last_message.sender == request.user %}
-                                    You:
-                                {% else %}
-                                    @{{ item.last_message.sender.username }}:
+                                {% if item.last_message %}
+                                    {% with message=item.last_message %}
+                                        {% if message.sender == request.user %}
+                                            You:
+                                        {% else %}
+                                            @{{ message.sender.username }}:
+                                        {% endif %}
+                                        {% if message.message_type == 'text' %}
+                                            {{ message.content|slice:80 }}...
+                                        {% else %}
+                                            Post
+                                        {% endif %}
+                                    {% endwith %}
                                 {% endif %}
-                                {{ item.last_message.content|slice:80 }}...
                             </small>
                         </div>
                         <small class="text-muted">{{ item.last_message.time_sent }}</small>

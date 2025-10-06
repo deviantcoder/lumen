@@ -169,13 +169,31 @@ body {
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    /* border-radius: 30px !important; */
 }
 .post-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
+}
+.post-video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.post-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.post-video:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background-color: var(--primary-bg);
 }
 .post-user-avatar {
     width: 32px;

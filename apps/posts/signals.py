@@ -7,7 +7,9 @@ from django.db.models.signals import pre_save, post_delete
 
 from .models import PostMedia, Post
 
-from utils.files import ALLOWED_IMAGE_EXTENSIONS, compress_image
+from utils.files import (
+    ALLOWED_IMAGE_EXTENSIONS, ALLOWED_VIDEO_EXTENSIONS, compress_image
+)
 
 
 logger = logging.getLogger(__name__)
@@ -18,6 +20,12 @@ def compress_media_file(sender, instance, **kwargs):
     try:
         if instance.file:
             ext = os.path.splitext(instance.file.name)[-1].lower().lstrip('.')
+
+            if ext in ALLOWED_IMAGE_EXTENSIONS:
+                instance.media_type = PostMedia.MEDIA_TYPES.IMAGE
+            else:
+                instance.media_type = PostMedia.MEDIA_TYPES.VIDEO
+
             if ext in ALLOWED_IMAGE_EXTENSIONS:
                 instance.file = compress_image(instance.file)
     except Exception as e:
