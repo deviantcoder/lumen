@@ -1,0 +1,11 @@
+{% if media.media_type == 'image' %}
+    <div class="post-image-wrapper">
+        <img src="{{ media.file.url }}" class="post-image" alt="Post image">
+    </div>
+{% else %}
+    <div class="post-video-wrapper">
+        <video class="post-video" controls preload="metadata">
+            <source src="{{ media.file.url }}" type="video/mp4">
+        </video>
+    </div>
+{% endif %}

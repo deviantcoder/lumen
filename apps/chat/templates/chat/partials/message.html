@@ -38,8 +38,10 @@
                             <span class="text-white small fw-bold">@{{ post.author.username }}</span>
                         </div>
                         <div class="card-body p-0">
-                            <div class="ratio ratio-1x1" style="width: 500px; max-width: 100%;">
-                                <img src="{{ post.media.first.file.url }}" class="w-100 h-100 object-fit-cover rounded-bottom-4" alt="Post">
+                            <div style="width: 500px; max-width: 100%;">
+                                {% with media=post.media.first %}
+                                    {% include 'posts/includes/media.html' %}
+                                {% endwith %}
                             </div>
                         </div>
                     </div>
