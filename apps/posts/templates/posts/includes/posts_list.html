@@ -1,7 +1,7 @@
 {% load humanize %}
 
 {% for post in posts %}
-    <div class="post-card">
+    <div class="post-card rounded-3 border-0">
         <div class="d-flex align-items-center justify-content-between p-2">
             <div class="d-flex align-items-center">
                 <img src="{{ post.author.profile.image_or_default }}" class="post-user-avatar" alt="User avatar">

@@ -1,7 +1,7 @@
 {% extends '_base.html' %}
 
 {% block head_title %}
-    Profile
+Profile
 {% endblock head_title %}
 
 {% block content %}
@@ -12,127 +12,121 @@
         </div>
         <div class="col-md-8">
             <div class="d-flex flex-column mb-3 align-items-center align-items-md-start">
-                <h2 class="mb-2 mt-3 mt-md-0 text-center text-md-start fw-bold gradient-text">@{{ profile.user.username }}</h2>
+                <h2 class="mb-2 mt-3 mt-md-0 text-center text-md-start fw-bold gradient-text">@{{ profile.user.username}}</h2>
                 <div class="d-flex gap-2 justify-content-center justify-content-md-start mt-2 w-100">
                     {% if profile.user == request.user %}
-                        <a href="{% url 'profiles:edit_profile' %}" class="btn btn-dark rounded-pill fw-bold flex-fill">
-                            <i class="bi bi-person-lines-fill me-2"></i>Edit Profile
-                        </a>
-                        <button class="btn btn-dark rounded-pill fw-bold flex-fill">
-                            <i class="bi bi-gear-wide me-2"></i>Settings
-                        </button>
+                    <a href="{% url 'profiles:edit_profile' %}" class="btn btn-dark rounded-3 fw-bold flex-fill">
+                        <i class="bi bi-person-lines-fill me-2"></i>Edit Profile
+                    </a>
+                    <button class="btn btn-dark rounded-3 fw-bold flex-fill">
+                        <i class="bi bi-gear-wide me-2"></i>Settings
+                    </button>
                     {% else %}
-                        <div class="d-flex flex-fill" id="follow-btn-{{ profile.user.pk }}">
-                            {% include 'profiles/partials/follow_button.html' with target_user=profile.user %}
-                        </div>
-                        <a href="{% url 'chat:start_chat' profile.user.username %}" class="btn btn-dark rounded-pill fw-bold flex-fill">
-                            <i class="bi bi-chat-heart me-2 fs-5"></i>Message
-                        </a>
+                    <div class="d-flex flex-fill" id="follow-btn-{{ profile.user.pk }}">
+                        {% include 'profiles/partials/follow_button.html' with target_user=profile.user %}
+                    </div>
+                    <a href="{% url 'chat:start_chat' profile.user.username %}" class="btn btn-dark rounded-3 fw-bold flex-fill">
+                        <i class="bi bi-chat-heart me-2 fs-5"></i>Message
+                    </a>
                     {% endif %}
                 </div>
             </div>
-            <div class="d-flex w-100 text-center text-md-start mt-4">
-                <div class="flex-fill d-flex gap-3 justify-content-center">
-                    <div class="bg-dark-subtle p-3 rounded-pill">
-                        <span class="fw-bold">{{ posts.count }}</span> <span class="text-muted">post{{ posts.count|pluralize:'s' }}</span>
+            <div class="row text-center text-md-start g-3">
+                <div class="col-12 col-sm-4">
+                    <div class="border border-dark p-3 rounded-3 h-100 text-center">
+                        <span class="fw-bold">{{ posts.count }}</span>
+                        <span class="text-muted">post{{ posts.count|pluralize:'s' }}</span>
                     </div>
-                    <a href="" class="bg-dark-subtle p-3 rounded-pill text-decoration-none"
-                        hx-get="{% url 'profiles:get_followers' profile.user.username %}"
-                        hx-target="#small-modal-body"
-                        hx-swap="innerHTML"
-                        data-bs-toggle="modal"
-                        data-bs-target="#small_modal"    
+                </div>
+                <div class="col-12 col-sm-4">
+                    <a href="" class="d-block border border-dark p-3 rounded-3 text-decoration-none h-100 text-center"
+                        hx-get="{% url 'profiles:get_followers' profile.user.username %}" hx-target="#small-modal-body"
+                        hx-swap="innerHTML" data-bs-toggle="modal" data-bs-target="#small_modal"
                     >
-                        <span class="fw-bold text-white">{{ followers_count }}</span> <span class="text-muted">follower{{ followers_count|pluralize:'s' }}</span>
+                        <span class="fw-bold text-white">{{ followers_count }}</span>
+                        <span class="text-muted">follower{{ followers_count|pluralize:'s' }}</span>
                     </a>
-                    <a href="" class="bg-dark-subtle p-3 rounded-pill text-decoration-none"
-                        hx-get="{% url 'profiles:get_following' profile.user.username %}"
-                        hx-target="#small-modal-body"
-                        hx-swap="innerHTML"
-                        data-bs-toggle="modal"
-                        data-bs-target="#small_modal" 
+                </div>
+                <div class="col-12 col-sm-4">
+                    <a href="" class="d-block border border-dark p-3 rounded-3 text-decoration-none h-100 text-center"
+                        hx-get="{% url 'profiles:get_following' profile.user.username %}" hx-target="#small-modal-body"
+                        hx-swap="innerHTML" data-bs-toggle="modal" data-bs-target="#small_modal"
                     >
-                        <span class="fw-bold text-white">{{ following_count }}</span> <span class="text-muted">following</span>
+                        <span class="fw-bold text-white">{{ following_count }}</span>
+                        <span class="text-muted">following</span>
                     </a>
                 </div>
             </div>
             <div class="text-center text-md-start mt-4">
                 {% if profile.user.full_name %}
-                    <div class="fw-bold">{{ profile.user.full_name }}</div>
+                    <h5 class="fw-bold mb-2 text-white">{{ profile.user.full_name }}</h5>
                 {% endif %}
                 {% if profile.bio %}
-                    <p class="text-muted">{{ profile.bio }}</p>
+                    <p class="text-muted small mb-2">{{ profile.bio }}</p>
                 {% endif %}
-                {% if profile.location %}
-                    <p class="text-muted"><i class="bi bi-geo-alt me-2"></i>{{ profile.location }}</p>
-                {% endif %}
-                {% if profile.url %}
-                    <a href="{{ profile.url }}" class="text-decoration-none">{{ profile.url }}</a>
-                {% endif %}
+                <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-2 justify-content-center justify-content-md-start">
+                    {% if profile.location %}
+                        <div class="text-muted small d-flex align-items-center">
+                            <i class="bi bi-geo-alt me-1 text-success"></i>
+                            {{ profile.location }}
+                        </div>
+                    {% endif %}
+                    {% if profile.url %}
+                        <a href="{{ profile.url }}" target="_blank" rel="noopener"
+                            class="text-decoration-none small d-flex align-items-center text-info">
+                            <i class="bi bi-link-45deg me-1"></i>{{ profile.url }}
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-    <div class="d-flex gap-3 mb-4 overflow-auto pb-2 d-flex justify-content-center">
-        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
+    <div class="d-flex flex-nowrap justify-content-center gap-3 mb-4 overflow-auto pb-2">
+        <div class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer">
             <div class="story-avatar">
-                <img src="https://picsum.photos/500/500?random=1" alt="Travel">
+            <img src="https://picsum.photos/500/500?random=1" alt="Travel">
             </div>
             <span class="story-username">Travel</span>
         </div>
-        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
+        <div class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer">
             <div class="story-avatar">
-                <img src="https://picsum.photos/500/500?random=2" alt="Design">
+            <img src="https://picsum.photos/500/500?random=2" alt="Design">
             </div>
             <span class="story-username">Design</span>
-        </div>
-        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
-            <div class="story-avatar">
-                <img src="https://picsum.photos/500/500?random=3" alt="Food">
-            </div>
-            <span class="story-username">Food</span>
         </div>
     </div>
     <hr>
     <ul class="nav nav-tabs justify-content-center mt-4 mb-4 border-0">
         <li class="nav-item">
-            <button type="button" name="posted" class="nav-link active border-0 rounded-5 hx-tab"
-                hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
-                hx-target="#posts"
-                hx-swap="innerHTML"
-                hx-trigger="click"
+            <button type="button" name="posted" class="nav-link active border-0 rounded-3 hx-tab d-flex align-items-center"
+                hx-get="{% url 'profiles:get_user_posts' profile.user.username %}" hx-target="#posts"
+                hx-swap="innerHTML" hx-trigger="click"
             >
                 <i class="bi bi-grid-3x3"></i> Posts
             </button>
         </li>
         {% if profile.user == request.user %}
             <li class="nav-item">
-                <button type="button" name="saved" class="nav-link border-0 rounded-5 hx-tab"
-                    hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
-                    hx-target="#posts"
-                    hx-swap="innerHTML"
-                    hx-trigger="click"
+                <button type="button" name="saved" class="nav-link border-0 rounded-3 hx-tab d-flex align-items-center"
+                    hx-get="{% url 'profiles:get_user_posts' profile.user.username %}" hx-target="#posts"
+                    hx-swap="innerHTML" hx-trigger="click"
                 >
                     <i class="bi bi-bookmark"></i> Saved
                 </button>
             </li>
         {% endif %}
     </ul>
-    <div class="posts-grid" id="posts"
-        hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
-        hx-target="#posts"
-        hx-swap="innerHTML"
-        hx-trigger="load"
-    >
+    <div class="posts-grid" id="posts" hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
+        hx-target="#posts" hx-swap="innerHTML" hx-trigger="load">
     </div>
 </div>
 <script>
-document.querySelectorAll('.hx-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.hx-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    document.querySelectorAll('.hx-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.hx-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
     });
-});
 </script>
-
 {% include 'feed/includes/mobile_nav.html' %}
 {% endblock content %}

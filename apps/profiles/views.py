@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
+from django.db.models import Count
 
 from apps.posts.models import Post
 
@@ -42,13 +43,27 @@ def profile(request, username: str):
 def get_user_posts(request, username):
     user = get_object_or_404(User, username=username)
 
-    posts = user.posts.filter(status=Post.POST_STATUS.ACTIVE)
+    posts = (
+        user.posts.filter(
+            status=Post.POST_STATUS.ACTIVE
+        )
+        .annotate(
+            likes_count=Count('likes'),
+            comments_count=Count('comments'),
+        )
+    )
     
     if 'saved' in request.GET and user == request.user:
         saved_posts_pks = user.saved_posts.values_list('post', flat=True)
-        posts = Post.objects.filter(
-            pk__in=saved_posts_pks,
-            status=Post.POST_STATUS.ACTIVE
+        posts = (
+            Post.objects.filter(
+                pk__in=saved_posts_pks,
+                status=Post.POST_STATUS.ACTIVE
+            )
+            .annotate(
+                likes_count=Count('likes'),
+                comments_count=Count('comments'),
+            )
         )
 
     context = {

@@ -1,6 +1,6 @@
 :root {
-    --primary-bg: #121212;
-    --secondary-bg: #1a1a1a;
+    --primary-bg: #101613;
+    --secondary-bg: #192220;
     --text-primary: #f1f1f1;
     --text-secondary: #a8a8a8;
     --border: #262626;
@@ -158,9 +158,7 @@ body {
     text-overflow: ellipsis;
 }
 .post-card {
-    background-color: var(--primary-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    background-color: var(--secondary-bg);
     margin-bottom: 15px;
     overflow: hidden;
 }

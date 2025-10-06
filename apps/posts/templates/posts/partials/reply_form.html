@@ -1,12 +1,12 @@
 {% load widget_tweaks %}
 
-<form id="reply-form-{{ form.initial.parent }}" method="POST" class="d-flex mb-3 p-1 bg-blurred shadow-lg rounded-pill"
+<form id="reply-form-{{ form.initial.parent }}" method="POST" class="d-flex mb-3 p-2 bg-blurred shadow-lg rounded-3"
       hx-post="{% url 'posts:add_comment' post.pk %}"
       hx-target="#reply-form-container-{{ form.initial.parent }}"
       hx-swap="beforeend"
 >
     {% csrf_token %}
     {{ form.parent }}
-    {% render_field form.body class="form-control rounded-pill me-2 p-2" %}
-    <button type="submit" class="btn btn-primary rounded-pill px-3 fw-bold">Post</button>
+    {% render_field form.body class="form-control rounded-3 border-0 me-2 p-2" %}
+    <button type="submit" class="btn btn-primary rounded-3 px-3 fw-bold">Post</button>
 </form>

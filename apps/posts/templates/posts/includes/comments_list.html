@@ -13,14 +13,14 @@
             {% endif %}
         {% endrecursetree %}
     </div>
-    <form method="POST" class="d-flex sticky-bottom p-2 bg-blurred border shadow-lg rounded-pill"
+    <form method="POST" class="d-flex sticky-bottom p-2 bg-blurred shadow-lg rounded-3"
         hx-post="{% url 'posts:add_comment' post.pk %}"
         hx-target="#comments_for_{{ post.pk }}"
         hx-swap="afterbegin"
         _="on htmx:afterRequest reset() me"
     >
         {% csrf_token %}
-        {% render_field comment_form.body class="form-control rounded-pill me-2 p-2" %}
-        <button type="submit" class="btn btn-primary rounded-pill px-3 fw-bold">Post</button>
+        {% render_field comment_form.body class="form-control border-0 rounded-3 me-2 p-2" %}
+        <button type="submit" class="btn btn-primary rounded-3 px-3 fw-bold">Post</button>
     </form>
 </div>
