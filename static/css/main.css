@@ -243,6 +243,12 @@ body {
     background: rgba(1, 2, 2, 0.3) !important;
     backdrop-filter: blur(10px) !important;
 }
+.message-me {
+    border-radius: 15px 15px 0px 15px !important;
+}
+.message-them {
+    border-radius: 15px 15px 15px 0px !important;
+}
 .chat-message-input {
     position: fixed;
     bottom: 0;

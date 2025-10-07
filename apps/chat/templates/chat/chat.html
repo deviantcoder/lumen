@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container p-0 col-lg-6 col-md-10 vh-100 d-flex flex-column pt-76">
-    <div class="d-flex align-items-center p-2 me-2 ms-2 rounded-5 bg-cold-grey">
+    <div class="d-flex align-items-center p-2 me-2 ms-2 rounded-3 bg-cold-grey">
         <a href="{% url 'chat:inbox' %}" class="btn btn-link text-white me-3 p-0">
             <i class="bi bi-chevron-left fs-4"></i>
         </a>
@@ -43,8 +43,8 @@
             _="on htmx:wsAfterSend reset() me"
         >
             {% csrf_token %}
-            {% render_field form.content class="form-control p-2 rounded-5 border-0 bg-cold-grey" autofocus=True id="chat-input" %}
-            <button class="btn text-white border-0 rounded-5 bg-warm-gradient" type="submit">
+            {% render_field form.content class="form-control p-2 rounded-3 border-0 bg-cold-grey" autofocus=True id="chat-input" %}
+            <button class="btn text-white border-0 rounded-3 bg-warm-gradient" type="submit">
                 <i class="bi bi-send-fill fs-5 px-2"></i>
             </button>
         </form>

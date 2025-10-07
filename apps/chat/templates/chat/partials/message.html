@@ -1,12 +1,14 @@
 <div class="d-flex {% if message.sender == user %}justify-content-end{% endif %} mb-2">
     <div 
         class="d-flex flex-column
-        {% if message.message_type == 'text' %}px-3 py-2{% endif %} rounded-4 
+        {% if message.message_type == 'text' %}px-3 py-2{% endif %}
         {% if message.message_type == 'text' %}
             {% if message.sender == user %}
                 bg-frosted-ice-gradient
+                message-me
             {% else %}
                 bg-warm-gradient
+                message-them
             {% endif %}
         {% endif %} 
         text-white"
