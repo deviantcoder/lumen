@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.explore.apps.ExploreConfig',
     'apps.search.apps.SearchConfig',
     'apps.chat.apps.ChatConfig',
+    'apps.stories.apps.StoriesConfig',
 ]
 
 MIDDLEWARE = [
