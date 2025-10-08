@@ -50,4 +50,4 @@ class Story(models.Model):
         verbose_name_plural = 'Stories'
 
     def __str__(self):
-        return 'f{self.author.username} (story)'
+        return f'{self.author.username} (story)'

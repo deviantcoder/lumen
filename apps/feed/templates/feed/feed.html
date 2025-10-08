@@ -1,29 +1,22 @@
 {% extends '_base.html' %}
 
+{% load static %}
 {% load humanize %}
 
 {% block content %}
 <div class="container mt-76 pb-76">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10">
-            <div class="story-container mb-4">
-                <div class="d-flex overflow-auto hide-scrollbar">
-                    <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
-                        <div class="story-avatar me">
-                            <img src="{{ request.user.profile.image_or_default }}" alt="Your story">
-                        </div>
-                        <span class="story-username">Your story</span>
-                    </div>
-                    {% for follow in request.user.following.all %}
-                        <div class="d-flex flex-column align-items-center me-3 cursor-pointer">
-                            <div class="story-avatar">
-                                <img src="{{ follow.user.profile.image_or_default }}" alt="Profile">
-                            </div>
-                            <span class="story-username">{{ follow.user.username }}</span>
-                        </div>
-                    {% endfor %}
+            <div class="d-flex align-items-center justify-content-between mb-3 d-block d-md-none">
+                <div class="d-flex align-items-center">
+                    <img src="{% static 'img/logo.png' %}" class="navbar-logo me-3"></img>
+                    <span class="gradient-text fw-bold fs-5">Lumen</span>
+                </div>
+                <div>
+                    <a href="{% url 'chat:inbox' %}" class="text-decoration-none text-white"><i class="bi bi-chat-heart-fill fs-5"></i></a>
                 </div>
             </div>
+            {% include 'stories/includes/stories_list.html' %}
             {% include 'posts/includes/posts_list.html' %}
         </div>
         <div class="col-lg-4 desktop-only">

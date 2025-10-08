@@ -21,6 +21,7 @@ urlpatterns = [
     path('explore/', include('apps.explore.urls')),
     path('explore/search/', include('apps.search.urls')),
     path('chats/', include('apps.chat.urls')),
+    path('stories/', include('apps.stories.urls')),
 
     # pages
     path('about/', TemplateView.as_view(template_name='pages/about.html'), name='about'),

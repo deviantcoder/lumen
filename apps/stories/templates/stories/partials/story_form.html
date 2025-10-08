@@ -1,0 +1,25 @@
+{% load static %}
+<form method="POST" action="{% url 'stories:create_story' %}" enctype="multipart/form-data" hx-on::after-settle="initializeDropzone()">
+    {% csrf_token %}
+    <h3>Create Story</h3>
+    <div class="mb-3 text-start">
+        <i class="bi bi-images me-2"></i> 
+        <label class="form-label fw-semibold">Media:</label>
+        <div id="dropzone" class="dropzone rounded-3 p-5 text-center bg-dark-subtle">
+            <p class="text-muted mb-2">Drag & drop files here or click to select</p>
+            <input 
+                type="file" 
+                id="file-input" 
+                name="files" 
+                multiple 
+                hidden
+            >
+            <button type="button" class="btn btn-outline-light rounded-3" onclick="document.getElementById('file-input').click()">
+                Select Files
+            </button>
+        </div>
+        <div id="file-list" class="mt-3 text-muted small"></div>
+    </div>
+    <button type="submit" class="btn btn-outline-light w-100 mt-2 rounded-3 p-3 fw-bold">Create Story</button>
+</form>
+<script src="{% static 'js/dropzone.js' %}"></script>
