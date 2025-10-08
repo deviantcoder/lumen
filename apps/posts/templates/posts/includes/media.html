@@ -4,7 +4,7 @@
     </div>
 {% else %}
     <div class="post-video-wrapper">
-        <video class="post-video" controls preload="metadata">
+        <video class="post-video" controls autoplay muted loop preload="metadata">
             <source src="{{ media.file.url }}" type="video/mp4">
         </video>
     </div>

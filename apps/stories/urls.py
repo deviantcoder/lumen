@@ -7,6 +7,8 @@ app_name = 'stories'
 
 
 urlpatterns = [
-    path('', views.stories, name='stories'),
     path('create/', views.create_story, name='create_story'),
+    path('stories-list/', views.stories_list, name='stories_list'),
+    path('<str:username>/', views.stories, name='stories'),
+    path('<str:username>/<int:story_id>/', views.stories, name='stories_with_id'),
 ]

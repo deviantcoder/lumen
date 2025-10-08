@@ -16,7 +16,14 @@
                     <a href="{% url 'chat:inbox' %}" class="text-decoration-none text-white"><i class="bi bi-chat-heart-fill fs-5"></i></a>
                 </div>
             </div>
-            {% include 'stories/includes/stories_list.html' %}
+            <div id="stories_list"
+                hx-get="{% url 'stories:stories_list' %}"
+                hx-trigger="load"
+                hx-target="#stories_list"
+                hx-swap="innerHTML"
+            >
+                <div class="text-muted small py-3 text-center">Loading stories...</div>
+            </div>
             {% include 'posts/includes/posts_list.html' %}
         </div>
         <div class="col-lg-4 desktop-only">

@@ -13,12 +13,12 @@
             </div>
             <span class="story-username">Your story</span>
         </a>
-        {% for follow in request.user.following.all %}
-            <a href="{% url 'stories:stories' %}" class="d-flex flex-column align-items-center me-3 cursor-pointer text-decoration-none">
+        {% for user in users %}
+            <a href="{% url 'stories:stories' user.username %}" class="d-flex flex-column align-items-center me-3 cursor-pointer text-decoration-none">
                 <div class="story-avatar">
-                    <img src="{{ follow.user.profile.image_or_default }}" alt="Profile">
+                    <img src="{{ user.profile.image_or_default }}" alt="Profile">
                 </div>
-                <span class="story-username">{{ follow.user.username }}</span>
+                <span class="story-username">{{ user.username }}</span>
             </a>
         {% endfor %}
     </div>

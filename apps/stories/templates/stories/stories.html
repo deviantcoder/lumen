@@ -22,7 +22,7 @@
                         <small class="text-muted">{{ story.created|naturaltime }}</small>
                     </div>
                 </div>
-                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-sm rounded-circle text-white">
+                <a href="/" class="btn btn-sm rounded-circle text-white">
                     <i class="bi bi-x-circle-fill fs-4"></i>
                 </a>
             </div>
@@ -31,14 +31,18 @@
         <!-- <video class="w-100 h-100 object-fit-cover" autoplay muted loop>
             <source src="" type="video/mp4">
         </video> -->
-        <div class="position-absolute top-50 translate-middle-y d-flex justify-content-between w-100 px-2">
-            <a href="" class="btn bg-opacity-50 border-0">
+        {% if prev_story %}
+            <a href="{% url 'stories:stories_with_id' story.author.username prev_story.id %}"
+            class="btn border-0 position-absolute start-0 top-50 translate-middle-y">
                 <i class="bi bi-arrow-left-circle-fill fs-4 text-white"></i>
             </a>
-            <a href="" class="btn border-0 rounded-circle">
+        {% endif %}
+        {% if next_story %}
+            <a href="{% url 'stories:stories_with_id' story.author.username next_story.id %}"
+            class="btn border-0 position-absolute end-0 top-50 translate-middle-y">
                 <i class="bi bi-arrow-right-circle-fill fs-4 text-white"></i>
             </a>
-        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}

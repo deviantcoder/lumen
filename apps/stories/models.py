@@ -28,7 +28,6 @@ def upload_to(instance, filename):
 
 
 class Story(models.Model):
-    
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stories')
 
     media = models.FileField(
