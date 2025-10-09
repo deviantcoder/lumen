@@ -61,8 +61,6 @@ def stories(request, username, story_id=None):
     else:
         current_story = user_stories.first()
 
-    print(current_story)
-
     stories_list = list(user_stories)
 
     idx = stories_list.index(current_story)
@@ -70,9 +68,11 @@ def stories(request, username, story_id=None):
     next_story = stories_list[idx + 1] if idx < (len(stories_list) - 1) else None
 
     context = {
+        'stories': user_stories,
         'story': current_story,
         'prev_story': prev_story,
         'next_story': next_story,
+        'current_idx': idx,
     }
 
     return render(request, 'stories/stories.html', context)
