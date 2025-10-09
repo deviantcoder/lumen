@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.db.models import Exists, OuterRef
 from django.utils import timezone
-from django.http import JsonResponse
 
-from .forms import StoryForm
 from .models import Story
 
 
@@ -56,6 +53,9 @@ def stories(request, username, story_id=None):
 
     user_stories = user.stories.order_by('created')
 
+    if not user_stories:
+        return redirect('/')
+
     if story_id:
         current_story = get_object_or_404(user_stories, pk=story_id)
     else:
@@ -88,23 +88,17 @@ def stories(request, username, story_id=None):
 
 @login_required
 def create_story(request):
-    # form = StoryForm()
-
     if request.method == 'POST':
         files = request.FILES.getlist('files')
 
         for file in files:
-            Story.objects.create(
+            story = Story.objects.create(
                 author=request.user,
                 media=file
             )
 
-            messages.success(request, 'Created a story.')
+            return redirect('stories:stories_with_id', request.user.username, story.pk)
 
-            return redirect('/')
-
-    context = {
-        # 'form': form,
-    }
+    context = {}
 
     return render(request, 'stories/partials/story_form.html', context)

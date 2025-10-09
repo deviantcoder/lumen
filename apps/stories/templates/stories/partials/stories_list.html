@@ -1,11 +1,16 @@
-<div class="story-container mb-4">
+<div class="story-container mb-2">
     <div class="d-flex overflow-auto hide-scrollbar">
-        <a href=""
-            hx-get="{% url 'stories:create_story' %}"
-            hx-target="#small-modal-body"
-            hx-swap="innerHTML"
-            data-bs-toggle="modal"
-            data-bs-target="#small_modal"
+        <a 
+            {% if request.user.stories.exists %}
+                href="{% url 'stories:stories' request.user.username %}"
+            {% else %}
+                href=""
+                hx-get="{% url 'stories:create_story' %}"
+                hx-target="#small-modal-body"
+                hx-swap="innerHTML"
+                data-bs-toggle="modal"
+                data-bs-target="#small_modal"
+            {% endif %}
             class="d-flex flex-column align-items-center me-3 cursor-pointer text-decoration-none"
         >
             <div class="story-avatar me">

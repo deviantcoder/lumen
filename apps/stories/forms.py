@@ -1,10 +1,10 @@
-from django import forms
+# from django import forms
 
-from .models import Story
+# from .models import Story
 
 
-class StoryForm(forms.ModelForm):
+# class StoryForm(forms.ModelForm):
     
-    class Meta:
-        model = Story
-        fields = ('media',)
+#     class Meta:
+#         model = Story
+#         fields = ('media',)
