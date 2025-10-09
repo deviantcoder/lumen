@@ -8,7 +8,7 @@
 {% endblock head_title %}
 
 {% block content %}
-<div class="story-viewer d-flex align-items-center justify-content-center text-white vh-100 position-relative">
+<div id="stories_container" class="story-viewer d-flex align-items-center justify-content-center text-white vh-100 position-relative">
     <div class="story-container bg-dark overflow-hidden rounded-3 shadow-lg position-relative d-flex align-items-center justify-content-center mt-76"
         style="width: 100%; max-width: 420px; height: 90vh;"
     >
@@ -49,22 +49,29 @@
             <source src="" type="video/mp4">
         </video> -->
         {% if prev_story %}
-            <a href="{% url 'stories:stories_with_id' story.author.username prev_story.id %}"
+            <button
+                hx-get="{% url 'stories:stories_with_id' story.author.username prev_story.id %}"
+                hx-target="#stories_container"
+                hx-swap="innerHTML"
+                hx-trigger="click"
                 class="btn border-0 position-absolute start-0 top-50 translate-middle-y"
             >
                 <i class="bi bi-arrow-left-circle-fill fs-4 text-white"></i>
-            </a>
+            </button>
         {% endif %}
         {% if next_story %}
-            <a href="{% url 'stories:stories_with_id' story.author.username next_story.id %}"
+            <button 
+                hx-get="{% url 'stories:stories_with_id' story.author.username next_story.id %}"
+                hx-target="#stories_container"
+                hx-swap="innerHTML"
+                hx-trigger="click"
                 class="btn border-0 position-absolute end-0 top-50 translate-middle-y"
                 id="next-story-btn"
             >
                 <i class="bi bi-arrow-right-circle-fill fs-4 text-white"></i>
-            </a>
+            </button>
         {% endif %}
     </div>
 </div>
 <script src="{% static 'js/story_progress.js' %}"></script>
-
 {% endblock content %}

@@ -54,7 +54,7 @@ def stories_list(request):
 def stories(request, username, story_id=None):
     user = get_object_or_404(User, username=username)
 
-    user_stories = user.stories.order_by('-created')
+    user_stories = user.stories.order_by('created')
 
     if story_id:
         current_story = get_object_or_404(user_stories, pk=story_id)
@@ -63,7 +63,12 @@ def stories(request, username, story_id=None):
 
     stories_list = list(user_stories)
 
-    idx = stories_list.index(current_story)
+    try:
+        idx = stories_list.index(current_story)
+    except ValueError:
+        current_story = stories_list[0]
+        idx = 0
+
     prev_story = stories_list[idx - 1] if idx > 0 else None
     next_story = stories_list[idx + 1] if idx < (len(stories_list) - 1) else None
 
@@ -74,6 +79,9 @@ def stories(request, username, story_id=None):
         'next_story': next_story,
         'current_idx': idx,
     }
+
+    if request.htmx:
+        return render(request, 'stories/partials/story.html', context)
 
     return render(request, 'stories/stories.html', context)
 

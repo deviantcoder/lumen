@@ -1,0 +1,65 @@
+{% load humanize %}
+
+<div class="story-container bg-dark overflow-hidden rounded-3 shadow-lg position-relative d-flex align-items-center justify-content-center mt-76"
+    style="width: 100%; max-width: 420px; height: 90vh;"
+>
+    <div class="position-absolute top-0 start-0 end-0 p-2 z-3">
+        <div class="d-flex gap-1 mb-2">
+            {% for story in stories %}
+                {% if forloop.counter0 < current_idx %}
+                    <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
+                        <div class="progress-bar" style="width: 100%; background-color: white;"></div>
+                    </div>
+                {% elif forloop.counter0 == current_idx %}
+                    <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
+                        <div id="current-progress" class="progress-bar" style="width: 0%; background-color: white;"></div>
+                    </div>
+                {% else %}
+                    <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
+                        <div class="progress-bar" style="width: 0%; background-color: white;"></div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="{{ story.author.profile.image_or_default }}" alt="User"
+                        class="rounded-circle me-2 profile-img">
+                <div class="d-flex flex-column">
+                    <span class="fw-semibold">{{ story.author.username }}</span>
+                    <small class="text-muted">{{ story.created|naturaltime }}</small>
+                </div>
+            </div>
+            <a href="/" id="close-btn" class="btn btn-sm rounded-circle text-white">
+                <i class="bi bi-x-circle-fill fs-4"></i>
+            </a>
+        </div>
+    </div>
+    <img src="{{ story.media.url }}" class="img-fluid w-100 h-100 object-fit-cover" alt="Story image">
+    <!-- <video class="w-100 h-100 object-fit-cover" autoplay muted loop>
+        <source src="" type="video/mp4">
+    </video> -->
+    {% if prev_story %}
+        <button
+            hx-get="{% url 'stories:stories_with_id' story.author.username prev_story.id %}"
+            hx-target="#stories_container"
+            hx-swap="innerHTML"
+            hx-trigger="click"
+            class="btn border-0 position-absolute start-0 top-50 translate-middle-y"
+        >
+            <i class="bi bi-arrow-left-circle-fill fs-4 text-white"></i>
+        </button>
+    {% endif %}
+    {% if next_story %}
+        <button 
+            hx-get="{% url 'stories:stories_with_id' story.author.username next_story.id %}"
+            hx-target="#stories_container"
+            hx-swap="innerHTML"
+            hx-trigger="click"
+            class="btn border-0 position-absolute end-0 top-50 translate-middle-y"
+            id="next-story-btn"
+        >
+            <i class="bi bi-arrow-right-circle-fill fs-4 text-white"></i>
+        </button>
+    {% endif %}
+</div>
