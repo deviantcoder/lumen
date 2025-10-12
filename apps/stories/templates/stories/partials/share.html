@@ -1,0 +1,36 @@
+{% load static %}
+<div class="p-3 pt-0 mx-auto" style="max-width: 700px;">
+    <h5 class="fw-bold mb-3 text-center">Share Story</h5>
+    <div id="share_container" class="mx-auto text-center">
+        <form method="POST"
+            hx-post="{% url 'stories:send_story_to_chat' story.pk %}"
+            hx-target="#share_container"
+            hx-swap="innerHTML"
+            id="share-form"
+        >
+            {% csrf_token %}
+            <div class="row row-cols-3 row-cols-sm-4 row-cols-md-5 row-cols-lg-auto g-4 justify-content-center">
+                {% for user in mutuals %}
+                    <div class="col text-center">
+                        <div class="select-user" data-username="{{ user.username }}">
+                            <img src="{{ user.profile.image_or_default }}"
+                                alt="{{ user.username }}"
+                                class="profile-img-md rounded-circle shadow-sm mb-2 user-avatar">
+                            <div class="small text-white text-truncate" style="max-width: 80px;">
+                                {{ user.username }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="recipients" id="selected-users">
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn bg-warm-gradient text-white border-0 rounded-pill px-5" id="send-btn" disabled>
+                    <i class="bi bi-send me-2"></i>
+                    <span class="fw-bold">Send</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{% static 'js/share.js' %}"></script>

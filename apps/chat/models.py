@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from apps.posts.models import Post
+from apps.stories.models import Story
 
 
 User = get_user_model()
@@ -36,6 +37,7 @@ class Message(models.Model):
     class MESSAGE_TYPES(models.TextChoices):
         TEXT = ('text', 'Text')
         POST = ('post', 'Post')
+        STORY = ('story', 'Story')
 
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages_sent')
@@ -44,8 +46,19 @@ class Message(models.Model):
 
     is_read = models.BooleanField(default=False)
 
-    message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES.choices, default=MESSAGE_TYPES.TEXT)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True, related_name='reposted')
+    message_type = models.CharField(
+        max_length=10,
+        choices=MESSAGE_TYPES.choices,
+        default=MESSAGE_TYPES.TEXT
+    )
+    
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, blank=True, related_name='shared'
+    )
+
+    story = models.ForeignKey(
+        Story, on_delete=models.CASCADE, null=True, blank=True, related_name='shared'
+    )
     
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

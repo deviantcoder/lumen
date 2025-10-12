@@ -39,6 +39,12 @@
     <!-- <video class="w-100 h-100 object-fit-cover" autoplay muted loop>
         <source src="" type="video/mp4">
     </video> -->
+    <div class="position-absolute top-0 start-0 end-0" 
+        style="height: 150px; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent); z-index: 2;">
+    </div>
+    <div class="position-absolute bottom-0 start-0 end-0" 
+        style="height: 200px; background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); z-index: 2;">
+    </div>
     {% if prev_story %}
         <button
             hx-get="{% url 'stories:stories_with_id' story.author.username prev_story.id %}"
@@ -62,9 +68,9 @@
             <i class="bi bi-arrow-right-circle-fill fs-4 text-white"></i>
         </button>
     {% endif %}
-    {% if story.author == request.user %}
-        <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3 z-3">
-            <a class="btn btn-light rounded-pill px-4 py-2 fw-semibold"
+    <div class="position-absolute bottom-0 start-50 translate-middle-x w-100 px-3 pb-3 z-3" style="max-width: 420px;">
+        {% if story.author == request.user %}
+            <a class="btn btn-light rounded-pill px-4 py-2 fw-semibold w-100 text-center"
                 hx-get="{% url 'stories:create_story' %}"
                 hx-target="#small-modal-body"
                 hx-swap="innerHTML"
@@ -73,6 +79,29 @@
             >
                 <i class="bi bi-plus-circle me-2"></i>Add Story
             </a>
-        </div>
-    {% endif %}
+        {% else %}
+            <div class="d-flex align-items-center gap-2 w-100 rounded-pill p-2">
+                <form class="d-flex align-items-center flex-grow-1 border border-white rounded-pill px-3 py-2">
+                    <input
+                        type="text"
+                        class="form-control border-0 bg-transparent text-white me-2"
+                        placeholder="Reply to {{ story.author.username }}..."
+                        style="box-shadow: none; outline: none;"
+                    >
+                    <!-- <button type="submit" class="btn p-0 border-0 text-white">
+                        <i class="bi bi-send-fill fs-5"></i>
+                    </button> -->
+                </form>
+                <button type="button" class="btn rounded-circle p-2"
+                    hx-get="{% url 'stories:share_story' story.pk %}"
+                    hx-target="#small-modal-body"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#small_modal"
+                >
+                    <i class="bi bi-send fs-3"></i>
+                </button>
+            </div>
+        {% endif %}
+    </div>
 </div>

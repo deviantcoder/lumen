@@ -3,8 +3,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef
 from django.utils import timezone
+from django.views.decorators.http import require_http_methods
 
 from .models import Story
+
+from apps.profiles.models import Follow
+from apps.chat.models import Message, Chat
 
 
 User = get_user_model()
@@ -102,3 +106,49 @@ def create_story(request):
     context = {}
 
     return render(request, 'stories/partials/story_form.html', context)
+
+
+@login_required
+def share_story(request, story_id):
+    story = get_object_or_404(Story, pk=story_id)
+
+    mutuals = User.objects.annotate(
+        followed_=Exists(
+            Follow.objects.filter(follower=request.user, user=OuterRef('pk'))
+        ),
+    ).filter(
+        followed_=True,
+    ).select_related('profile')
+
+    context = {
+        'mutuals': mutuals,
+        'story': story,
+    }
+
+    return render(request, 'stories/partials/share.html', context)
+
+
+@require_http_methods(['POST'])
+@login_required
+def send_story_to_chat(request, story_id):
+    if request.method == 'POST':
+        story = get_object_or_404(Story, pk=story_id)
+        usernames = request.POST.get('recipients', '').split(',')
+
+        recipients = User.objects.filter(username__in=usernames)
+
+        for user in recipients:
+            chat = Chat.objects.filter(members=request.user).filter(members=user).first()
+
+            if not chat:
+                chat = Chat.objects.create()
+                chat.members.add(request.user, user)
+
+            Message.objects.create(
+                message_type=Message.MESSAGE_TYPES.STORY,
+                chat=chat,
+                sender=request.user,
+                story=story
+            )
+
+        return render(request, 'stories/partials/share_success.html')

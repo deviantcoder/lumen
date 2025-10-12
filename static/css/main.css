@@ -28,10 +28,10 @@ body {
 }
 @media (max-width: 768px) {
     .mt-76 {
-        margin-top: 15px !important;
+        margin-top: 5px !important;
     }
     .pt-76 {
-        padding-top: 0px !important;
+        padding-top: 5px !important;
     }
 }
 .navbar {
