@@ -1,10 +1,14 @@
-# from django import forms
+from django import forms
 
-# from .models import Story
+from .models import Collection
 
 
-# class StoryForm(forms.ModelForm):
+class CollectionForm(forms.ModelForm):
+    class Meta:
+        model = Collection
+        fields = ('name', 'image')
     
-#     class Meta:
-#         model = Story
-#         fields = ('media',)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['name'].widget.attrs.update({'placeholder': 'Name your collection'})

@@ -89,14 +89,21 @@ Profile
             </div>
         </div>
     </div>
-    <div class="d-flex flex-nowrap align-items-center justify-content-center gap-3 mb-4 overflow-auto pb-2"
-        id="collections_list"
-        hx-get="{% url 'stories:collections_list' profile.user.username %}"
-        hx-trigger="load"
-        hx-target="#collections_list"
-        hx-swap="afterbegin"
-    >
-        <a href="" class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer text-decoration-none">
+    <div class="d-flex flex-nowrap align-items-center justify-content-center gap-3 mb-4 overflow-auto pb-2">
+        <div id="collections_list" class="d-flex flex-nowrap align-items-center gap-3"
+            hx-get="{% url 'stories:collections_list' profile.user.username %}"
+            hx-trigger="load, close from:body"
+            hx-target="#collections_list"
+            hx-swap="innerHTML"
+        >
+        </div>
+        <a href="" class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer text-decoration-none"
+            hx-get="{% url 'stories:create_collection' %}"
+            hx-target="#small-modal-body"
+            hx-swap="innerHTML"
+            data-bs-toggle="modal"
+            data-bs-target="#small_modal"
+        >
             <div>
                 <i class="bi bi-plus-circle-fill fs-1 text-white"></i>
             </div>

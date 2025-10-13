@@ -17,5 +17,6 @@ urlpatterns = [
     path('<int:story_id>/reply/', views.send_story_reply, name='send_story_reply'),
 
     # collections
+    path('collections/create/', views.create_collection, name='create_collection'),
     path('collections/<str:username>/', views.collections_list, name='collections_list'),
 ]

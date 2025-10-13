@@ -4,8 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse
 
 from .models import Story
+from .forms import CollectionForm
 
 from apps.profiles.models import Follow
 from apps.chat.models import Message, Chat
@@ -189,3 +191,28 @@ def collections_list(request, username):
     }
 
     return render(request, 'stories/partials/collections_list.html', context)
+
+
+@login_required
+def create_collection(request):
+    if request.method == 'POST':
+        form = CollectionForm(request.POST, request.FILES)
+        if form.is_valid():
+            collection = form.save(commit=False)
+            collection.owner = request.user
+
+            collection.save()
+            
+            response = HttpResponse(status=204)
+            response['HX-Trigger'] = 'close'
+
+            return response
+
+    else:
+        form = CollectionForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'stories/partials/collection_form.html', context)

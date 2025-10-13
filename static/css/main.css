@@ -299,6 +299,9 @@ body {
     object-fit: cover;
     border: 5px solid var(--primary-bg);
 }
+.story-avatar-lg img {
+    border: 10px solid var(--primary-bg);
+}
 .story-username {
     font-size: 0.75rem;
     color: var(--text-primary);
