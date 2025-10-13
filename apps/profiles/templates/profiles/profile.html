@@ -89,21 +89,20 @@ Profile
             </div>
         </div>
     </div>
-    <div class="d-flex flex-nowrap justify-content-center gap-3 mb-4 overflow-auto pb-2">
-        <div class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer">
-            <div class="story-avatar">
-            <img src="https://picsum.photos/500/500?random=1" alt="Travel">
+    <div class="d-flex flex-nowrap align-items-center justify-content-center gap-3 mb-4 overflow-auto pb-2"
+        id="collections_list"
+        hx-get="{% url 'stories:collections_list' profile.user.username %}"
+        hx-trigger="load"
+        hx-target="#collections_list"
+        hx-swap="afterbegin"
+    >
+        <a href="" class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer text-decoration-none">
+            <div>
+                <i class="bi bi-plus-circle-fill fs-1 text-white"></i>
             </div>
-            <span class="story-username">Travel</span>
-        </div>
-        <div class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer">
-            <div class="story-avatar">
-            <img src="https://picsum.photos/500/500?random=2" alt="Design">
-            </div>
-            <span class="story-username">Design</span>
-        </div>
+            <span class="story-username">Create</span>
+        </a>
     </div>
-    <hr>
     <ul class="nav nav-tabs justify-content-center mt-4 mb-4 border-0">
         <li class="nav-item">
             <button type="button" name="posted" class="nav-link active border-0 rounded-3 hx-tab d-flex align-items-center"

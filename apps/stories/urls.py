@@ -7,6 +7,7 @@ app_name = 'stories'
 
 
 urlpatterns = [
+    # stories
     path('create/', views.create_story, name='create_story'),
     path('stories-list/', views.stories_list, name='stories_list'),
     path('<str:username>/', views.stories, name='stories'),
@@ -14,4 +15,7 @@ urlpatterns = [
     path('<int:story_id>/share/', views.share_story, name='share_story'),
     path('<int:story_id>/share/chat/', views.send_story_to_chat, name='send_story_to_chat'),
     path('<int:story_id>/reply/', views.send_story_reply, name='send_story_reply'),
+
+    # collections
+    path('collections/<str:username>/', views.collections_list, name='collections_list'),
 ]

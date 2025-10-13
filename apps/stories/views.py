@@ -177,3 +177,15 @@ def send_story_reply(request, story_id):
     )
 
     return redirect('/')
+
+
+@login_required
+def collections_list(request, username):
+    user = get_object_or_404(User, username=username)
+    collections = user.collections.all()
+
+    context = {
+        'collections': collections,
+    }
+
+    return render(request, 'stories/partials/collections_list.html', context)

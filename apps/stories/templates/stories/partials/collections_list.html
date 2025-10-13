@@ -1,0 +1,11 @@
+{% for collection in collections %}
+    <a href="" class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer text-center text-decoration-none" style="width: 70px;">
+        <div class="story-avatar mb-1">
+            <img src="{{ collection.image_or_default }}" alt="Collection" class="rounded-circle w-100 h-100 object-fit-cover">
+        </div>
+        <span class="story-username d-block text-truncate" 
+              style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            {{ collection.name }}
+        </span>
+    </a>
+{% endfor %}

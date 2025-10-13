@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             name='Story',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('media', models.FileField(upload_to=apps.stories.models.upload_to, validators=[django.core.validators.FileExtensionValidator(('jpg', 'jpeg', 'png', 'gif', 'webp', 'jpg', 'jpeg', 'png', 'gif', 'webp')), utils.files.validate_file_size])),
+                ('media', models.FileField(upload_to=apps.stories.models.story_upload_to, validators=[django.core.validators.FileExtensionValidator(('jpg', 'jpeg', 'png', 'gif', 'webp', 'jpg', 'jpeg', 'png', 'gif', 'webp')), utils.files.validate_file_size])),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('expires_at', models.DateTimeField(default=apps.stories.models.set_expiry_datetime)),
                 ('public_id', models.CharField(default=apps.stories.models.generate_public_id, max_length=22, unique=True)),
