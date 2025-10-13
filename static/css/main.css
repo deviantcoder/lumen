@@ -150,6 +150,14 @@ body {
     background: var(--mint-gradient);
     margin-bottom: 8px;
 }
+.story-avatar-lg {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    padding: 5px;
+    background: var(--mint-gradient);
+    margin-bottom: 8px;
+}
 .story-avatar.me {
     background: var(--warm-gradient);
 }
@@ -158,6 +166,13 @@ body {
     background: var(--mint-gradient);
 }
 .story-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--primary-bg);
+}
+.story-avatar-lg img {
     width: 100%;
     height: 100%;
     border-radius: 50%;

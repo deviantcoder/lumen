@@ -22,14 +22,14 @@
             {% endfor %}
         </div>
         <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
+            <a href="{% url 'profiles:profile' story.author.username %}" class="d-flex align-items-center text-decoration-none">
                 <img src="{{ story.author.profile.image_or_default }}" alt="User"
                         class="rounded-circle me-2 profile-img">
                 <div class="d-flex flex-column">
-                    <span class="fw-semibold">{{ story.author.username }}</span>
+                    <span class="fw-semibold text-white">{{ story.author.username }}</span>
                     <small class="text-muted">{{ story.created|naturaltime }}</small>
                 </div>
-            </div>
+            </a>
             <a href="/" id="close-btn" class="btn btn-sm rounded-circle text-white">
                 <i class="bi bi-x-circle-fill fs-4"></i>
             </a>
