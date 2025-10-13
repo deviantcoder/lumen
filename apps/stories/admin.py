@@ -5,4 +5,6 @@ from .models import Story
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'author', 'story_type', 'expires_at'
+    )

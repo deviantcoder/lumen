@@ -35,10 +35,13 @@
             </a>
         </div>
     </div>
-    <img src="{{ story.media.url }}" class="img-fluid w-100 h-100 object-fit-cover" alt="Story image">
-    <!-- <video class="w-100 h-100 object-fit-cover" autoplay muted loop>
-        <source src="" type="video/mp4">
-    </video> -->
+    {% if story.story_type == 'image' %}
+        <img src="{{ story.media.url }}" class="img-fluid w-100 h-100 object-fit-cover" alt="Story image">
+    {% else %}
+        <video class="w-100 h-100 object-fit-cover" autoplay>
+            <source src="{{ story.media.url }}" type="video/mp4">
+        </video>
+    {% endif %}
     <div class="position-absolute top-0 start-0 end-0" 
         style="height: 150px; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent); z-index: 2;">
     </div>

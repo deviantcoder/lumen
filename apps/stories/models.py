@@ -28,6 +28,11 @@ def upload_to(instance, filename):
 
 
 class Story(models.Model):
+
+    class STORY_TYPES(models.TextChoices):
+        IMAGE = ('image', 'Image')
+        VIDEO = ('video', 'Video')
+
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stories')
 
     media = models.FileField(
@@ -36,6 +41,10 @@ class Story(models.Model):
             FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS + ALLOWED_IMAGE_EXTENSIONS),
             validate_file_size
         ]
+    )
+
+    story_type = models.CharField(
+        max_length=5, choices=STORY_TYPES.choices, default=STORY_TYPES.IMAGE
     )
 
     created = models.DateTimeField(auto_now_add=True)
