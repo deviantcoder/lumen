@@ -1,23 +1,17 @@
 <div class="d-flex {% if message.sender == user %}justify-content-end{% endif %} mb-2">
     <div 
-        class="d-flex flex-column
-        {% if message.message_type == 'text' %}px-3 py-2{% endif %}
-        {% if message.message_type == 'text' %}
-            {% if message.sender == user %}
-                bg-frosted-ice-gradient
-                message-me
-            {% else %}
-                bg-warm-gradient
-                message-them
-            {% endif %}
-        {% endif %} 
-        text-white"
+        class="d-flex flex-column text-white"
         style="max-width: 80%; word-wrap: break-word;"
     >
         {% if message.message_type == 'text' %}
-            <span class="mb-1">
-                {{ message.content }}
-            </span>
+            <div class="px-3 py-2 rounded-4 shadow-sm
+                {% if message.sender == user %}
+                    bg-frosted-ice-gradient message-me
+                {% else %}
+                    bg-warm-gradient message-them
+                {% endif %}">
+                <span class="mb-1">{{ message.content }}</span>
+            </div>
         {% elif message.message_type == 'post' %}
             {% with post=message.post %}
                 <a  href=""
@@ -34,7 +28,7 @@
                         {% else %}
                             bg-warm-gradient
                         {% endif %}
-                        border-0 rounded-3 mb-1">
+                        border-0 rounded-3 mb-1 shadow-sm">
                         <div class="card-header border-0">
                             <img src="{{ post.author.profile.image_or_default }}" class="profile-img">
                             <span class="text-white small fw-bold">@{{ post.author.username }}</span>
@@ -60,8 +54,7 @@
                         <div class="position-relative">
                             <img src="{{ story.media.url }}" alt="Story" class="img-fluid w-100" style="height: 300px; object-fit: cover;">
                             <div class="position-absolute top-0 start-0 end-0" 
-                                style="height: 120px; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent); z-index: 1;">
-                            </div>
+                                style="height: 120px; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent); z-index: 1;"></div>
                             <div class="position-absolute top-0 start-0 end-0 p-2 z-2">
                                 <div class="d-flex align-items-center">
                                     <img src="{{ story.author.profile.image_or_default }}" alt="User" class="rounded-circle me-2 profile-img">
@@ -69,8 +62,7 @@
                                 </div>
                             </div>
                             <div class="position-absolute bottom-0 start-0 end-0" 
-                                style="height: 100px; background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); z-index: 1;">
-                            </div>
+                                style="height: 100px; background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); z-index: 1;"></div>
                             <div class="position-absolute bottom-0 start-50 translate-middle-x mb-2 z-2">
                                 <span class="badge rounded-pill bg-white text-dark px-3 py-1 small fw-semibold"
                                     style="backdrop-filter: blur(5px); opacity: 0.7;">
@@ -80,15 +72,63 @@
                         </div>
                     </div>
                 </a>
+            {% endwith %}
+        {% elif message.message_type == 'story_reply' %}
+            {% with story=message.story %}
+                <div class="shadow-sm mb-1
+                    {% if message.sender == user %}
+                        align-self-end
+                    {% else %}
+                        align-self-start
+                    {% endif %}"
+                    style="max-width: 100%;">
+                    <a href="{% url 'stories:stories_with_id' story.author.username story.id %}"
+                        class="text-decoration-none text-white-50 mb-2 d-inline-block">
+                        <div class="card border-0 rounded-3 overflow-hidden shadow-sm"
+                            style="width: 140px; max-width: 100%;
+                                    background: rgba(255,255,255,0.05);
+                                    backdrop-filter: blur(8px);
+                                    opacity: 0.8;">
+                            <div class="position-relative">
+                                <img src="{{ story.media.url }}" alt="Story" class="img-fluid w-100"
+                                    style="height: 180px; object-fit: cover; filter: grayscale(40%) brightness(85%);">
+                                <div class="position-absolute top-0 start-0 end-0"
+                                    style="height: 60px; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); z-index: 1;"></div>
+                                <div class="position-absolute top-0 start-0 end-0 p-2 z-2">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ story.author.profile.image_or_default }}" alt="User"
+                                            class="rounded-circle me-2" style="width: 22px; height: 22px; object-fit: cover; border: 1px solid rgba(255,255,255,0.4);">
+                                        <span class="fw-semibold small text-white-50">{{ story.author.username }}</span>
+                                    </div>
+                                </div>
+                                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-2 z-2">
+                                    <span class="badge rounded-pill bg-dark text-white-50 px-2 py-1 small fw-semibold"
+                                        style="backdrop-filter: blur(5px);">
+                                        <i class="bi bi-reply-fill me-1"></i>Story Reply
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
 
+                    <!-- Text content -->
+                    <div class="py-1 px-2
+                        {% if message.sender == user %}
+                            bg-warm-gradient message-me
+                        {% else %}
+                            bg-frosted-ice-gradient message-them
+                        {% endif %}">
+                        <span class="text-white">{{ message.content }}</span>
+                    </div>
+                </div>
             {% endwith %}
         {% endif %}
-        <div 
-        {% if message.sender == user %}
-            class="align-self-end"
-        {% endif %}
-        >
-            <span class="text-muted small bg-blurred py-1 px-2 rounded-pill">{{ message.time_sent }}</span>
+
+        <!-- Timestamp -->
+        <div {% if message.sender == user %}class="align-self-end"{% endif %}>
+            <span class="text-muted small bg-blurred py-1 px-2 rounded-pill">
+                {{ message.time_sent }}
+            </span>
         </div>
     </div>
 </div>

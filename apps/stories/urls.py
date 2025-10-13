@@ -13,4 +13,5 @@ urlpatterns = [
     path('<str:username>/<int:story_id>/', views.stories, name='stories_with_id'),
     path('<int:story_id>/share/', views.share_story, name='share_story'),
     path('<int:story_id>/share/chat/', views.send_story_to_chat, name='send_story_to_chat'),
+    path('<int:story_id>/reply/', views.send_story_reply, name='send_story_reply'),
 ]

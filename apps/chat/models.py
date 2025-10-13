@@ -38,6 +38,7 @@ class Message(models.Model):
         TEXT = ('text', 'Text')
         POST = ('post', 'Post')
         STORY = ('story', 'Story')
+        STORY_REPLY = ('story_reply', 'StoryReply')
 
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages_sent')
@@ -47,7 +48,7 @@ class Message(models.Model):
     is_read = models.BooleanField(default=False)
 
     message_type = models.CharField(
-        max_length=10,
+        max_length=15,
         choices=MESSAGE_TYPES.choices,
         default=MESSAGE_TYPES.TEXT
     )

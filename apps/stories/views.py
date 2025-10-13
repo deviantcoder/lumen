@@ -152,3 +152,28 @@ def send_story_to_chat(request, story_id):
             )
 
         return render(request, 'stories/partials/share_success.html')
+
+
+@require_http_methods(['POST'])
+@login_required
+def send_story_reply(request, story_id):
+    
+    story = get_object_or_404(Story, pk=story_id)
+
+    chat = Chat.objects.filter(members=request.user).filter(members=story.author).first()
+
+    if not chat:
+        chat = Chat.objects.create()
+        chat.members.add(request.user, story.author)
+
+    reply = request.POST.get('reply', '')
+
+    Message.objects.create(
+        message_type=Message.MESSAGE_TYPES.STORY_REPLY,
+        chat=chat,
+        sender=request.user,
+        story=story,
+        content=reply
+    )
+
+    return redirect('/')

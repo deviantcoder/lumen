@@ -10,4 +10,4 @@ class ChatAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('chat', 'sender', 'message_type')

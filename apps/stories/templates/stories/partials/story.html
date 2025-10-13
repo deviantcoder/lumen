@@ -81,16 +81,20 @@
             </a>
         {% else %}
             <div class="d-flex align-items-center gap-2 w-100 rounded-pill p-2">
-                <form class="d-flex align-items-center flex-grow-1 border border-white rounded-pill px-3 py-2">
+                <form method="POST" action="{% url 'stories:send_story_reply' story.pk %}" class="d-flex align-items-center flex-grow-1 border border-white rounded-pill px-3 py-2">
+                    {% csrf_token %}
                     <input
                         type="text"
                         class="form-control border-0 bg-transparent text-white me-2"
                         placeholder="Reply to {{ story.author.username }}..."
                         style="box-shadow: none; outline: none;"
+                        name="reply"
+                        id="replyInput"
+                        autocomplete="off"
                     >
-                    <!-- <button type="submit" class="btn p-0 border-0 text-white">
-                        <i class="bi bi-send-fill fs-5"></i>
-                    </button> -->
+                    <button type="submit" class="btn p-0 border-0 text-primary fw-bold d-none" id="replyButton">
+                        Reply
+                    </button>
                 </form>
                 <button type="button" class="btn rounded-circle p-2"
                     hx-get="{% url 'stories:share_story' story.pk %}"
