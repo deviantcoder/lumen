@@ -71,17 +71,28 @@
             <i class="bi bi-arrow-right-circle-fill fs-4 text-white"></i>
         </button>
     {% endif %}
-    <div class="position-absolute bottom-0 start-50 translate-middle-x w-100 px-3 pb-3 z-3" style="max-width: 420px;">
+    <div class="position-absolute bottom-0 start-50 translate-middle-x w-100 px-3 pb-3 z-3">
         {% if story.author == request.user %}
-            <a class="btn btn-light rounded-pill px-4 py-2 fw-semibold w-100 text-center"
-                hx-get="{% url 'stories:create_story' %}"
-                hx-target="#small-modal-body"
-                hx-swap="innerHTML"
-                data-bs-toggle="modal"
-                data-bs-target="#small_modal"
-            >
-                <i class="bi bi-plus-circle me-2"></i>Add Story
-            </a>
+            <div class="d-flex align-items-center justify-content-between gap-3">
+                <button class="btn btn-light rounded-5 py-2 fw-semibold w-50 text-center"
+                    hx-get="{% url 'stories:create_story' %}"
+                    hx-target="#small-modal-body"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#small_modal"
+                >
+                    <i class="bi bi-plus-circle me-2"></i>Add Story
+                </button>
+                <button class="btn btn-outline-light rounded-5 py-2 fw-semibold w-50 text-center"
+                    hx-get="{% url 'stories:save_story_to_collection' story.pk %}"
+                    hx-target="#small-modal-body"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#small_modal"
+                >
+                    <i class="bi bi-collection me-2"></i>Add to Collection
+                </button>
+            </div>
         {% else %}
             <div class="d-flex align-items-center gap-2 w-100 rounded-pill p-2">
                 <form method="POST" action="{% url 'stories:send_story_reply' story.pk %}" class="d-flex align-items-center flex-grow-1 border border-white rounded-pill px-3 py-2">

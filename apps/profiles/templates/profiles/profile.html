@@ -6,10 +6,10 @@ Profile
 
 {% block content %}
 <div class="container mx-auto p-4 mt-76 pb-76">
-    <div class="row mb-5 align-items-center text-center text-md-start">
+    <div class="row mb-4 align-items-center text-center text-md-start">
         <div class="col-md-4 text-center">
             {% if profile.user.stories.exists %}
-                <a href="{% url 'stories:stories' profile.user.username %}" class="d-flex flex-column align-items-center me-3 cursor-pointer text-decoration-none">
+                <a href="{% url 'stories:stories' profile.user.username %}" class="d-flex flex-column align-items-center cursor-pointer text-decoration-none">
                     <div class="story-avatar-lg">
                         <img src="{{ profile.image_or_default }}" alt="Profile">
                     </div>
@@ -39,29 +39,37 @@ Profile
                     {% endif %}
                 </div>
             </div>
-            <div class="row text-center text-md-start g-3">
-                <div class="col-12 col-sm-4">
-                    <div class="border border-dark p-3 rounded-3 h-100 text-center">
+            <div class="row g-3 text-center text-md-start">
+                <div class="col-4">
+                    <div class="border border-dark p-2 rounded-3 h-100 d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1">
                         <span class="fw-bold">{{ posts.count }}</span>
-                        <span class="text-muted">post{{ posts.count|pluralize:'s' }}</span>
+                        <span class="text-muted small">post{{ posts.count|pluralize:'s' }}</span>
                     </div>
                 </div>
-                <div class="col-12 col-sm-4">
-                    <a href="" class="d-block border border-dark p-3 rounded-3 text-decoration-none h-100 text-center"
-                        hx-get="{% url 'profiles:get_followers' profile.user.username %}" hx-target="#small-modal-body"
-                        hx-swap="innerHTML" data-bs-toggle="modal" data-bs-target="#small_modal"
+                <div class="col-4">
+                    <a href=""
+                        class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 border border-dark p-2 rounded-3 text-decoration-none h-100"
+                        hx-get="{% url 'profiles:get_followers' profile.user.username %}"
+                        hx-target="#small-modal-body"
+                        hx-swap="innerHTML"
+                        data-bs-toggle="modal"
+                        data-bs-target="#small_modal"
                     >
                         <span class="fw-bold text-white">{{ followers_count }}</span>
-                        <span class="text-muted">follower{{ followers_count|pluralize:'s' }}</span>
+                        <span class="text-muted small">follower{{ followers_count|pluralize:'s' }}</span>
                     </a>
                 </div>
-                <div class="col-12 col-sm-4">
-                    <a href="" class="d-block border border-dark p-3 rounded-3 text-decoration-none h-100 text-center"
-                        hx-get="{% url 'profiles:get_following' profile.user.username %}" hx-target="#small-modal-body"
-                        hx-swap="innerHTML" data-bs-toggle="modal" data-bs-target="#small_modal"
+                <div class="col-4">
+                    <a href=""
+                        class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 border border-dark p-2 rounded-3 text-decoration-none h-100"
+                        hx-get="{% url 'profiles:get_following' profile.user.username %}"
+                        hx-target="#small-modal-body"
+                        hx-swap="innerHTML"
+                        data-bs-toggle="modal"
+                        data-bs-target="#small_modal"
                     >
                         <span class="fw-bold text-white">{{ following_count }}</span>
-                        <span class="text-muted">following</span>
+                        <span class="text-muted small">following</span>
                     </a>
                 </div>
             </div>
@@ -89,28 +97,33 @@ Profile
             </div>
         </div>
     </div>
-    <div class="d-flex flex-nowrap align-items-center justify-content-center gap-3 mb-4 overflow-auto pb-2">
-        <div id="collections_list" class="d-flex flex-nowrap align-items-center gap-3"
+    <div class="d-flex align-items-center justify-content-center gap-4 overflow-auto mb-3 px-2">
+        <div id="collections_list" class="d-flex align-items-center gap-4 flex-nowrap"
             hx-get="{% url 'stories:collections_list' profile.user.username %}"
             hx-trigger="load, close from:body"
             hx-target="#collections_list"
             hx-swap="innerHTML"
         >
         </div>
-        <a href="" class="d-flex flex-column align-items-center flex-shrink-0 me-3 cursor-pointer text-decoration-none"
-            hx-get="{% url 'stories:create_collection' %}"
-            hx-target="#small-modal-body"
-            hx-swap="innerHTML"
-            data-bs-toggle="modal"
-            data-bs-target="#small_modal"
-        >
-            <div>
-                <i class="bi bi-plus-circle-fill fs-1 text-white"></i>
-            </div>
-            <span class="story-username">Create</span>
-        </a>
+        {% if profile.user == request.user %}
+            <a href="" 
+                class="d-flex flex-column align-items-center flex-shrink-0 cursor-pointer text-decoration-none text-white"
+                style="width: 70px;"
+                hx-get="{% url 'stories:create_collection' %}"
+                hx-target="#small-modal-body"
+                hx-swap="innerHTML"
+                data-bs-toggle="modal"
+                data-bs-target="#small_modal"
+            >
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-plus-circle-fill fs-1"></i>
+                </div>
+                <span class="story-username text-truncate w-100 text-center">Create</span>
+            </a>
+        {% endif %}
     </div>
-    <ul class="nav nav-tabs justify-content-center mt-4 mb-4 border-0">
+
+    <ul class="nav nav-tabs justify-content-center mb-4 border-0">
         <li class="nav-item">
             <button type="button" name="posted" class="nav-link active border-0 rounded-3 hx-tab d-flex align-items-center"
                 hx-get="{% url 'profiles:get_user_posts' profile.user.username %}" hx-target="#posts"

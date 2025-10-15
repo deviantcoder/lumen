@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 
-from .models import Story
+from .models import Story, Collection
 from .forms import CollectionForm
 
 from apps.profiles.models import Follow
@@ -207,7 +207,6 @@ def create_collection(request):
             response['HX-Trigger'] = 'close'
 
             return response
-
     else:
         form = CollectionForm()
 
@@ -216,3 +215,32 @@ def create_collection(request):
     }
 
     return render(request, 'stories/partials/collection_form.html', context)
+
+
+@login_required
+def save_story_to_collection(request, story_id):
+    story = get_object_or_404(Story, pk=story_id)
+    collections = request.user.collections.exclude(stories=story)
+
+    if request.method == 'POST':
+        pks = request.POST.get('recipients', '')
+        
+        pk_list = [int(pk) for pk in pks.split(',') if pk.isdigit()]
+
+        if pk_list:
+            collections = Collection.objects.filter(owner=request.user, pk__in=pk_list)
+
+            for collection in collections:
+                collection.stories.add(story)
+
+        response = HttpResponse(status=204)
+        response['HX-Trigger'] = 'close'
+
+        return response
+    
+    context = {
+        'collections': collections,
+        'story': story,
+    }
+
+    return render(request, 'stories/partials/save.html', context)

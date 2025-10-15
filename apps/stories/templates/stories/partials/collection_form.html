@@ -1,3 +1,4 @@
+{% load static %}
 {% load widget_tweaks %}
 <div class="p-4 mx-auto" style="max-width: 500px;">
     <h5 class="fw-bold mb-4 text-center text-white">Create Collection</h5>
@@ -29,11 +30,4 @@
         </form>
     </div>
 </div>
-<script>
-document.body.addEventListener("htmx:afterRequest", function (e) {
-    if (e.detail.xhr.getResponseHeader("HX-Trigger") === "close") {
-        const modal = bootstrap.Modal.getInstance(document.getElementById("small_modal"));
-        if (modal) modal.hide();
-    }
-});
-</script>
+<script src="{% static 'js/close_modal.js' %}"></script>
