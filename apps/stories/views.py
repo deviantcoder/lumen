@@ -244,3 +244,19 @@ def save_story_to_collection(request, story_id):
     }
 
     return render(request, 'stories/partials/save.html', context)
+
+
+
+@login_required
+def delete_story(request, story_id):
+    story = get_object_or_404(Story, pk=story_id)
+
+    if request.method == 'POST':
+        story.delete()
+        return redirect('stories:stories', request.user.username)
+    
+    context = {
+        'story': story,
+    }
+    
+    return render(request, 'stories/partials/delete_story.html', context)

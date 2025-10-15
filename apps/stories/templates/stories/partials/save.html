@@ -19,6 +19,8 @@
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    <span class="text-muted">No collection is available.</span>
                 {% endfor %}
             </div>
             <input type="hidden" name="recipients" id="selected-users">

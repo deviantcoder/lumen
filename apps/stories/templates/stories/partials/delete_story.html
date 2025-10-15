@@ -1,0 +1,23 @@
+<div class="p-4 text-center text-white">
+    <form method="POST" action="{% url 'stories:delete_story' story.pk %}">
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-3"></i>
+            <h5 class="fw-bold mb-2">Delete Story</h5>
+            <p class="text-muted mb-0">
+                Are you sure you want to permanently delete this story?<br>
+                This action cannot be undone.
+            </p>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3">
+            <button type="submit" class="btn btn-danger rounded-5 px-4 fw-semibold">
+                <i class="bi bi-trash me-2"></i>Delete
+            </button>
+            <button type="button" class="btn btn-outline-light rounded-5 px-4 fw-semibold" data-bs-dismiss="modal">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
