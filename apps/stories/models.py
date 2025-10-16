@@ -67,7 +67,6 @@ class Story(models.Model):
         return f'{self.author.username} (story)'
 
 
-
 class Collection(models.Model):
     
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')

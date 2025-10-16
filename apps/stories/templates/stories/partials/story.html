@@ -120,6 +120,13 @@
                         <i class="bi bi-trash me-2"></i>Delete
                     </button>
                 </div>
+            {% else %}
+                <form method="POST" action="{% url 'stories:remove_story_from_collection' collection.public_id story.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger rounded-5 w-100">
+                        <i class="bi bi-trash-fill me-2"></i>Remove from collection
+                    </button>
+                </form>
             {% endif %}
         {% else %}
             <div class="d-flex align-items-center gap-2 w-100 rounded-pill p-2">

@@ -295,3 +295,14 @@ def collection(request, collection_uid, story_id=None):
         return render(request, 'stories/partials/story.html', context)
 
     return render(request, 'stories/collection.html', context)
+
+
+@require_http_methods(['POST'])
+@login_required
+def remove_story_from_collection(request, collection_uid, story_id):
+    collection = get_object_or_404(Collection, public_id=collection_uid)
+    story = get_object_or_404(Story, pk=story_id)
+
+    collection.stories.remove(story)
+
+    return redirect('stories:collection', collection.public_id)
