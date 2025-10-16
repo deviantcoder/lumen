@@ -266,21 +266,37 @@ def collection(request, collection_uid, story_id=None):
     collection = get_object_or_404(Collection, public_id=collection_uid)
     stories = collection.stories.all()
 
-    if story_id:
-        current_story = get_object_or_404(stories, pk=story_id)
-    else:
-        current_story = stories.first()
-
     stories_list = list(stories)
 
-    try:
-        idx = stories_list.index(current_story)
-    except ValueError:
-        current_story = stories_list[0]
-        idx = 0
+    if stories:
+        if story_id:
+            current_story = get_object_or_404(stories, pk=story_id)
+        else:
+            current_story = stories.first()
 
-    prev_story = stories_list[idx - 1] if idx > 0 else None
-    next_story = stories_list[idx + 1] if idx < (len(stories_list) - 1) else None
+        try:
+            idx = stories_list.index(current_story)
+        except ValueError:
+            current_story = stories_list[0]
+            idx = 0
+        except IndexError:
+            current_story = None
+            idx = 0
+
+        prev_story = stories_list[idx - 1] if idx > 0 else None
+        next_story = stories_list[idx + 1] if idx < (len(stories_list) - 1) else None
+    else:
+        context = {
+            'collection': collection,
+            'stories': [],
+            'story': None,
+            'prev_story': None,
+            'next_story': None,
+            'current_idx': None,
+            'is_empty': True,
+        }
+
+        return render(request, 'stories/collection.html', context)
 
     context = {
         'collection': collection,
@@ -289,6 +305,7 @@ def collection(request, collection_uid, story_id=None):
         'prev_story': prev_story,
         'next_story': next_story,
         'current_idx': idx,
+        'is_empty': False,
     }
     
     if request.htmx:
@@ -306,3 +323,24 @@ def remove_story_from_collection(request, collection_uid, story_id):
     collection.stories.remove(story)
 
     return redirect('stories:collection', collection.public_id)
+
+
+@login_required
+def edit_collection(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+
+    if request.method == 'POST':
+        form = CollectionForm(request.POST, request.FILES, instance=collection)
+        if form.is_valid():
+            print(form.cleaned_data)
+            form.save()
+            return redirect('stories:collection', collection.public_id)
+    else:
+        form = CollectionForm(instance=collection)
+
+    context = {
+        'form': form,
+        'collection': collection,
+    }
+
+    return render(request, 'stories/partials/edit_collection.html', context)

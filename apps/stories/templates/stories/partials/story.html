@@ -1,3 +1,4 @@
+{% load static %}
 {% load humanize %}
 
 <div class="story-container bg-dark overflow-hidden rounded-3 shadow-lg position-relative d-flex align-items-center justify-content-center mt-76"
@@ -5,21 +6,23 @@
 >
     <div class="position-absolute top-0 start-0 end-0 p-2 z-3">
         <div class="d-flex gap-1 mb-2">
-            {% for story in stories %}
-                {% if forloop.counter0 < current_idx %}
-                    <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
-                        <div class="progress-bar" style="width: 100%; background-color: white;"></div>
-                    </div>
-                {% elif forloop.counter0 == current_idx %}
-                    <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
-                        <div class="progress-bar current-progress" style="width: 0%; background-color: white;"></div>
-                    </div>
-                {% else %}
-                    <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
-                        <div class="progress-bar" style="width: 0%; background-color: white;"></div>
-                    </div>
-                {% endif %}
-            {% endfor %}
+            {% if stories %}
+                {% for story in stories %}
+                    {% if forloop.counter0 < current_idx %}
+                        <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
+                            <div class="progress-bar" style="width: 100%; background-color: white;"></div>
+                        </div>
+                    {% elif forloop.counter0 == current_idx %}
+                        <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
+                            <div class="progress-bar current-progress" style="width: 0%; background-color: white;"></div>
+                        </div>
+                    {% else %}
+                        <div class="progress flex-grow-1" style="height: 3px; background-color: rgba(255,255,255,0.3);">
+                            <div class="progress-bar" style="width: 0%; background-color: white;"></div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="d-flex justify-content-between align-items-center">
             {% if not collection %}
@@ -44,12 +47,16 @@
             </a>
         </div>
     </div>
-    {% if story.story_type == 'image' %}
-        <img src="{{ story.media.url }}" class="img-fluid w-100 h-100 object-fit-cover" alt="Story image">
+    {% if story %}
+        {% if story.story_type == 'image' %}
+            <img src="{{ story.media.url }}" class="img-fluid w-100 h-100 object-fit-cover">
+        {% else %}
+            <video class="w-100 h-100 object-fit-cover" autoplay>
+                <source src="{{ story.media.url }}" type="video/mp4">
+            </video>
+        {% endif %}
     {% else %}
-        <video class="w-100 h-100 object-fit-cover" autoplay>
-            <source src="{{ story.media.url }}" type="video/mp4">
-        </video>
+        <img src="{% static 'img/def_collection.jpg' %}" class="img-fluid w-100 h-100 object-fit-cover">   
     {% endif %}
     <div class="position-absolute top-0 start-0 end-0" 
         style="height: 150px; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent); z-index: 2;">
@@ -57,7 +64,7 @@
     <div class="position-absolute bottom-0 start-0 end-0" 
         style="height: 200px; background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); z-index: 2;">
     </div>
-    {% if prev_story %}
+    {% if prev_story and not is_empty %}
         <button
             {% if not collection %}
                 hx-get="{% url 'stories:stories_with_id' story.author.username prev_story.id %}"
@@ -72,7 +79,7 @@
             <i class="bi bi-arrow-left-circle-fill fs-4 text-white"></i>
         </button>
     {% endif %}
-    {% if next_story %}
+    {% if next_story and not is_empty %}
         <button
             {% if not collection %}
                 hx-get="{% url 'stories:stories_with_id' story.author.username next_story.id %}"
@@ -89,7 +96,7 @@
         </button>
     {% endif %}
     <div class="position-absolute bottom-0 start-50 translate-middle-x w-100 px-3 pb-3 z-3">
-        {% if story.author == request.user %}
+        {% if story.author == request.user or collection.owner == request.user %}
             {% if not collection %}
                 <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-3">
                     <button class="btn btn-light rounded-4 py-2 fw-semibold flex-fill text-center"
@@ -121,40 +128,55 @@
                     </button>
                 </div>
             {% else %}
-                <form method="POST" action="{% url 'stories:remove_story_from_collection' collection.public_id story.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-danger rounded-5 w-100">
-                        <i class="bi bi-trash-fill me-2"></i>Remove from collection
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-3">
+                    <button type="button" class="btn text-light fw-bold"
+                        hx-get="{% url 'stories:edit_collection' collection.pk %}"
+                        hx-target="#small-modal-body"
+                        hx-swap="innerHTML"
+                        data-bs-toggle="modal"
+                        data-bs-target="#small_modal"
+                    >
+                        <i class="bi bi-pencil-square fs-3"></i>
                     </button>
-                </form>
+                    {% if not is_empty %}
+                        <form method="POST" action="{% url 'stories:remove_story_from_collection' collection.public_id story.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn text-danger rounded-5 w-100 fw-bold">
+                                <i class="bi bi-trash-fill fs-3"></i>
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
             {% endif %}
         {% else %}
-            <div class="d-flex align-items-center gap-2 w-100 rounded-pill p-2">
-                <form method="POST" action="{% url 'stories:send_story_reply' story.pk %}" class="d-flex align-items-center flex-grow-1 border border-white rounded-pill px-3 py-2">
-                    {% csrf_token %}
-                    <input
-                        type="text"
-                        class="form-control border-0 bg-transparent text-white me-2"
-                        placeholder="Reply to {{ story.author.username }}..."
-                        style="box-shadow: none; outline: none;"
-                        name="reply"
-                        id="replyInput"
-                        autocomplete="off"
+            {% if not collection %}
+                <div class="d-flex align-items-center gap-2 w-100 rounded-pill p-2">
+                    <form method="POST" action="{% url 'stories:send_story_reply' story.pk %}" class="d-flex align-items-center flex-grow-1 border border-white rounded-pill px-3 py-2">
+                        {% csrf_token %}
+                        <input
+                            type="text"
+                            class="form-control border-0 bg-transparent text-white me-2"
+                            placeholder="Reply to {{ story.author.username }}..."
+                            style="box-shadow: none; outline: none;"
+                            name="reply"
+                            id="replyInput"
+                            autocomplete="off"
+                        >
+                        <button type="submit" class="btn p-0 border-0 text-primary fw-bold d-none" id="replyButton">
+                            Reply
+                        </button>
+                    </form>
+                    <button type="button" class="btn rounded-circle p-2"
+                        hx-get="{% url 'stories:share_story' story.pk %}"
+                        hx-target="#small-modal-body"
+                        hx-swap="innerHTML"
+                        data-bs-toggle="modal"
+                        data-bs-target="#small_modal"
                     >
-                    <button type="submit" class="btn p-0 border-0 text-primary fw-bold d-none" id="replyButton">
-                        Reply
+                        <i class="bi bi-send fs-3"></i>
                     </button>
-                </form>
-                <button type="button" class="btn rounded-circle p-2"
-                    hx-get="{% url 'stories:share_story' story.pk %}"
-                    hx-target="#small-modal-body"
-                    hx-swap="innerHTML"
-                    data-bs-toggle="modal"
-                    data-bs-target="#small_modal"
-                >
-                    <i class="bi bi-send fs-3"></i>
-                </button>
-            </div>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 </div>
