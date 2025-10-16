@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center gap-3">
     {% for collection in collections %}
-        <a href="#" 
+        <a href="{% url 'stories:collection' collection.public_id %}" 
            class="d-flex flex-column align-items-center flex-shrink-0 text-center text-decoration-none text-white"
            style="width: 70px;">
             <div class="story-avatar mb-1">

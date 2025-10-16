@@ -1,0 +1,16 @@
+{% extends '_base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block head_title %}
+    Collections
+{% endblock head_title %}
+
+{% block content %}
+<div id="stories_container" class="story-viewer d-flex align-items-center justify-content-center text-white vh-100 position-relative">
+    {% include 'stories/partials/story.html' %}
+</div>
+<script src="{% static 'js/story_progress.js' %}"></script>
+<script src="{% static 'js/replyBtn.js' %}"></script>
+{% endblock content %}

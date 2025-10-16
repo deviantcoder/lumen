@@ -22,4 +22,6 @@ urlpatterns = [
     # collections
     path('collections/create/', views.create_collection, name='create_collection'),
     path('collections/<str:username>/', views.collections_list, name='collections_list'),
+    path('collections/view/<str:collection_uid>/', views.collection, name='collection'),
+    path('collections/view/<str:collection_uid>/<int:story_id>/', views.collection, name='collection_story_with_id'),
 ]

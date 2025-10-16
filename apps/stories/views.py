@@ -246,7 +246,6 @@ def save_story_to_collection(request, story_id):
     return render(request, 'stories/partials/save.html', context)
 
 
-
 @login_required
 def delete_story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
@@ -260,3 +259,39 @@ def delete_story(request, story_id):
     }
     
     return render(request, 'stories/partials/delete_story.html', context)
+
+
+@login_required
+def collection(request, collection_uid, story_id=None):
+    collection = get_object_or_404(Collection, public_id=collection_uid)
+    stories = collection.stories.all()
+
+    if story_id:
+        current_story = get_object_or_404(stories, pk=story_id)
+    else:
+        current_story = stories.first()
+
+    stories_list = list(stories)
+
+    try:
+        idx = stories_list.index(current_story)
+    except ValueError:
+        current_story = stories_list[0]
+        idx = 0
+
+    prev_story = stories_list[idx - 1] if idx > 0 else None
+    next_story = stories_list[idx + 1] if idx < (len(stories_list) - 1) else None
+
+    context = {
+        'collection': collection,
+        'stories': stories,
+        'story': current_story,
+        'prev_story': prev_story,
+        'next_story': next_story,
+        'current_idx': idx,
+    }
+    
+    if request.htmx:
+        return render(request, 'stories/partials/story.html', context)
+
+    return render(request, 'stories/collection.html', context)
