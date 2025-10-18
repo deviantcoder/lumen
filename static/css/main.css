@@ -43,8 +43,8 @@ body {
     -webkit-text-fill-color: transparent;
 }
 .bg-blurred {
-    background: rgba(1, 2, 2, 0.3) !important;
-    backdrop-filter: blur(10px) !important;
+    background: rgba(3, 19, 19, 0.5) !important;
+    backdrop-filter: blur(15px) !important;
 }
 .bg-frosted-ice-gradient {
     background: var(--frosted-ice-gradient) !important;
