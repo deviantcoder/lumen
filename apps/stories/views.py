@@ -344,3 +344,13 @@ def edit_collection(request, collection_id):
     }
 
     return render(request, 'stories/partials/edit_collection.html', context)
+
+
+@require_http_methods(['POST'])
+@login_required
+def delete_collection(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+    collection.delete()
+
+    return redirect('profiles:profile', request.user.username)
+

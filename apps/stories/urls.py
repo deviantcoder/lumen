@@ -34,4 +34,5 @@ urlpatterns = [
         name='remove_story_from_collection'
     ),
     path('collections/edit/<int:collection_id>/', views.edit_collection, name='edit_collection'),
+    path('collections/delete/<int:collection_id>/', views.delete_collection, name='delete_collection'),
 ]

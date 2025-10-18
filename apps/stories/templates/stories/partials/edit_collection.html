@@ -24,4 +24,17 @@
             </div>
         </form>
     </div>
+    <hr class="text-secondary my-4">
+    <div class="text-center">
+        <form method="POST" action="{% url 'stories:delete_collection' collection.pk %}">
+            {% csrf_token %}
+            <button type="submit" 
+                    class="btn btn-outline-danger rounded-4 fw-semibold px-4 py-2">
+                <i class="bi bi-trash-fill me-2"></i> Delete Collection
+            </button>
+        </form>
+        <small class="text-muted d-block mt-2">
+            This will permanently delete this collection and all its associations.
+        </small>
+    </div>
 </div>
