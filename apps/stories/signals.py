@@ -63,3 +63,14 @@ def compress_collection_media_file(sender, instance, **kwargs):
                     instance.image = compress_image(instance.image)
     except Exception as e:
         logger.warning(f'Story media deletion failed: {e}')
+
+    
+@receiver(post_delete, sender=Collection)
+def delete_collection_media(sender, instance, *args, **kwargs):
+    try:
+        path = f'media/collections/{str(instance.public_id)}'
+
+        if os.path.exists(path):
+            shutil.rmtree(path)
+    except Exception as e:
+        logger.warning(f'Collection media deletion failed: {e}')
