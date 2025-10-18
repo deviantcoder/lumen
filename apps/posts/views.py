@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db.models import Exists, OuterRef
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse
 
 from .forms import PostForm, CommentForm
 from .models import PostMedia, Tag, Post, Like, Save, Comment
@@ -182,4 +183,9 @@ def send_post_to_chat(request, post_id):
                 post=post
             )
 
-        return render(request, 'posts/partials/share_success.html')
+        # return render(request, 'posts/partials/share_success.html')
+
+        response = HttpResponse(status=204)
+        response['HX-Trigger'] = 'close'
+
+        return response
