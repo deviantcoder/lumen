@@ -153,7 +153,10 @@ def send_story_to_chat(request, story_id):
                 story=story
             )
 
-        return render(request, 'stories/partials/share_success.html')
+        response = HttpResponse(status=204)
+        response['HX-Trigger'] = 'close'
+
+        return response
 
 
 @require_http_methods(['POST'])
