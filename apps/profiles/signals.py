@@ -8,7 +8,9 @@ from django.contrib.auth import get_user_model
 
 from .models import Profile
 
-from utils.files import compress_image, crop_image
+from utils.files import (
+    compress_image, crop_image, ALLOWED_IMAGE_EXTENSIONS, crop_and_compress_image
+)
 
 
 logger = logging.getLogger(__name__)
@@ -26,24 +28,27 @@ def create_profile(sender, instance, created, **kwargs):
 
 @receiver(pre_save, sender=Profile)
 def compress_profile_image(sender, instance, **kwargs):
-    if not instance.image:
-        return
-    
     try:
-        if instance.pk:
+        if not instance.pk:
+            if instance.image:
+                ext = os.path.splitext(instance.image.name)[-1].lower().lstrip('.')
+                
+                if ext in ALLOWED_IMAGE_EXTENSIONS:
+                    instance.image = crop_and_compress_image(
+                        instance.image, crop_size=500, quality=60
+                    )
+        else:
             old_image = Profile.objects.filter(pk=instance.pk).values_list('image', flat=True).first()
-            if old_image and old_image == instance.image:
+
+            if not old_image:
                 return
+            
+            if instance.image and instance.image != old_image:
+                instance.image = crop_and_compress_image(
+                    instance.image, crop_size=500, quality=60
+                )
     except Exception as e:
-        logger.warning(f'Image compression failed: {e}')
-
-    try:
-        cropped = crop_image(instance.image, size=500)
-        compressed = compress_image(cropped, quality=60)
-
-        instance.image = compressed
-    except Exception as e:
-        logger.warning(f'Image compression failed: {e}')
+        logger.warning(f'Profile image compression failed: {e}')
 
 
 @receiver(post_delete, sender=Profile)

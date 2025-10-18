@@ -89,6 +89,13 @@ def crop_image(file, size: int = 300):
         logger.warning(f'Could not resize image: {e}')
 
 
+def crop_and_compress_image(image, crop_size: int = 300, quality: int = 60):
+    cropped = crop_image(image, crop_size)
+    compressed = compress_image(cropped, quality)
+
+    return compressed
+
+
 def validate_file_size(file):
     max_size_mb = getattr(settings, 'MAX_MEDIA_SIZE', 50)
     max_size_bytes = max_size_mb * 1024 * 1024
