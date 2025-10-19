@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'apps.search.apps.SearchConfig',
     'apps.chat.apps.ChatConfig',
     'apps.stories.apps.StoriesConfig',
+    'apps.api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
