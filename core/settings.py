@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'mptt',
     'channels',
+    'rest_framework',
 
     # project apps
     'apps.accounts.apps.AccountsConfig',

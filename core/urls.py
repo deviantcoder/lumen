@@ -14,6 +14,8 @@ urlpatterns = [
 
     path('', include('apps.feed.urls')),
 
+    # apps
+
     path('accounts/', include('apps.accounts.urls')),
     path('accounts/social/', include('social_django.urls', namespace='social')),
     path('posts/', include('apps.posts.urls')),
@@ -24,9 +26,15 @@ urlpatterns = [
     path('stories/', include('apps.stories.urls')),
 
     # pages
+
     path('about/', TemplateView.as_view(template_name='pages/about.html'), name='about'),
 
+    # API
+
+    path('api-auth/', include('rest_framework.urls')),
+
     # password reset
+
     path(
         'reset_password/',
         auth_views.PasswordResetView.as_view(template_name='accounts/password_reset/reset_password.html'),
