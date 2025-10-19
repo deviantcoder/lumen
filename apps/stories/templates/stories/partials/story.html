@@ -48,7 +48,7 @@
         </div>
     </div>
     {% if story %}
-        {% if story.story_type == 'image' %}
+        {% if story.media_type == 'image' %}
             <img src="{{ story.media.url }}" class="img-fluid w-100 h-100 object-fit-cover">
         {% else %}
             <video class="w-100 h-100 object-fit-cover" autoplay>

@@ -23,19 +23,21 @@ def set_expiry_datetime(hours: int = 24):
     return timezone.now() + timedelta(hours=hours)
 
 
-def upload_to_factory(base_dir: str):
-    def upload_to(instance, filename):
-        return base_upload_to(instance, filename, base_dir=base_dir)
-    return upload_to
+def story_upload_to(instance, filename):
+    return base_upload_to(instance, filename, base_dir='stories')
 
-
-story_upload_to = upload_to_factory(base_dir='stories')
-collection_upload_to = upload_to_factory(base_dir='collections')
+def collection_upload_to(instance, filename):
+    return base_upload_to(instance, filename, base_dir='collections')
 
 
 class Story(models.Model):
 
     class STORY_TYPES(models.TextChoices):
+        ACTIVE = ('active', 'Active')
+        ARCHIVED = ('archived', 'Archived')
+        DELETED = ('deleted', 'Deleted')
+
+    class MEDIA_TYPES(models.TextChoices):
         IMAGE = ('image', 'Image')
         VIDEO = ('video', 'Video')
 
@@ -50,7 +52,11 @@ class Story(models.Model):
     )
 
     story_type = models.CharField(
-        max_length=5, choices=STORY_TYPES.choices, default=STORY_TYPES.IMAGE
+        max_length=10, choices=STORY_TYPES.choices, default=STORY_TYPES.ACTIVE
+    )
+
+    media_type = models.CharField(
+        max_length=5, choices=MEDIA_TYPES.choices, default=MEDIA_TYPES.IMAGE
     )
 
     created = models.DateTimeField(auto_now_add=True)

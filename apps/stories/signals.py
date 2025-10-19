@@ -23,9 +23,9 @@ def compress_story_media_file(sender, instance, **kwargs):
 
             if ext in ALLOWED_IMAGE_EXTENSIONS:
                 instance.media = compress_image(instance.media)
-                instance.story_type = Story.STORY_TYPES.IMAGE
+                instance.media_type = Story.MEDIA_TYPES.IMAGE
             else:
-                instance.story_type = Story.STORY_TYPES.VIDEO
+                instance.media_type = Story.MEDIA_TYPES.VIDEO
     except Exception as e:
         logger.warning(f'Image compression failed: {e}')
 

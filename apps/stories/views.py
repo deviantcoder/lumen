@@ -103,7 +103,7 @@ def create_story(request):
                 media=file
             )
 
-            return redirect('stories:stories_with_id', request.user.username, story.pk)
+        return redirect('stories:stories_with_id', request.user.username, story.pk)
 
     context = {}
 

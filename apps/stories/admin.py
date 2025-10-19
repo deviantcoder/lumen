@@ -6,7 +6,7 @@ from .models import Story, Collection
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
     list_display = (
-        'author', 'story_type', 'expires_at'
+        'author', 'media_type', 'expires_at'
     )
 
 
