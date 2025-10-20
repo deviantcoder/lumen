@@ -1,6 +1,8 @@
 from django import forms
 
-from .models import Post, Comment, Tag
+from .models import (
+    Post, Comment, Tag, PostMedia
+)
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -23,15 +25,45 @@ class MultipleFileField(forms.FileField):
 
 
 class PostForm(forms.ModelForm):
-    files = MultipleFileField()
+    files = MultipleFileField(required=False)
+    tags_ = forms.CharField(
+        widget=forms.TextInput(),
+        required=False
+    )
 
     class Meta:
         model = Post
-        fields = ('caption', 'files')
+        fields = ('caption', 'files', 'tags_')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.fields['caption'].widget.attrs.update({'placeholder': 'Add caption...'})
+        self.fields['tags_'].widget.attrs.update({'placeholder': 'Add tags'})
+
+    def save(self, author=None, commit=True):
+        post = super().save(commit=False)
+
+        if author:
+            post.author = author
+        
+        if commit:
+            post.save()
+
+        tags_str = self.cleaned_data.get('tags_', '')
+        tag_names = [tag.strip().lower() for tag in tags_str.split('#') if tag.strip()]
+
+        for name in tag_names:
+            tag, _ = Tag.objects.get_or_create(name=name)
+            post.tags.add(tag)
+
+        files = self.files.getlist('files')
+        
+        for file in files:
+            PostMedia.objects.create(post=post, file=file)
+
+        return post
+
 
 
 class CommentForm(forms.ModelForm):

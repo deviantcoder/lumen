@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.db.models import Exists, OuterRef
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 
 from .forms import PostForm, CommentForm, EditPostForm
-from .models import PostMedia, Tag, Post, Like, Save, Comment
+from .models import Post, Like, Save, Comment
 
 from apps.profiles.models import Follow
 from apps.chat.models import Message, Chat
@@ -18,41 +17,15 @@ User = get_user_model()
 
 @login_required
 def create_post(request):
-    form = PostForm()
-
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-
-            files = request.FILES.getlist('files')
-
-            if files:
-                for file in files:
-                    PostMedia.objects.create(
-                        post=post,
-                        file=file,
-                    )
-            
-            tags = request.POST.get('tags', '')
-
-            if tags:
-                tags_list = [tag.strip().lower() for tag in tags.split('#') if tag.strip()]
-                for tag in set(tags_list):
-                    tag_obj, _ = Tag.objects.get_or_create(name=tag.lower())
-                    post.tags.add(tag_obj)
-
-            messages.success(request, 'Post created!')
-
+            form.save(author=request.user)
             return redirect('/')
+    else:
+        form = PostForm()
 
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'posts/post_form.html', context)
+    return render(request, 'posts/post_form.html', {'form': form})
 
 
 @require_http_methods(['POST'])
