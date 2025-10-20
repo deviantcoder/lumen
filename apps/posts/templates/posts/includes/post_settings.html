@@ -17,7 +17,15 @@
             </li>
             <li><hr class="dropdown-divider"></li>
             <li>
-                <button type="button" class="dropdown-item text-danger">Delete</button>
+                <button type="button" class="dropdown-item text-danger"
+                    hx-get="{% url 'posts:delete_post' post.pk %}"
+                    hx-target="#small-modal-body"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#small_modal"
+                >
+                    Delete
+                </button>
             </li>
         {% endif %}
         <li>

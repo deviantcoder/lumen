@@ -192,6 +192,10 @@ def send_post_to_chat(request, post_id):
 @login_required
 def edit_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+
+    if request.user != post.author:
+        return redirect('/')
+
     tag_names = list(post.tags.all().values_list('name', flat=True))
     tags = ' '.join(f'#{name}' for name in tag_names) if tag_names else ''
 
@@ -213,4 +217,17 @@ def edit_post(request, post_id):
 
 @login_required
 def delete_post(request, post_id):
-    pass
+    post = get_object_or_404(Post, pk=post_id)
+
+    if request.user != post.author:
+        return redirect('/')
+
+    if request.method == 'POST':
+        post.delete()
+        return redirect(request.META.get('HTTP_REFERER') or '')
+
+    context = {
+        'post': post,
+    }
+
+    return render(request, 'posts/partials/delete_post.html', context)
