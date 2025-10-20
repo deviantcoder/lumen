@@ -32,6 +32,7 @@ urlpatterns = [
     # API
 
     path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('apps.api.urls')),
 
     # password reset
 
