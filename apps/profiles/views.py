@@ -47,6 +47,7 @@ def get_user_posts(request, username):
         user.posts.filter(
             status=Post.POST_STATUS.ACTIVE
         )
+        .order_by('-created')
         .annotate(
             likes_count=Count('likes'),
             comments_count=Count('comments'),

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -31,7 +31,7 @@ class PostForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['caption'].widget.attrs.update({'placeholder': 'Enter a post caption...'})
+        self.fields['caption'].widget.attrs.update({'placeholder': 'Add caption...'})
 
 
 class CommentForm(forms.ModelForm):
@@ -42,4 +42,41 @@ class CommentForm(forms.ModelForm):
             'body': forms.TextInput(attrs={'placeholder': 'Write a comment...'}),
             'parent': forms.HiddenInput()
         }
-    
+
+
+class EditPostForm(forms.ModelForm):
+    tags_ = forms.CharField(
+        widget=forms.TextInput(),
+        required=False
+    )
+
+    class Meta:
+        model = Post
+        fields = ('caption', 'tags_')
+
+    def __init__(self, *args, **kwargs):
+        tags_ = kwargs.pop('tags_', None)
+
+        super().__init__(*args, **kwargs)
+
+        if tags_:
+            self.initial['tags_'] = tags_
+
+        self.fields['caption'].widget.attrs.update({'placeholder': 'Add caption...'})
+        self.fields['tags_'].widget.attrs.update({'placeholder': 'Add tags'})
+
+    def save(self, commit=True):
+        post = super().save(commit=False)
+
+        tags_str = self.cleaned_data.get('tags_', '')
+        tag_names = [tag.strip().lower() for tag in tags_str.split('#') if tag.strip()]
+
+        if commit:
+            post.save()
+            post.tags.clear()
+
+            for name in tag_names:
+                tag, _ = Tag.objects.get_or_create(name=name)
+                post.tags.add(tag)
+
+        return post

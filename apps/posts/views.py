@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, EditPostForm
 from .models import PostMedia, Tag, Post, Like, Save, Comment
 
 from apps.profiles.models import Follow
@@ -183,9 +183,34 @@ def send_post_to_chat(request, post_id):
                 post=post
             )
 
-        # return render(request, 'posts/partials/share_success.html')
-
         response = HttpResponse(status=204)
         response['HX-Trigger'] = 'close'
 
         return response
+    
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    tag_names = list(post.tags.all().values_list('name', flat=True))
+    tags = ' '.join(f'#{name}' for name in tag_names) if tag_names else ''
+
+    if request.method == 'POST':
+        form = EditPostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect(request.META.get('HTTP_REFERER') or '/')
+    else:
+        form = EditPostForm(tags_=tags, instance=post)
+
+    context = {
+        'post': post,
+        'form': form, 
+    }
+
+    return render(request, 'posts/partials/edit_post.html', context)
+
+
+@login_required
+def delete_post(request, post_id):
+    pass

@@ -10,9 +10,7 @@
                     <a href="{% url 'profiles:profile' post.author.username %}" class="fw-bold text-white small text-decoration-none me-2">{{ post.author }}</a>
                     <span class="text-muted small">• {{ post.created|naturaltime }}</span>
                 </div>
-                <button class="btn border-0 cursor-pointer">
-                    <i class="bi bi-three-dots"></i>
-                </button>
+                {% include 'posts/includes/post_settings.html' %}
             </div>
             {% if not post.media.count > 1 %}
                 {% with media=post.media.first %}

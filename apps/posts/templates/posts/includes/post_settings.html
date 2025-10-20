@@ -1,0 +1,27 @@
+<div class="dropdown">
+    <button class="btn border-0 cursor-pointer" type="button" data-bs-toggle="dropdown">
+        <i class="bi bi-three-dots"></i>
+    </button>
+    <ul class="dropdown-menu">
+        {% if request.user == post.author %}
+            <li>
+                <button type="button" class="dropdown-item"
+                    hx-get="{% url 'posts:edit_post' post.pk %}"
+                    hx-target="#small-modal-body"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#small_modal"
+                >
+                    Edit
+                </button>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <button type="button" class="dropdown-item text-danger">Delete</button>
+            </li>
+        {% endif %}
+        <li>
+            <button type="button" class="dropdown-item">Action</button>
+        </li>
+    </ul>
+</div>
