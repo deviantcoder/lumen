@@ -14,6 +14,9 @@ from .models import Follow
 User = get_user_model()
 
 
+# ---------- PROFILES ----------
+
+
 @login_required
 def profile(request, username: str):
     user = get_object_or_404(User, username=username)
@@ -39,39 +42,7 @@ def profile(request, username: str):
     return render(request, 'profiles/profile.html', context)
 
 
-@login_required
-def get_user_posts(request, username):
-    user = get_object_or_404(User, username=username)
-
-    posts = (
-        user.posts.filter(
-            status=Post.POST_STATUS.ACTIVE
-        )
-        .order_by('-created')
-        .annotate(
-            likes_count=Count('likes'),
-            comments_count=Count('comments'),
-        )
-    )
-    
-    if 'saved' in request.GET and user == request.user:
-        saved_posts_pks = user.saved_posts.values_list('post', flat=True)
-        posts = (
-            Post.objects.filter(
-                pk__in=saved_posts_pks,
-                status=Post.POST_STATUS.ACTIVE
-            )
-            .annotate(
-                likes_count=Count('likes'),
-                comments_count=Count('comments'),
-            )
-        )
-
-    context = {
-        'posts': posts,
-    }
-
-    return render(request, 'posts/partials/posts_grid.html', context)
+# ---------- EDITING ----------
 
 
 @login_required
@@ -135,6 +106,9 @@ def update_profile_bio(request):
             return redirect('profiles:edit_profile')
 
 
+# ---------- INTERACTIONS ----------
+
+
 @require_http_methods(['POST'])
 @login_required
 def toggle_follow(request, username):
@@ -158,6 +132,41 @@ def toggle_follow(request, username):
         }
 
         return render(request, 'profiles/partials/follow_button.html', context)
+    
+
+@login_required
+def get_user_posts(request, username):
+    user = get_object_or_404(User, username=username)
+
+    posts = (
+        user.posts.filter(
+            status=Post.POST_STATUS.ACTIVE
+        )
+        .order_by('-created')
+        .annotate(
+            likes_count=Count('likes'),
+            comments_count=Count('comments'),
+        )
+    )
+    
+    if 'saved' in request.GET and user == request.user:
+        saved_posts_pks = user.saved_posts.values_list('post', flat=True)
+        posts = (
+            Post.objects.filter(
+                pk__in=saved_posts_pks,
+                status=Post.POST_STATUS.ACTIVE
+            )
+            .annotate(
+                likes_count=Count('likes'),
+                comments_count=Count('comments'),
+            )
+        )
+
+    context = {
+        'posts': posts,
+    }
+
+    return render(request, 'posts/partials/posts_grid.html', context)
 
 
 @login_required

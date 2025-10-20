@@ -16,41 +16,7 @@ from apps.chat.models import Message, Chat
 User = get_user_model()
 
 
-@login_required
-def stories_list(request):
-    user = request.user
-    now = timezone.now()
-
-    following_ids = user.following.values_list('user__pk', flat=True)
-
-    active_stories_subquery = Story.objects.filter(
-        author=OuterRef('pk'),
-        expires_at__gt=now
-    )
-
-    users = (
-        User.objects.filter(pk__in=following_ids)
-        .annotate(
-            has_active_stories = Exists(
-                active_stories_subquery
-            )
-        )
-        .filter(
-            has_active_stories=True
-        )
-        .select_related(
-            'profile'
-        )
-        .prefetch_related(
-            'stories'
-        )
-    )
-
-    context = {
-        'users': users,
-    }
-
-    return render(request, 'stories/partials/stories_list.html', context)
+# ---------- STORIES ----------
 
 
 @login_required
@@ -111,6 +77,89 @@ def create_story(request):
 
 
 @login_required
+def delete_story(request, story_id):
+    story = get_object_or_404(Story, pk=story_id)
+
+    if request.method == 'POST':
+        story.delete()
+        return redirect('stories:stories', request.user.username)
+    
+    context = {
+        'story': story,
+    }
+    
+    return render(request, 'stories/partials/delete_story.html', context)
+
+
+@login_required
+def stories_list(request):
+    user = request.user
+    now = timezone.now()
+
+    following_ids = user.following.values_list('user__pk', flat=True)
+
+    active_stories_subquery = Story.objects.filter(
+        author=OuterRef('pk'),
+        expires_at__gt=now
+    )
+
+    users = (
+        User.objects.filter(pk__in=following_ids)
+        .annotate(
+            has_active_stories = Exists(
+                active_stories_subquery
+            )
+        )
+        .filter(
+            has_active_stories=True
+        )
+        .select_related(
+            'profile'
+        )
+        .prefetch_related(
+            'stories'
+        )
+    )
+
+    context = {
+        'users': users,
+    }
+
+    return render(request, 'stories/partials/stories_list.html', context)
+
+
+# ---------- INTERACTIONS ----------
+
+
+@require_http_methods(['POST'])
+@login_required
+def send_story_reply(request, story_id):
+    
+    story = get_object_or_404(Story, pk=story_id)
+
+    chat = Chat.objects.filter(members=request.user).filter(members=story.author).first()
+
+    if not chat:
+        chat = Chat.objects.create()
+        chat.members.add(request.user, story.author)
+
+    reply = request.POST.get('reply', '')
+
+    Message.objects.create(
+        message_type=Message.MESSAGE_TYPES.STORY_REPLY,
+        chat=chat,
+        sender=request.user,
+        story=story,
+        content=reply
+    )
+
+    return redirect('/')
+
+
+# ---------- SHARING ----------
+
+
+@login_required
 def share_story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
 
@@ -159,109 +208,7 @@ def send_story_to_chat(request, story_id):
         return response
 
 
-@require_http_methods(['POST'])
-@login_required
-def send_story_reply(request, story_id):
-    
-    story = get_object_or_404(Story, pk=story_id)
-
-    chat = Chat.objects.filter(members=request.user).filter(members=story.author).first()
-
-    if not chat:
-        chat = Chat.objects.create()
-        chat.members.add(request.user, story.author)
-
-    reply = request.POST.get('reply', '')
-
-    Message.objects.create(
-        message_type=Message.MESSAGE_TYPES.STORY_REPLY,
-        chat=chat,
-        sender=request.user,
-        story=story,
-        content=reply
-    )
-
-    return redirect('/')
-
-
-@login_required
-def collections_list(request, username):
-    user = get_object_or_404(User, username=username)
-    collections = user.collections.all()
-
-    context = {
-        'collections': collections,
-    }
-
-    return render(request, 'stories/partials/collections_list.html', context)
-
-
-@login_required
-def create_collection(request):
-    if request.method == 'POST':
-        form = CollectionForm(request.POST, request.FILES)
-        if form.is_valid():
-            collection = form.save(commit=False)
-            collection.owner = request.user
-
-            collection.save()
-            
-            response = HttpResponse(status=204)
-            response['HX-Trigger'] = 'close'
-
-            return response
-    else:
-        form = CollectionForm()
-
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'stories/partials/collection_form.html', context)
-
-
-@login_required
-def save_story_to_collection(request, story_id):
-    story = get_object_or_404(Story, pk=story_id)
-    collections = request.user.collections.exclude(stories=story)
-
-    if request.method == 'POST':
-        pks = request.POST.get('recipients', '')
-        
-        pk_list = [int(pk) for pk in pks.split(',') if pk.isdigit()]
-
-        if pk_list:
-            collections = Collection.objects.filter(owner=request.user, pk__in=pk_list)
-
-            for collection in collections:
-                collection.stories.add(story)
-
-        response = HttpResponse(status=204)
-        response['HX-Trigger'] = 'close'
-
-        return response
-    
-    context = {
-        'collections': collections,
-        'story': story,
-    }
-
-    return render(request, 'stories/partials/save.html', context)
-
-
-@login_required
-def delete_story(request, story_id):
-    story = get_object_or_404(Story, pk=story_id)
-
-    if request.method == 'POST':
-        story.delete()
-        return redirect('stories:stories', request.user.username)
-    
-    context = {
-        'story': story,
-    }
-    
-    return render(request, 'stories/partials/delete_story.html', context)
+# ---------- COLLECTIONS ----------
 
 
 @login_required
@@ -317,15 +264,28 @@ def collection(request, collection_uid, story_id=None):
     return render(request, 'stories/collection.html', context)
 
 
-@require_http_methods(['POST'])
 @login_required
-def remove_story_from_collection(request, collection_uid, story_id):
-    collection = get_object_or_404(Collection, public_id=collection_uid)
-    story = get_object_or_404(Story, pk=story_id)
+def create_collection(request):
+    if request.method == 'POST':
+        form = CollectionForm(request.POST, request.FILES)
+        if form.is_valid():
+            collection = form.save(commit=False)
+            collection.owner = request.user
 
-    collection.stories.remove(story)
+            collection.save()
+            
+            response = HttpResponse(status=204)
+            response['HX-Trigger'] = 'close'
 
-    return redirect('stories:collection', collection.public_id)
+            return response
+    else:
+        form = CollectionForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'stories/partials/collection_form.html', context)
 
 
 @login_required
@@ -357,3 +317,54 @@ def delete_collection(request, collection_id):
 
     return redirect('profiles:profile', request.user.username)
 
+
+@login_required
+def collections_list(request, username):
+    user = get_object_or_404(User, username=username)
+    collections = user.collections.all()
+
+    context = {
+        'collections': collections,
+    }
+
+    return render(request, 'stories/partials/collections_list.html', context)
+
+
+@login_required
+def save_story_to_collection(request, story_id):
+    story = get_object_or_404(Story, pk=story_id)
+    collections = request.user.collections.exclude(stories=story)
+
+    if request.method == 'POST':
+        pks = request.POST.get('recipients', '')
+        
+        pk_list = [int(pk) for pk in pks.split(',') if pk.isdigit()]
+
+        if pk_list:
+            collections = Collection.objects.filter(owner=request.user, pk__in=pk_list)
+
+            for collection in collections:
+                collection.stories.add(story)
+
+        response = HttpResponse(status=204)
+        response['HX-Trigger'] = 'close'
+
+        return response
+    
+    context = {
+        'collections': collections,
+        'story': story,
+    }
+
+    return render(request, 'stories/partials/save.html', context)
+
+
+@require_http_methods(['POST'])
+@login_required
+def remove_story_from_collection(request, collection_uid, story_id):
+    collection = get_object_or_404(Collection, public_id=collection_uid)
+    story = get_object_or_404(Story, pk=story_id)
+
+    collection.stories.remove(story)
+
+    return redirect('stories:collection', collection.public_id)
