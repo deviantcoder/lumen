@@ -1,12 +1,16 @@
-from django.db.models import Count, Exists, OuterRef
+from django.db.models import Count, Exists, OuterRef, Q
+from django.contrib.auth import get_user_model
 
 from rest_framework.generics import (
     get_object_or_404,
     RetrieveAPIView
 )
+from rest_framework import status
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -16,6 +20,9 @@ from .serializers import (
 )
 
 from apps.profiles.models import Profile, Follow
+
+
+User = get_user_model()
 
 
 class CurrentUserProfileAPIView(RetrieveAPIView):
@@ -77,3 +84,67 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         )
 
         return queryset
+
+    @action(
+        detail=True,
+        methods=['POST'],
+        url_path='follow',
+        authentication_classes=[JWTAuthentication],
+        permission_classes=[IsAuthenticated]
+    )
+    def follow(self, request, pk=None):
+        follower = self.request.user
+        profile = get_object_or_404(Profile, pk=pk)
+        user = profile.user
+
+        if follower == user:
+            return Response(
+                {'detail': 'You cannot follow yourself.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if Follow.objects.filter(
+            user=user, follower=follower
+        ).exists():
+            return Response(
+                {'detail': 'You are already following this user.'},
+                status=status.HTTP_409_CONFLICT
+            )
+        
+        follow = Follow.objects.create(
+            user=user, follower=follower
+        )
+
+        return Response(
+            {'detail': 'You started following this user.'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+
+    @action(
+        detail=True,
+        methods=['POST'],
+        url_path='unfollow',
+        authentication_classes=[JWTAuthentication],
+        permission_classes=[IsAuthenticated]
+    )
+    def unfollow(self, request, pk=None):
+        follower = self.request.user
+        profile = get_object_or_404(Profile, pk=pk)
+        user = profile.user
+
+        try:
+            follow = Follow.objects.get(
+                Q(follower=follower) & Q(user=user)
+            )
+
+            follow.delete()
+            
+            return Response(
+                {'detail': 'You have unfollowed this user.'},
+                status=status.HTTP_204_NO_CONTENT
+            )
+        except Follow.DoesNotExist:
+            return Response(
+                {'detail': 'You are not following this user.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
