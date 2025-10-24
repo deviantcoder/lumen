@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.profiles.models import Profile
+from apps.profiles.models import Profile, Follow
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -42,8 +42,10 @@ class ProfileListSerializer(ProfileSerializer):
         lookup_field='pk'
     )
 
+    followed_by_me = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Profile
         fields = (
-            'profile_url', 'url', 'id', 'username', 'full_name', 'image',
+            'profile_url', 'url', 'id', 'username', 'full_name', 'image', 'followed_by_me'
         )

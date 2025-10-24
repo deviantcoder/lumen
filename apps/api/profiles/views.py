@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Exists, OuterRef
 
 from rest_framework.generics import (
     get_object_or_404,
@@ -15,7 +15,7 @@ from .serializers import (
     ProfileListSerializer
 )
 
-from apps.profiles.models import Profile
+from apps.profiles.models import Profile, Follow
 
 
 class CurrentUserProfileAPIView(RetrieveAPIView):
@@ -66,7 +66,13 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             )
             .annotate(
                 followers_count=Count('user__followers', distinct=True),
-                following_count=Count('user__following', distinct=True)
+                following_count=Count('user__following', distinct=True),
+
+                followed_by_me=Exists(
+                    Follow.objects.filter(
+                        follower=self.request.user, user=OuterRef('pk')
+                    )
+                )
             )
         )
 
