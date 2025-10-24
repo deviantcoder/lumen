@@ -4,7 +4,9 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     CurrentUserProfileAPIView,
-    ProfileViewSet
+    ProfileViewSet,
+    ProfileFollowersAPIView,
+    ProfileFollowingAPIView
 )
 
 
@@ -14,5 +16,9 @@ router.register(r'profiles', ProfileViewSet, basename='profile')
 
 urlpatterns = [
     path('profiles/me/', CurrentUserProfileAPIView.as_view(), name='current-profile'),
+
+    path('profiles/<int:pk>/followers/', ProfileFollowersAPIView.as_view(), name='profile-followers'),
+    path('profiles/<int:pk>/following/', ProfileFollowingAPIView.as_view(), name='profile-following'),
+
     path('', include(router.urls)),
 ]

@@ -49,3 +49,35 @@ class ProfileListSerializer(ProfileSerializer):
         fields = (
             'profile_url', 'url', 'id', 'username', 'full_name', 'image', 'followed_by_me'
         )
+
+
+class FollowerSerialzer(serializers.ModelSerializer):
+    
+    profile_id = serializers.IntegerField(
+        source='follower.profile.pk', read_only=True
+    )
+    username = serializers.CharField(
+        source='follower.username', read_only=True
+    )
+
+    class Meta:
+        model = Follow
+        fields = (
+            'profile_id', 'username'
+        )
+
+
+class FollowingSerializer(serializers.ModelSerializer):
+
+    profile_id = serializers.IntegerField(
+        source='user.profile.pk', read_only=True
+    )
+    username = serializers.CharField(
+        source='user.username', read_only=True
+    )
+
+    class Meta:
+        model = Follow
+        fields = (
+            'profile_id', 'username'
+        )

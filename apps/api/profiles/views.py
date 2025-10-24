@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 
 from rest_framework.generics import (
     get_object_or_404,
-    RetrieveAPIView
+    RetrieveAPIView,
+    ListAPIView
 )
 from rest_framework import status
 from rest_framework.viewsets import GenericViewSet
@@ -16,7 +17,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import (
     ProfileSerializer,
-    ProfileListSerializer
+    ProfileListSerializer,
+    FollowerSerialzer,
+    FollowingSerializer
 )
 
 from apps.profiles.models import Profile, Follow
@@ -83,6 +86,15 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             )
         )
 
+        username = self.request.query_params.get('username', '')
+        full_name = self.request.query_params.get('full_name', '')
+
+        if username:
+            queryset = queryset.filter(user__username__icontains=username)
+
+        if full_name:
+            queryset = queryset.filter(user__full_name__icontains=full_name)
+
         return queryset
 
     @action(
@@ -148,3 +160,23 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
                 {'detail': 'You are not following this user.'},
                 status=status.HTTP_404_NOT_FOUND
             )
+
+
+class ProfileFollowersAPIView(ListAPIView):
+    serializer_class = FollowerSerialzer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.followers.all()
+
+
+class ProfileFollowingAPIView(ListAPIView):
+    serializer_class = FollowingSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.following.all()
