@@ -35,7 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         return obj.image_or_default
 
 
-class ProfileListSerializer(ProfileSerializer, serializers.HyperlinkedModelSerializer):
+class ProfileListSerializer(ProfileSerializer):
 
     profile_url = serializers.HyperlinkedIdentityField(
         view_name='profile-detail',

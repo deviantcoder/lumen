@@ -2,8 +2,7 @@ from django.db.models import Count
 
 from rest_framework.generics import (
     get_object_or_404,
-    RetrieveAPIView,
-    ListAPIView
+    RetrieveAPIView
 )
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
@@ -45,10 +44,17 @@ class CurrentUserProfileAPIView(RetrieveAPIView):
         )
 
 
-class ProfileListAPIView(ListAPIView):
+class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     serializer_class = ProfileListSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProfileListSerializer
+        if self.action == 'retrieve':
+            return ProfileSerializer
+        return ProfileListSerializer
 
     def get_queryset(self):
         queryset = (
@@ -65,8 +71,3 @@ class ProfileListAPIView(ListAPIView):
         )
 
         return queryset
-
-
-class ProfileDetailAPIView(RetrieveAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
