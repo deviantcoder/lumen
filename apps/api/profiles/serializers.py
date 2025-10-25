@@ -39,7 +39,7 @@ class ProfileListSerializer(ProfileSerializer):
 
     profile_url = serializers.HyperlinkedIdentityField(
         view_name='profile-detail',
-        lookup_field='pk'
+        lookup_field='username'
     )
 
     followed_by_me = serializers.BooleanField(read_only=True)
@@ -62,7 +62,7 @@ class FollowerSerialzer(serializers.ModelSerializer):
     profile_url = serializers.HyperlinkedRelatedField(
         source='follower.profile',
         view_name='profile-detail',
-        lookup_field='pk',
+        lookup_field='username',
         read_only=True
     )
 
@@ -84,7 +84,7 @@ class FollowingSerializer(serializers.ModelSerializer):
     profile_url = serializers.HyperlinkedRelatedField(
         source='user.profile',
         view_name='profile-detail',
-        lookup_field='pk',
+        lookup_field='username',
         read_only=True
     )
 

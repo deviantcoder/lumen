@@ -55,6 +55,10 @@ class Profile(models.Model):
         if self.image:
             return self.image.url
         return '/static/img/def.png'
+    
+    @property
+    def username(self):
+        return self.user.username
 
 
 class Follow(models.Model):

@@ -59,12 +59,20 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    lookup_field = 'username'
+    lookup_url_kwarg = 'username'
+
     def get_serializer_class(self):
         if self.action == 'list':
             return ProfileListSerializer
         if self.action == 'retrieve':
             return ProfileSerializer
         return ProfileListSerializer
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        username = self.kwargs.get(self.lookup_url_kwarg)
+        return get_object_or_404(queryset, user__username=username)
 
     def get_queryset(self):
         queryset = (
@@ -80,7 +88,8 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
                 followed_by_me=Exists(
                     Follow.objects.filter(
-                        follower=self.request.user, user=OuterRef('pk')
+                        follower=self.request.user,
+                        user=OuterRef('user_id')
                     )
                 )
             )
@@ -101,13 +110,10 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         detail=True,
         methods=['POST'],
         url_path='follow',
-        authentication_classes=[JWTAuthentication],
-        permission_classes=[IsAuthenticated]
     )
-    def follow(self, request, pk=None):
+    def follow(self, request, username=None):
         follower = self.request.user
-        profile = get_object_or_404(Profile, pk=pk)
-        user = profile.user
+        user = get_object_or_404(User, username=username)
 
         if follower == user:
             return Response(
@@ -129,20 +135,17 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
         return Response(
             {'detail': 'You started following this user.'},
-            status=status.HTTP_204_NO_CONTENT
+            status=status.HTTP_201_CREATED
         )
 
     @action(
         detail=True,
         methods=['POST'],
         url_path='unfollow',
-        authentication_classes=[JWTAuthentication],
-        permission_classes=[IsAuthenticated]
     )
-    def unfollow(self, request, pk=None):
+    def unfollow(self, request, username=None):
         follower = self.request.user
-        profile = get_object_or_404(Profile, pk=pk)
-        user = profile.user
+        user = get_object_or_404(User, username=username)
 
         try:
             follow = Follow.objects.get(
@@ -152,7 +155,6 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             follow.delete()
             
             return Response(
-                {'detail': 'You have unfollowed this user.'},
                 status=status.HTTP_204_NO_CONTENT
             )
         except Follow.DoesNotExist:
