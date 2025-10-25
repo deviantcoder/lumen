@@ -59,11 +59,17 @@ class FollowerSerialzer(serializers.ModelSerializer):
     username = serializers.CharField(
         source='follower.username', read_only=True
     )
+    profile_url = serializers.HyperlinkedRelatedField(
+        source='follower.profile',
+        view_name='profile-detail',
+        lookup_field='pk',
+        read_only=True
+    )
 
     class Meta:
         model = Follow
         fields = (
-            'profile_id', 'username'
+            'profile_id', 'username', 'profile_url'
         )
 
 
@@ -75,9 +81,15 @@ class FollowingSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         source='user.username', read_only=True
     )
+    profile_url = serializers.HyperlinkedRelatedField(
+        source='user.profile',
+        view_name='profile-detail',
+        lookup_field='pk',
+        read_only=True
+    )
 
     class Meta:
         model = Follow
         fields = (
-            'profile_id', 'username'
+            'profile_id', 'username', 'profile_url'
         )

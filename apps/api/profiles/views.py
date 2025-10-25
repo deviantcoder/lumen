@@ -168,7 +168,8 @@ class ProfileFollowersAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
+        username = self.kwargs.get('username')
+        user = get_object_or_404(User, username=username)
         return user.followers.all()
 
 
@@ -178,5 +179,6 @@ class ProfileFollowingAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
+        username = self.kwargs.get('username')
+        user = get_object_or_404(User, username=username)
         return user.following.all()
