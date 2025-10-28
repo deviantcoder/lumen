@@ -32,9 +32,16 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+
+    profile_url = serializers.HyperlinkedIdentityField(
+        source='profile',
+        view_name='profile-detail',
+        lookup_field='username',
+        read_only=True
+    )
     
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'email', 'full_name'
+            'id', 'username', 'email', 'full_name', 'profile_url'
         )
