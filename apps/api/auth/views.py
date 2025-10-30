@@ -2,6 +2,8 @@ from rest_framework import generics, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from .serializers import (
     RegisterSerializer, UserSerializer
 )
@@ -12,12 +14,10 @@ class RegisterAPIView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 
-class CurrentUserAPIView(views.APIView):
+class CurrentUserAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
-    def get(self, request):
-        serializer = UserSerializer(
-            request.user,
-            context={'request': self.request}
-        )
-        return Response(serializer.data)
+    def get_object(self):
+        return self.request.user

@@ -39,9 +39,25 @@ class UserSerializer(serializers.ModelSerializer):
         lookup_field='username',
         read_only=True
     )
+    email = serializers.ReadOnlyField()
+    username = serializers.CharField(required=False)
+    full_name = serializers.CharField(required=False)
     
     class Meta:
         model = User
         fields = (
             'id', 'username', 'email', 'full_name', 'profile_url'
         )
+
+    def validate_username(self, value):
+        user = self.context['request'].user
+
+        if value == user.username:
+            raise serializers.ValidationError(
+                'This is already your username.'
+            )
+        
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError('This username is already taken')
+        
+        return value
