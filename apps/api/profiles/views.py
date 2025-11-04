@@ -18,7 +18,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import (
     ProfileSerializer,
     ProfileListSerializer,
-    FollowerSerialzer,
+    FollowerSerializer,
     FollowingSerializer
 )
 
@@ -29,6 +29,8 @@ User = get_user_model()
 
 
 class CurrentUserProfileAPIView(RetrieveUpdateAPIView):
+
+    http_method_names = ['get', 'patch']
     serializer_class = ProfileSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -55,6 +57,7 @@ class CurrentUserProfileAPIView(RetrieveUpdateAPIView):
 
 
 class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+
     serializer_class = ProfileListSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -165,7 +168,8 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
 
 class ProfileFollowersAPIView(ListAPIView):
-    serializer_class = FollowerSerialzer
+
+    serializer_class = FollowerSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -176,6 +180,7 @@ class ProfileFollowersAPIView(ListAPIView):
 
 
 class ProfileFollowingAPIView(ListAPIView):
+    
     serializer_class = FollowingSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]

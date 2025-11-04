@@ -10,7 +10,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     email = serializers.CharField(source='user.email', read_only=True)
 
-    image = serializers.SerializerMethodField()
+    image = serializers.ImageField(required=False, allow_null=True)
 
     followers_count = serializers.IntegerField(read_only=True)
     following_count = serializers.IntegerField(read_only=True)
@@ -31,9 +31,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             'created'
         )
 
-    def get_image(self, obj):
-        return obj.image_or_default
-
 
 class ProfileListSerializer(ProfileSerializer):
 
@@ -51,7 +48,7 @@ class ProfileListSerializer(ProfileSerializer):
         )
 
 
-class FollowerSerialzer(serializers.ModelSerializer):
+class FollowerSerializer(serializers.ModelSerializer):
     
     profile_id = serializers.IntegerField(
         source='follower.profile.pk', read_only=True
