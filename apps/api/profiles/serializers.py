@@ -44,7 +44,13 @@ class ProfileListSerializer(ProfileSerializer):
     class Meta:
         model = Profile
         fields = (
-            'profile_url', 'url', 'id', 'username', 'full_name', 'image', 'followed_by_me'
+            'id',
+            'profile_url',
+            'url',
+            'username',
+            'full_name',
+            'image',
+            'followed_by_me',
         )
 
 
