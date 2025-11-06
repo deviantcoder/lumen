@@ -1,15 +1,19 @@
 from django.db.models import Count, Exists, OuterRef
 
-from rest_framework.generics import RetrieveAPIView
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import (
     PostSerializer,
     PostListSerializer,
-    PostDetailSerializer
+    PostDetailSerializer,
+    PostMediaSerializer
 )
 from .permissions import IsAuthorOrReadOnly
 
@@ -21,6 +25,7 @@ class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    http_method_names = ['get', 'patch', 'post', 'delete']
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -68,3 +73,30 @@ class PostViewSet(ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(
+        methods=['POST'],
+        detail=True,
+        url_path='upload-media'
+    )
+    def upload_media(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+
+        files = request.FILES.getlist('media')
+        
+        if not files:
+            return Response(
+                'No media files provided.',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        data = [{'file': file} for file in files]
+
+        serializer = PostMediaSerializer(data=data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(post=post)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
