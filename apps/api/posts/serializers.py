@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from apps.posts.models import Post, Tag, PostMedia
+from apps.posts.models import (
+    Post, Tag, PostMedia, Comment
+)
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -60,4 +62,18 @@ class PostDetailSerializer(PostSerializer):
     class Meta(PostSerializer.Meta):
         fields = PostSerializer.Meta.fields + (
             'liked_by_user', 'saved_by_user'
+        )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    author = serializers.ReadOnlyField(source='author.username')
+    post_id = serializers.IntegerField(source='post.id', read_only=True)
+    body=serializers.CharField(required=True)
+    created = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = (
+            'id', 'author', 'post_id', 'body', 'created'
         )

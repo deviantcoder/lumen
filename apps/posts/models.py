@@ -148,9 +148,9 @@ class Comment(MPTTModel):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='comments')
 
-    body = models.TextField(blank=True)
+    body = models.TextField(blank=False)
 
     created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=COMMENT_STATUS.choices, default=COMMENT_STATUS.ACTIVE)

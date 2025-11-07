@@ -6,7 +6,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -18,11 +18,12 @@ from .serializers import (
     PostSerializer,
     PostListSerializer,
     PostDetailSerializer,
-    PostMediaSerializer
+    PostMediaSerializer,
+    CommentSerializer
 )
 from .permissions import IsAuthorOrReadOnly
 
-from apps.posts.models import Post, Like, Save
+from apps.posts.models import Post, Like, Save, Comment
 
 
 class PostViewSet(ModelViewSet):
@@ -232,3 +233,30 @@ class PostViewSet(ModelViewSet):
         serializer = PostListSerializer(queryset, many=True)
 
         return Response(serializer.data)
+
+
+class CommentViewSet(ModelViewSet):
+
+    serializer_class = CommentSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+
+    def get_queryset(self):
+        queryset = Comment.objects.filter(
+            post_id=self.kwargs.get('post_id')
+        )
+
+        return queryset
+    
+    def perform_create(self, serializer):
+        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
+        serializer.save(
+            author=self.request.user,
+            post=post
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(
+            {'detail': 'Deleting comments is not allowed'},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )

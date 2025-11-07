@@ -55,5 +55,5 @@ class SaveAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(MPTTModelAdmin):
     list_display = (
-        'user', 'post', 'created'
+        'author', 'post', 'created'
     )
