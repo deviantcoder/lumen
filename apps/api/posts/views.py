@@ -147,3 +147,16 @@ class PostViewSet(ModelViewSet):
                 {'detail': 'You have not liked this post.'},
                 status=status.HTTP_404_NOT_FOUND
             )
+
+    @action(
+        methods=["GET"],
+        detail=False,
+        url_path="my-posts"
+    )
+    def my_posts(self, request):
+        user = request.user
+
+        queryset = self.get_queryset().filter(author=user)
+        serializer = PostListSerializer(queryset, many=True)
+
+        return Response(serializer.data)
