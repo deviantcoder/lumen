@@ -1,4 +1,9 @@
-from django.db.models import Count, Exists, OuterRef
+from django.db.models import (
+    Count, Exists, OuterRef, Q, F, Case, When, IntegerField
+)
+from django.utils import timezone
+
+from datetime import timedelta
 
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
@@ -47,6 +52,7 @@ class PostViewSet(ModelViewSet):
             .annotate(
                 likes_count=Count('likes', distinct=True),
                 comments_count=Count('comments', distinct=True),
+
                 liked_by_user=Exists(
                     Like.objects.filter(
                         user=self.request.user, post=OuterRef('pk')
@@ -183,6 +189,46 @@ class PostViewSet(ModelViewSet):
         user = request.user
 
         queryset = self.get_queryset().filter(saves__user=user)
+        serializer = PostListSerializer(queryset, many=True)
+
+        return Response(serializer.data)
+
+    @action(
+        methods=['GET'],
+        detail=False,
+        url_name='feed'
+    )
+    def feed(self, request):
+        user = request.user
+
+        queryset = (
+            self.get_queryset().filter(
+                Q(author=user) | Q(author__followers__follower=user)
+            )
+            .annotate(
+                priority_score=Case(
+                    When(author=user, then=100),
+                    default=10,
+                    output_field=IntegerField()
+                ),
+                time_score=Case(
+                    When(created__gte=timezone.now() - timedelta(hours=24), then=20),
+                    When(created__gte=timezone.now() - timedelta(days=7), then=10),
+                    When(created__gte=timezone.now() - timedelta(days=30), then=5),
+                    default=1,
+                    output_field=IntegerField()
+                ),
+            )
+            .annotate(
+                final_score=(
+                    F("priority_score") + F("time_score") + F("likes_count") + F("comments_count")
+                )
+            )
+            .order_by(
+                '-final_score', '-created'
+            )
+        )
+
         serializer = PostListSerializer(queryset, many=True)
 
         return Response(serializer.data)
