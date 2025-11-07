@@ -120,7 +120,8 @@ class PostViewSet(ModelViewSet):
         Like.objects.create(user=self.request.user, post=post)
 
         return Response(
-            status=status.HTTP_204_NO_CONTENT
+            {'detail': 'You liked this post.'},
+            status=status.HTTP_201_CREATED
         )
     
     @action(
@@ -135,7 +136,7 @@ class PostViewSet(ModelViewSet):
             like = Like.objects.get(
                 user=self.request.user, post=post
             )
-            
+
             like.delete()
 
             return Response(
