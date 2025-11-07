@@ -86,7 +86,7 @@ class PostViewSet(ModelViewSet):
         
         if not files:
             return Response(
-                'No media files provided.',
+                {'detail': 'No media files provided.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
@@ -100,3 +100,49 @@ class PostViewSet(ModelViewSet):
             serializer.data,
             status=status.HTTP_201_CREATED
         )
+
+    @action(
+        methods=['POST'],
+        detail=True,
+        url_name='like'
+    )
+    def like(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+
+        if Like.objects.filter(
+            user=self.request.user, post=post
+        ).exists():
+            return Response(
+                {'detail': 'You have already liked this post.'},
+                status=status.HTTP_409_CONFLICT
+            )
+        
+        Like.objects.create(user=self.request.user, post=post)
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
+        )
+    
+    @action(
+        methods=['POST'],
+        detail=True,
+        url_name='unlike'
+    )
+    def unlike(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+
+        try:
+            like = Like.objects.get(
+                user=self.request.user, post=post
+            )
+            
+            like.delete()
+
+            return Response(
+                status=status.HTTP_204_NO_CONTENT
+            )
+        except Like.DoesNotExist:
+            return Response(
+                {'detail': 'You have not liked this post.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
