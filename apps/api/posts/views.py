@@ -160,3 +160,29 @@ class PostViewSet(ModelViewSet):
         serializer = PostListSerializer(queryset, many=True)
 
         return Response(serializer.data)
+    
+    @action(
+        methods=['GET'],
+        detail=False,
+        url_name='liked'
+    )
+    def liked(self, request):
+        user = request.user
+
+        queryset = self.get_queryset().filter(likes__user=user)
+        serializer = PostListSerializer(queryset, many=True)
+
+        return Response(serializer.data)
+    
+    @action(
+        methods=['GET'],
+        detail=False,
+        url_name='saved'
+    )
+    def saved(self, request):
+        user = request.user
+
+        queryset = self.get_queryset().filter(saves__user=user)
+        serializer = PostListSerializer(queryset, many=True)
+
+        return Response(serializer.data)
