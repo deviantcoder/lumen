@@ -267,3 +267,25 @@ class CommentViewSet(ModelViewSet):
             {'detail': 'Deleting comments is not allowed'},
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
+    
+    @action(
+        methods=['POST'],
+        detail=True,
+        url_name='reply'
+    )
+    def reply(self, request, post_id=None, pk=None):
+        post = get_object_or_404(Post, pk=post_id)
+        comment = self.get_object()
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(
+            author=request.user,
+            post=post,
+            parent=comment
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )

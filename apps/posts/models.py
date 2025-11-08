@@ -159,4 +159,4 @@ class Comment(MPTTModel):
         order_insertion_by = ['post']
 
     def __str__(self):
-        return f'{self.user.username} - {self.post.caption[:20]} (comment)'
+        return f'{self.author.username} - {self.post.caption[:20]} (comment)'
