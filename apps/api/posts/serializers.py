@@ -72,8 +72,15 @@ class CommentSerializer(serializers.ModelSerializer):
     body=serializers.CharField(required=True)
     created = serializers.DateTimeField(read_only=True)
 
+    children = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
         fields = (
-            'id', 'author', 'post_id', 'body', 'created'
+            'id', 'author', 'post_id', 'body', 'created', 'parent', 'children'
         )
+
+    def get_children(self, obj):
+        if obj.get_children():
+            return CommentSerializer(obj.get_children(), many=True).data
+        return []

@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -243,6 +244,7 @@ class CommentViewSet(ModelViewSet):
 
     def get_queryset(self):
         queryset = Comment.objects.filter(
+            parent__isnull=True,
             post_id=self.kwargs.get('post_id')
         )
 
@@ -250,6 +252,11 @@ class CommentViewSet(ModelViewSet):
     
     def perform_create(self, serializer):
         post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
+
+        parent = serializer.validated_data.get('parent')
+        if parent and parent.level >= 4:
+            raise ValidationError('Maximum reply depth reached (5 levels).')
+
         serializer.save(
             author=self.request.user,
             post=post
