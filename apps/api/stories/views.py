@@ -143,3 +143,32 @@ class CollectionViewSet(ModelViewSet):
             {'detail': 'Story added to collection.'},
             status=status.HTTP_200_OK
         )
+    
+    @action(
+        methods=['POST'],
+        detail=True,
+        url_path='remove-story'
+    )
+    def remove_story(self, request, username=None, pk=None):
+        collection = self.get_object()
+        story_id = request.data.get('story_id', '')
+
+        if not story_id:
+            return Response(
+                {'detail': 'Story id not provided.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        story = get_object_or_404(Story, pk=story_id)
+        
+        if not collection.stories.filter(pk=story.pk).exists():
+            return Response(
+                {'detail': 'Story is missing from the collection.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        collection.stories.remove(story)
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
+        )
