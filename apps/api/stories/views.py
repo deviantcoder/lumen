@@ -1,5 +1,10 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -7,6 +12,9 @@ from .serializers import StorySerializer
 from .permissions import IsAuthorOrReadOnly
 
 from apps.stories.models import Story
+
+
+User = get_user_model()
 
 
 class StoryViewSet(ModelViewSet):
@@ -39,3 +47,31 @@ class StoryViewSet(ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(
+        methods=['GET'],
+        detail=False,
+        url_path='my-stories'
+    )
+    def my_stories(self, request):
+        user = request.user
+
+        print(user)
+
+        queryset = self.get_queryset().filter(author=user)
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)
+    
+    @action(
+        methods=['GET'],
+        detail=False,
+        url_path='(?P<username>[^/.]+)'
+    )
+    def stories_by_user(self, request, username=None):
+        user = get_object_or_404(User, username=username)
+
+        queryset = self.get_queryset().filter(author=user)
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)

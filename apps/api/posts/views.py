@@ -112,7 +112,7 @@ class PostViewSet(ModelViewSet):
     @action(
         methods=['POST'],
         detail=True,
-        url_name='like'
+        url_path='like'
     )
     def like(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
@@ -135,7 +135,7 @@ class PostViewSet(ModelViewSet):
     @action(
         methods=['POST'],
         detail=True,
-        url_name='unlike'
+        url_path='unlike'
     )
     def unlike(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
@@ -172,7 +172,7 @@ class PostViewSet(ModelViewSet):
     @action(
         methods=['GET'],
         detail=False,
-        url_name='liked'
+        url_path='liked'
     )
     def liked(self, request):
         user = request.user
@@ -185,7 +185,7 @@ class PostViewSet(ModelViewSet):
     @action(
         methods=['GET'],
         detail=False,
-        url_name='saved'
+        url_path='saved'
     )
     def saved(self, request):
         user = request.user
@@ -198,7 +198,7 @@ class PostViewSet(ModelViewSet):
     @action(
         methods=['GET'],
         detail=False,
-        url_name='feed'
+        url_path='feed'
     )
     def feed(self, request):
         user = request.user
@@ -271,7 +271,7 @@ class CommentViewSet(ModelViewSet):
     @action(
         methods=['POST'],
         detail=True,
-        url_name='reply'
+        url_path='reply'
     )
     def reply(self, request, post_id=None, pk=None):
         post = get_object_or_404(Post, pk=post_id)
