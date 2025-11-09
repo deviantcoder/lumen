@@ -96,7 +96,7 @@
         </button>
     {% endif %}
     <div class="position-absolute bottom-0 start-50 translate-middle-x w-100 px-3 pb-3 z-3">
-        {% if story.author == request.user or collection.owner == request.user %}
+        {% if story.author == request.user or collection.author == request.user %}
             {% if not collection %}
                 <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-3">
                     <button class="btn btn-light rounded-4 py-2 fw-semibold flex-fill text-center"

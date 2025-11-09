@@ -270,7 +270,7 @@ def create_collection(request):
         form = CollectionForm(request.POST, request.FILES)
         if form.is_valid():
             collection = form.save(commit=False)
-            collection.owner = request.user
+            collection.author = request.user
 
             collection.save()
             

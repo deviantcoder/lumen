@@ -75,7 +75,7 @@ class Story(models.Model):
 
 class Collection(models.Model):
     
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
 
     name = models.CharField(max_length=200)
     stories = models.ManyToManyField(Story, related_name='collections', blank=True)
@@ -100,7 +100,7 @@ class Collection(models.Model):
         verbose_name_plural = 'Collections'
 
     def __str__(self):
-        return f'{self.name}: {self.owner}'
+        return f'{self.name}: {self.author}'
     
     @property
     def image_or_default(self):

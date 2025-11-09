@@ -13,5 +13,5 @@ class StoryAdmin(admin.ModelAdmin):
 @admin.register(Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = (
-        'owner', 'name'
+        'author', 'name'
     )

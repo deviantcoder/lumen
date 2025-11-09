@@ -6,7 +6,7 @@ function initShareLogic() {
     const hiddenInput = document.getElementById("selected-users");
     const sendBtn = document.getElementById("send-btn");
 
-    container.addEventListener("click", (e) => {
+    container.onclick = (e) => {
         const el = e.target.closest(".select-user");
         if (!el) return;
 
@@ -19,15 +19,15 @@ function initShareLogic() {
             el.classList.add("selected");
         }
 
-        hiddenInput.value = Array.from(selectedUsers).join(",");
+        hiddenInput.value = [...selectedUsers].join(",");
         sendBtn.disabled = selectedUsers.size === 0;
-    });
+    };
 }
 
+document.addEventListener("DOMContentLoaded", initShareLogic);
+
 document.body.addEventListener("htmx:afterSwap", (e) => {
-    if (e.detail.target.id === "share_container") {
+    if (e.detail.target.closest("#share_container") !== null) {
         initShareLogic();
     }
 });
-
-document.addEventListener("DOMContentLoaded", initShareLogic);
