@@ -1,4 +1,4 @@
-##  🌌 Lumen — Django Social Media Application
+##  🌌 Lumen: A Modern Django Social Media Platform
 
 <p  align="center">
     <img  src="https://img.shields.io/badge/Python-3.13.7-blue?logo=python&logoColor=white" />
@@ -12,95 +12,111 @@
 
 ---
 
-##  📖 About
+##  📖 Overview
 
-**Lumen** is a full-stack Django web application inspired by Instagram — built for modern social interaction.
-It provides a dynamic, interactive experience powered by **HTMX** and **Django Channels**, featuring real-time chat, stories, and collections — all wrapped in a clean Bootstrap 5 UI.
+**Lumen** is a full-stack Django web application designed as a modern social media platform, drawing inspiration from Instagram. It delivers a seamless, interactive user experience through real-time features powered by HTMX and Django Channels. Key highlights include instant messaging, ephemeral stories, and personalized content curation, all presented in a responsive Bootstrap 5 interface.
+This project emphasizes scalability, security, and developer-friendly extensibility, with a comprehensive REST API for third-party integrations.
 
-##  ✨ Features
+## ✨ Core Features
 
-###  👤 User Accounts & Profiles
+###  👤 User Management
 
-- Sign up, log in, and edit profiles (bio, website, avatar)
-- Social authentication via **Google** and **GitHub**
-- View other users’ profiles
-- See user posts, followers and following
-
----
-
-###  📸 Posts
-
-- Upload **images and/or videos**
-- Add captions and tags
-- Discover new content via the **explore page**
-- Basic **search** for posts and profiles
-- Personalized **feed** for logged-in users
+- Secure user registration, login, and profile editing (including bio, website, and avatar uploads).
+- Social authentication integrations with **Google** and **GitHub**.
+- Public profile viewing, including posts, followers, and following lists.
 
 ---
 
-###  💬 Interactions
+###  📸 Content Creation
 
-- Like / Unlike posts (HTMX-powered real-time updates)
-- Save posts to personal collections
-- Nested comments (up to 5 levels deep)
+- Public profile viewing, including posts, followers, and following lists.
+- Explore page for discovering new content.
+- Basic search functionality for posts and user profiles.
 
 ---
 
-###  💭 Real-Time Chat
+###  💬 Engagement Tools
 
--  **Instant messaging** with **Django Channels** and **Daphne**
-- Typing indicators and online/offline user status
-- Integrated post & story sharing directly into chat
+- Real-time like/unlike actions with HTMX-driven updates.
+- Post saving to private collection.
+- Nested commenting system supporting up to 5 levels of replies.
+
+---
+
+###  💭 Real-Time Messaging
+
+- Instant one-on-one chats using **Django Channels** and **Daphne**.
+- Live typing indicators and user presence status (online/offline).
+- Seamless sharing of posts and stories directly within conversations.
 
 ---
 
 ###  🎞️ Stories & Collections
 
-- Create temporary **stories** (images or videos)
-- Reply to stories or share them in chats
-- Organize stories into **collections** that stay on the profile
-- Responsive story viewer with progress tracking and auto-switch
+- Create 24-hour ephemeral stories with images or videos.
+- Story replies and in-chat sharing capabilities.
+- Persistent collections for archiving stories and posts on user profiles.
+- Interactive story viewer with progress bars, auto-advance, and responsive design.
 
 ---
 
-## 🔌 REST API (Django Rest Framework)
+## 🔌 RESTful API
 
-Lumen exposes a full REST API for building clients, mobile apps, or integrating external services.
+Lumen provides a robust REST API built with **Django REST Framework**, enabling easy integration for mobile apps, SPAs, or external services. All endpoints are secured via **JWT token authentication**.
 
 The API supports:
 
 ### ✅ Authentication & Security
 
-- Token-based authentication using **JWT**
-- Permission-based access
-- Secure actions
+- **JWT-based** token authentication for stateless sessions.
+- Permission-based access.
+- Secure actions.
 
 ### 👤 Profiles API
 
-- Fetch public user profiles
-- Follow/unfollow users
-- View followers and following lists
-- Get authenticated user’s profile
+- Fetch public user profiles.
+- Follow/unfollow users.
+- View followers and following lists.
+- Get authenticated user’s profile.
 
 ### 📸 Posts API
 
-- Create, edit, and delete posts
-- Upload media (images/videos)
-- Like / Unlike / Save posts
-- Personalized feed, saved posts
+- Create, edit, and delete posts.
+- Upload media (images/videos).
+- Like / Unlike / Save posts.
+- Personalized feed, saved posts.
 
 ### 💬 Comments API
 
-- Nested comments up to 5 levels
-- Create comments or replies
-- List comments for a post
-- View full comment trees with children
+- Nested comments up to 5 levels.
+- Create comments or replies.
+- List comments for a post.
+- View full comment trees with children.
+
+### 📚 Stories API
+
+- Create stories (image or video).
+- Stories automatically expire after 24 hours.
+- View stories from users you follow.
+- View stories for a specific user.
+- Save a story to a collection.
+- Get your own stories separately.
+
+### 🗂 Collections API
+
+- Create personal collections to organize saved stories and posts.
+- Add or remove stories from collections.
+- List all collections for a specific user.
+- Private: only the owner can modify their collections.
+
 
 ---
 
 ##  🛠️ Tech Stack
 
--  **Backend:** Django 5.2.5, Python 3.13.7
+-  **Backend:** Python 3.13.7
+-  **Framework:** Django 5.2.5
+-  **API:** Django REST Framework 3.16.1 
 -  **Frontend:** Bootstrap 5.3.6, htmx 2.0.7, JavaScript
 -  **Realtime:** Django Channels + Daphne
 -  **Auth:** Django built-in system with Social Auth
