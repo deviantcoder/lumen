@@ -224,3 +224,5 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),   # TODO: change to 5-10 minutes
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+# Celery config
