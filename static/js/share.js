@@ -1,6 +1,9 @@
 function initShareLogic() {
     const container = document.querySelector("#share_container");
-    if (!container) return;
+    
+    if (!container) {
+        return;
+    }
 
     let selectedUsers = new Set();
     const hiddenInput = document.getElementById("selected-users");
@@ -27,7 +30,7 @@ function initShareLogic() {
 document.addEventListener("DOMContentLoaded", initShareLogic);
 
 document.body.addEventListener("htmx:afterSwap", (e) => {
-    if (e.detail.target.closest("#share_container") !== null) {
+    if (e.detail.target.querySelector("#share_container")) {
         initShareLogic();
     }
 });
