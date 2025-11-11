@@ -8,6 +8,9 @@
     <img  src="https://img.shields.io/badge/JavaScript-BA8E23?logo=javascript&logoColor=white" />
     <img  src="https://img.shields.io/badge/Django%20Channels-4.3.1-ff6600?logo=django&logoColor=white" />
     <img  src="https://img.shields.io/badge/Django Rest Framework%20-3.16.1-red?logo=django&logoColor=white" />
+    <img  src="https://img.shields.io/badge/Celery-5.5.3-cyan?logo=celery&logoColor=white" />
+    <img  src="https://img.shields.io/badge/RabbitMQ-4.2.0-orange?logo=rabbitmq&logoColor=white" />
+    <img  src="https://img.shields.io/badge/Docker-28.5.2-blue?logo=docker&logoColor=white" />
 </p>
 
 ---
