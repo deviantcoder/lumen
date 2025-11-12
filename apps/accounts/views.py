@@ -1,4 +1,5 @@
 import re
+import logging
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView
@@ -6,13 +7,14 @@ from django.contrib.auth import logout, get_user_model, login
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views import generic
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_decode
 
 from .forms import LoginForm, SignupForm
-from .utils import send_activation_email
 from .tokens import account_activation_token_generator
+from .tasks import send_activation_email_task
 
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -65,7 +67,12 @@ class SignupUserView(generic.CreateView):
         user = form.instance
 
         if user:
-            send_activation_email(user)
+            try:
+                send_activation_email_task.delay(user.pk)
+            except Exception as e:
+                logger.warning(f'Celery unavailable, falling back to sync email: {e}')
+                send_activation_email_task(user)
+
             return render(
                 self.request,
                 'accounts/activation/activation_email_sent.html',
