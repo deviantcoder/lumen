@@ -3,14 +3,17 @@ import shutil
 import logging
 
 from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_save, post_delete
+from django.db.models.signals import (
+    post_save,
+    pre_save,
+    post_delete
+)
 from django.contrib.auth import get_user_model
 
 from .models import Profile
+from .tasks import process_profile_image_task
 
-from utils.files import (
-    compress_image, crop_image, ALLOWED_IMAGE_EXTENSIONS, crop_and_compress_image
-)
+from utils.files import ALLOWED_IMAGE_EXTENSIONS
 
 
 logger = logging.getLogger(__name__)
@@ -27,28 +30,45 @@ def create_profile(sender, instance, created, **kwargs):
 
 
 @receiver(pre_save, sender=Profile)
-def compress_profile_image(sender, instance, **kwargs):
-    try:
-        if not instance.pk:
-            if instance.image:
-                ext = os.path.splitext(instance.image.name)[-1].lower().lstrip('.')
-                
-                if ext in ALLOWED_IMAGE_EXTENSIONS:
-                    instance.image = crop_and_compress_image(
-                        instance.image, crop_size=500, quality=60
-                    )
-        else:
-            old_image = Profile.objects.filter(pk=instance.pk).values_list('image', flat=True).first()
+def detect_image_processing_need(sender, instance, **kwargs):
+    if getattr(instance, '_skip_signals', False):
+        return
 
-            if not old_image:
-                return
-            
-            if instance.image and instance.image != old_image:
-                instance.image = crop_and_compress_image(
-                    instance.image, crop_size=500, quality=60
-                )
-    except Exception as e:
-        logger.warning(f'Profile image compression failed: {e}')
+    needs_processing = False
+
+    if not instance.pk:
+        if instance.image:
+            ext = os.path.splitext(instance.image.name)[-1].lower().lstrip('.')
+
+            if ext in ALLOWED_IMAGE_EXTENSIONS:
+                needs_processing = True
+    else:
+        old_image = (
+            sender.objects.filter(
+                pk=instance.pk
+            )
+            .values_list('image', flat=True)
+            .first()
+        )
+        
+        if instance.image and instance.image.name != old_image:
+            ext = os.path.splitext(instance.image.name)[-1].lower().lstrip('.')
+
+            if ext in ALLOWED_IMAGE_EXTENSIONS:
+                needs_processing = True
+
+    if needs_processing:
+        instance._needs_processing = True
+
+
+@receiver(post_save, sender=Profile)
+def queue_image_processing(sender, instance, created, **kwargs):
+    if getattr(instance, '_skip_signals', False):
+        return
+
+    if getattr(instance, '_needs_processing', False) and instance.image:
+        process_profile_image_task.delay(instance.pk)
+        del instance._needs_processing
 
 
 @receiver(post_delete, sender=Profile)
