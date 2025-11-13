@@ -1,5 +1,4 @@
 import os
-import shutil
 import logging
 
 from django.dispatch import receiver
@@ -11,7 +10,10 @@ from django.db.models.signals import (
 from django.contrib.auth import get_user_model
 
 from .models import Profile
-from .tasks import process_profile_image_task
+from .tasks import (
+    process_profile_image_task,
+    delete_profile_media_task
+)
 
 from utils.files import ALLOWED_IMAGE_EXTENSIONS
 
@@ -74,9 +76,6 @@ def queue_image_processing(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Profile)
 def delete_profile_media(sender, instance, *args, **kwargs):
     try:
-        path = f'media/profiles/{str(instance.user.public_id)}'
-
-        if os.path.exists(path):
-            shutil.rmtree(path)
+        delete_profile_media_task.delay(instance.user.public_id)
     except Exception as e:
         logger.warning(f'User media deletion failed: {e}')

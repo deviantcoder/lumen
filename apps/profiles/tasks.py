@@ -1,5 +1,8 @@
 import os
+import shutil
 import logging
+
+from django.conf import settings
 
 from celery import shared_task
 
@@ -47,5 +50,21 @@ def process_profile_image_task(self, profile_id=None, crop_size=500, quality=60)
     except Exception as exc:
         logger.warning(
             f'Image compression failed for profile: {profile_id}: {exc}'
+        )
+        raise self.retry(countdown=60, exc=exc)
+
+
+@shared_task(bind=True, max_retries=3)
+def delete_profile_media_task(self, public_id):
+    try:
+        path = os.path.join(
+            getattr(settings, 'MEDIA_ROOT'), 'profiles', str(public_id)
+        )
+
+        if os.path.exists(path):
+            shutil.rmtree(path)
+    except Exception as exc:
+        logger.error(
+            f'Failed to delete profile media for profile: {public_id}, {exc}'
         )
         raise self.retry(countdown=60, exc=exc)
