@@ -22,6 +22,12 @@ User = get_user_model()
 
 @shared_task(bind=True, max_retries=3)
 def send_activation_email_task(self, user_id):
+
+    """
+    Celery task that sends an account activation email to the user with the given user_id.
+    Implements a cooldown mechanism to prevent spamming activation emails.
+    """
+
     try:
         user = User.objects.get(pk=user_id)
 

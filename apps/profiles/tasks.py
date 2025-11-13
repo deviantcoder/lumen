@@ -19,6 +19,11 @@ logger = logging.getLogger(__name__)
 
 @shared_task(bind=True, max_retries=3)
 def process_profile_image_task(self, profile_id=None, crop_size=500, quality=60):
+    
+    """
+    Celery task that processes and compresses the profile image for the given profile_id.
+    """
+    
     try:
         profile = Profile.objects.get(pk=profile_id)
         if not profile.image:
@@ -56,6 +61,10 @@ def process_profile_image_task(self, profile_id=None, crop_size=500, quality=60)
 
 @shared_task(bind=True, max_retries=3)
 def delete_profile_media_task(self, public_id):
+
+    """
+    Celery task that deletes all media files associated with the profile identified by public_id."""
+
     try:
         path = os.path.join(
             getattr(settings, 'MEDIA_ROOT'), 'profiles', str(public_id)

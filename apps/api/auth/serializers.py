@@ -8,6 +8,10 @@ User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
 
+    """
+    Serializer for user registration.
+    """
+
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
@@ -32,6 +36,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+
+    """
+    Serializer for user details.
+    """
 
     profile_url = serializers.HyperlinkedIdentityField(
         source='profile',

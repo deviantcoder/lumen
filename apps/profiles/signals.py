@@ -25,6 +25,10 @@ User = get_user_model()
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
+
+    """
+    Signal to create a Profile instance whenever a new User is created."""
+
     if created:
         Profile.objects.create(
             user=instance
@@ -33,6 +37,11 @@ def create_profile(sender, instance, created, **kwargs):
 
 @receiver(pre_save, sender=Profile)
 def detect_image_processing_need(sender, instance, **kwargs):
+
+    """
+    Signal to detect if the profile image needs processing before saving.
+    """
+
     if getattr(instance, '_skip_signals', False):
         return
 
@@ -65,6 +74,11 @@ def detect_image_processing_need(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Profile)
 def queue_image_processing(sender, instance, created, **kwargs):
+
+    """
+    Signal to queue profile image processing after saving if needed.
+    """
+
     if getattr(instance, '_skip_signals', False):
         return
 
@@ -74,7 +88,12 @@ def queue_image_processing(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Profile)
-def delete_profile_media(sender, instance, *args, **kwargs):
+def queue_profile_media_delete(sender, instance, *args, **kwargs):
+
+    """
+    Signal to queue profile media deletion after profile is deleted.
+    """
+
     try:
         delete_profile_media_task.delay(instance.user.public_id)
     except Exception as e:

@@ -23,6 +23,11 @@ ALLOWED_VIDEO_EXTENSIONS = (
 
 
 def base_upload_to(instance, filename, base_dir='uploads', id_attr='public_id'):
+
+    """
+    Generate a dynamic file path for uploading files.
+    """
+
     ext = os.path.splitext(filename)[-1]
     new_filename = shortuuid.uuid()
 
@@ -40,6 +45,11 @@ def base_upload_to(instance, filename, base_dir='uploads', id_attr='public_id'):
 
 
 def compress_image(file, quality: int = 60):
+
+    """
+    Compress an image file to JPEG format with specified quality.
+    """
+
     try:
         with Image.open(file) as image:
             if image.mode in ('P', 'RGBA'):
@@ -60,6 +70,10 @@ def compress_image(file, quality: int = 60):
 
 
 def crop_image(file, size: int = 300):
+
+    """
+    Crop and resize an image file to a square of specified size."""
+
     try:
         with Image.open(file) as image:
             if image.mode in ('P', 'RGBA'):
@@ -90,6 +104,11 @@ def crop_image(file, size: int = 300):
 
 
 def crop_and_compress_image(image, crop_size: int = 300, quality: int = 60):
+
+    """
+    Crop and compress an image file.
+    """
+
     cropped = crop_image(image, crop_size)
     compressed = compress_image(cropped, quality)
 
@@ -97,6 +116,11 @@ def crop_and_compress_image(image, crop_size: int = 300, quality: int = 60):
 
 
 def validate_file_size(file):
+
+    """
+    Validate that the file size does not exceed the maximum allowed size.
+    """
+
     max_size_mb = getattr(settings, 'MAX_MEDIA_SIZE', 50)
     max_size_bytes = max_size_mb * 1024 * 1024
     

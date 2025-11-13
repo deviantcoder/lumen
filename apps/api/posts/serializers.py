@@ -7,12 +7,20 @@ from apps.posts.models import (
 
 class TagSerializer(serializers.ModelSerializer):
 
+    """
+    Serializer for post tags.
+    """
+
     class Meta:
         model = Tag
         fields = ('id', 'name')
 
 
 class PostMediaSerializer(serializers.ModelSerializer):
+
+    """
+    Serializer for post media files.
+    """
     
     class Meta:
         model = PostMedia
@@ -20,6 +28,10 @@ class PostMediaSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+
+    """
+    Base serializer for posts.
+    """
 
     author = serializers.ReadOnlyField(source='author.username')
 
@@ -45,6 +57,10 @@ class PostSerializer(serializers.ModelSerializer):
 
 class PostListSerializer(PostSerializer):
 
+    """
+    Serializer for listing posts with user-specific fields.
+    """
+
     liked_by_user = serializers.BooleanField(read_only=True)
     saved_by_user = serializers.BooleanField(read_only=True)
     
@@ -56,6 +72,10 @@ class PostListSerializer(PostSerializer):
 
 class PostDetailSerializer(PostSerializer):
 
+    """
+    Serializer for detailed post view with user-specific fields.
+    """
+
     liked_by_user = serializers.BooleanField(read_only=True)
     saved_by_user = serializers.BooleanField(read_only=True)
     
@@ -66,6 +86,10 @@ class PostDetailSerializer(PostSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+
+    """
+    Serializer for post comments.
+    """
 
     author = serializers.ReadOnlyField(source='author.username')
     post_id = serializers.IntegerField(source='post.id', read_only=True)

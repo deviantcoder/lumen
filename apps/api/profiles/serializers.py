@@ -5,6 +5,10 @@ from apps.profiles.models import Profile, Follow
 
 class ProfileSerializer(serializers.ModelSerializer):
 
+    """
+    Serializer for user profiles.
+    """
+
     username = serializers.ReadOnlyField(source='user.username')
     full_name = serializers.ReadOnlyField(source='user.full_name')
 
@@ -34,6 +38,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class ProfileListSerializer(ProfileSerializer):
 
+    """
+    Serializer for listing user profiles.
+    """
+
     profile_url = serializers.HyperlinkedIdentityField(
         view_name='profile-detail',
         lookup_field='username'
@@ -55,6 +63,10 @@ class ProfileListSerializer(ProfileSerializer):
 
 
 class FollowerSerializer(serializers.ModelSerializer):
+
+    """
+    Serializer for profile followers.
+    """
     
     profile_id = serializers.IntegerField(
         source='follower.profile.pk', read_only=True
@@ -77,6 +89,10 @@ class FollowerSerializer(serializers.ModelSerializer):
 
 
 class FollowingSerializer(serializers.ModelSerializer):
+
+    """
+    Serializer for profiles being followed.
+    """
 
     profile_id = serializers.IntegerField(
         source='user.profile.pk', read_only=True

@@ -5,6 +5,10 @@ from apps.stories.models import Story, Collection
 
 class StorySerializer(serializers.ModelSerializer):
 
+    """
+    Serializer for stories.
+    """
+
     author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
@@ -19,6 +23,10 @@ class StorySerializer(serializers.ModelSerializer):
 
 
 class CollectionSerializer(serializers.ModelSerializer):
+
+    """
+    Serializer for story collections.
+    """
 
     author = serializers.ReadOnlyField(source='author.username')
     stories = StorySerializer(many=True, read_only=True)
