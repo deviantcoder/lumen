@@ -3,33 +3,41 @@ import shutil
 import logging
 
 from django.dispatch import receiver
-from django.db.models.signals import pre_save, post_delete
+from django.db.models.signals import post_save, post_delete
 
 from .models import PostMedia, Post
+from .tasks import process_postmedia_image_task
 
 from utils.files import (
-    ALLOWED_IMAGE_EXTENSIONS, ALLOWED_VIDEO_EXTENSIONS, compress_image
+    ALLOWED_IMAGE_EXTENSIONS,
+    ALLOWED_VIDEO_EXTENSIONS
 )
 
 
 logger = logging.getLogger(__name__)
 
 
-@receiver(pre_save, sender=PostMedia)
+@receiver(post_save, sender=PostMedia)
 def compress_media_file(sender, instance, **kwargs):
+    if getattr(instance, '_skip_signals', False):
+        return
+
     try:
         if instance.file:
             ext = os.path.splitext(instance.file.name)[-1].lower().lstrip('.')
 
             if ext in ALLOWED_IMAGE_EXTENSIONS:
                 instance.media_type = PostMedia.MEDIA_TYPES.IMAGE
-            else:
+                process_postmedia_image_task.delay(postmedia_id=instance.pk)
+            elif ext in ALLOWED_VIDEO_EXTENSIONS:
                 instance.media_type = PostMedia.MEDIA_TYPES.VIDEO
 
-            if ext in ALLOWED_IMAGE_EXTENSIONS:
-                instance.file = compress_image(instance.file)
+            instance.save(update_fields=['media_type'])
+
     except Exception as e:
-        logger.warning(f'Image compression failed: {e}')
+        logger.warning(
+            f'Image compression failed for post media: {instance.pk}: {e}'
+        )
 
 
 @receiver(post_delete, sender=Post)

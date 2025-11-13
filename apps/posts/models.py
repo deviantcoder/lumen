@@ -1,3 +1,4 @@
+import os
 import shortuuid
 
 from django.db import models
@@ -5,9 +6,13 @@ from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from django.db import IntegrityError, transaction
+from django.core.exceptions import ValidationError
 
 from utils.files import (
-    ALLOWED_VIDEO_EXTENSIONS, ALLOWED_IMAGE_EXTENSIONS, base_upload_to, validate_file_size
+    ALLOWED_VIDEO_EXTENSIONS,
+    ALLOWED_IMAGE_EXTENSIONS,
+    base_upload_to,
+    validate_file_size
 )
 
 from mptt.models import MPTTModel, TreeForeignKey
@@ -76,6 +81,13 @@ class PostMedia(models.Model):
 
     def __str__(self):
         return f'{self.post} (media)'
+    
+    def clean(self):
+        ext = os.path.splitext(self.file.name)[-1].lower().lstrip('.')
+        if ext not in (*ALLOWED_IMAGE_EXTENSIONS, *ALLOWED_VIDEO_EXTENSIONS):
+            raise ValidationError(
+                f'Unsupported file type: {ext}'
+            )
 
 
 class Tag(models.Model):
