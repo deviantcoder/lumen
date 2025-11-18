@@ -27,7 +27,8 @@ User = get_user_model()
 def create_profile(sender, instance, created, **kwargs):
 
     """
-    Signal to create a Profile instance whenever a new User is created."""
+    Signal to create a Profile instance whenever a new User is created.
+    """
 
     if created:
         Profile.objects.create(

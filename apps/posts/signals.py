@@ -7,7 +7,10 @@ from django.db.models.signals import post_save, post_delete
 from django.db import transaction
 
 from .models import PostMedia, Post
-from .tasks import process_postmedia_image_task
+from .tasks import (
+    process_postmedia_image_task,
+    delete_post_media_task
+)
 
 from utils.files import (
     ALLOWED_IMAGE_EXTENSIONS,
@@ -53,9 +56,6 @@ def compress_media_file(sender, instance, **kwargs):
 @receiver(post_delete, sender=Post)
 def delete_post_media(sender, instance, *args, **kwargs):
     try:
-        path = f'media/posts/{str(instance.public_id)}'
-
-        if os.path.exists(path):
-            shutil.rmtree(path)
+        delete_post_media_task.delay(instance.public_id)
     except Exception as e:
         logger.warning(f'Post media deletion failed: {e}')

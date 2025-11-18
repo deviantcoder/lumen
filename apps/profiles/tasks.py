@@ -21,7 +21,8 @@ logger = logging.getLogger(__name__)
 def process_profile_image_task(self, profile_id=None, crop_size=500, quality=60):
     
     """
-    Celery task that processes and compresses the profile image for the given profile_id.
+    Celery task that processes and compresses the 
+    profile image for the given profile_id.
     """
     
     try:
@@ -63,7 +64,9 @@ def process_profile_image_task(self, profile_id=None, crop_size=500, quality=60)
 def delete_profile_media_task(self, public_id):
 
     """
-    Celery task that deletes all media files associated with the profile identified by public_id."""
+    Celery task that deletes all media files associated 
+    with the profile identified by public_id.
+    """
 
     try:
         path = os.path.join(
@@ -74,6 +77,6 @@ def delete_profile_media_task(self, public_id):
             shutil.rmtree(path)
     except Exception as exc:
         logger.error(
-            f'Failed to delete profile media for profile: {public_id}, {exc}'
+            f'Failed to delete media for profile: {public_id}, {exc}'
         )
         raise self.retry(countdown=60, exc=exc)
