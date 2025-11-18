@@ -4,6 +4,7 @@ import logging
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+from django.db import transaction
 
 from .models import PostMedia, Post
 from .tasks import process_postmedia_image_task
@@ -28,11 +29,20 @@ def compress_media_file(sender, instance, **kwargs):
 
             if ext in ALLOWED_IMAGE_EXTENSIONS:
                 instance.media_type = PostMedia.MEDIA_TYPES.IMAGE
-                process_postmedia_image_task.delay(postmedia_id=instance.pk)
+                instance._skip_signals = True
+
+                instance.save(update_fields=['media_type'])
+
+                transaction.on_commit(
+                    lambda: process_postmedia_image_task.delay(
+                        postmedia_id=instance.pk
+                    )
+                )
             elif ext in ALLOWED_VIDEO_EXTENSIONS:
                 instance.media_type = PostMedia.MEDIA_TYPES.VIDEO
 
-            instance.save(update_fields=['media_type'])
+                instance._save_signals = True
+                instance.save(update_fields=['media_type'])
 
     except Exception as e:
         logger.warning(
