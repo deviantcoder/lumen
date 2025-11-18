@@ -63,6 +63,15 @@ This project emphasizes scalability, security, and developer-friendly extensibil
 
 ---
 
+### ⚙️ Asynchronous Tasks (Celery + RabbitMQ)
+
+Background task handling is powered by **Celery** using **RabbitMQ** as the message broker, enhancing responsiveness and performance.
+- Image compression and resizing for posts and profile pictures.
+- Automatic deletion of user-uploaded media when a post or profile is deleted.
+- Sending an activation email upon user registration.
+
+---
+
 ## 🔌 RESTful API
 
 Lumen provides a robust REST API built with **Django REST Framework**, enabling easy integration for mobile apps, SPAs, or external services. All endpoints are secured via **JWT token authentication**.
@@ -120,11 +129,13 @@ The API supports:
 -  **Backend:** Python 3.13.7
 -  **Framework:** Django 5.2.5
 -  **API:** Django REST Framework 3.16.1 
+-  **Async Tasks:** Celery 5.5.3, RabbitMQ 4.2.0
 -  **Frontend:** Bootstrap 5.3.6, htmx 2.0.7, JavaScript
 -  **Realtime:** Django Channels + Daphne
 -  **Auth:** Django built-in system with Social Auth
 -  **Media Handling:** Pillow for image compression/resizing
 -  **Database:** SQLite (dev) / PostgreSQL (prod)
+-  **Containerization**: Docker
 
 ---
 
