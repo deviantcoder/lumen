@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
 from django.db.models import Count
+from django.core.cache import cache
 
 from apps.posts.models import Post
 
@@ -21,6 +22,11 @@ User = get_user_model()
 def profile(request, username: str):
     user = get_object_or_404(User, username=username)
 
+    posts = cache.get(f'user:{user.pk}:posts')
+    if posts is None:
+        posts = user.posts.all()
+        cache.set(f'user:{user.pk}:posts', posts, 60 * 15)
+
     is_following = None
 
     if user != request.user:
@@ -28,12 +34,19 @@ def profile(request, username: str):
             user=user, follower=request.user
         ).exists()
 
-    following_count = Follow.objects.filter(follower=user).count()
-    followers_count = Follow.objects.filter(user=user).count()
+    following_count = cache.get(f'user:{user.pk}:following_count')
+    if following_count is None:
+        following_count = Follow.objects.filter(follower=user).count()
+        cache.set(f'user:{user.pk}:following_count', following_count, timeout=60 * 15)
+
+    followers_count = cache.get(f'user:{user.pk}:followers_count')
+    if following_count is None:
+        followers_count = Follow.objects.filter(user=user).count()
+        cache.set(f'user:{user.pk}:followers_count', following_count, timeout=60 * 15)
 
     context = {
         'profile': user.profile,
-        'posts': user.posts.all(),
+        'posts': '',
         'is_following': is_following,
         'followers_count': followers_count,
         'following_count': following_count,
