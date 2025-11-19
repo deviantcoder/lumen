@@ -10,7 +10,9 @@
     <img  src="https://img.shields.io/badge/Django Rest Framework%20-3.16.1-red?logo=django&logoColor=white" />
     <img  src="https://img.shields.io/badge/Celery-5.5.3-cyan?logo=celery&logoColor=white" />
     <img  src="https://img.shields.io/badge/RabbitMQ-4.2.0-orange?logo=rabbitmq&logoColor=white" />
+    <img  src="https://img.shields.io/badge/Redis-8.4.0-red?logo=redis&logoColor=white" />
     <img  src="https://img.shields.io/badge/Docker-28.5.2-blue?logo=docker&logoColor=white" />
+    <img  src="https://img.shields.io/badge/SQLite-dev-cyan?logo=sqlite&logoColor=white" />
 </p>
 
 ---
