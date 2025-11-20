@@ -24,7 +24,9 @@
             >
                 <div class="text-muted small py-3 text-center">Loading stories...</div>
             </div>
-            {% include 'posts/includes/posts_list.html' %}
+            <div id="feed-container">
+                {% include 'posts/includes/posts_list.html' %}
+            </div>
         </div>
         <div class="col-lg-4 desktop-only">
             <div class="sticky-top" style="top: 76px; padding-left: 24px;">

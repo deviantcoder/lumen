@@ -126,8 +126,10 @@ Profile
     <ul class="nav nav-tabs justify-content-center mb-4 border-0">
         <li class="nav-item">
             <button type="button" name="posted" class="nav-link active border-0 rounded-3 hx-tab d-flex align-items-center"
-                hx-get="{% url 'profiles:get_user_posts' profile.user.username %}" hx-target="#posts"
-                hx-swap="innerHTML" hx-trigger="click"
+                hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
+                hx-target="#posts"
+                hx-swap="innerHTML"
+                hx-trigger="click"
             >
                 <i class="bi bi-grid-3x3"></i> Posts
             </button>

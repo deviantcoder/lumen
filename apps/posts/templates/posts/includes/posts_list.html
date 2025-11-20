@@ -53,16 +53,27 @@
                 {% endfor %}
             </div>
             <div class="ps-2 mb-2">
-                {% with comment_count=post.comments.count %}
                 <a href="" class="text-muted small text-decoration-none cursor-pointer"
                     hx-get="{% url 'posts:post_preview' post.pk %}"
                     hx-target="#modal-body"
                     hx-swap="innerHTML"
                     data-bs-toggle="modal"
                     data-bs-target="#modal"
-                >View {{ comment_count }} comment{{ comment_count|pluralize:'s' }}</a>
-                {% endwith %}
+                >View {{ post.comments_count }} comment{{ post.comments_count|pluralize:'s' }}</a>
             </div>
         </div>
     </div>
 {% endfor %}
+{% if posts.has_next %}
+    <div
+        id="feed-loader-{{ posts.next_page_number }}"
+        hx-get="{% url 'feed:feed' %}?page={{ posts.next_page_number }}"
+        hx-trigger="revealed"
+        hx-swap="outerHTML"
+        class="feed-infinite-loader d-flex justify-content-center p-0"
+    >
+        <div class="spinner-border text-light htmx-indicator" role="status">
+            <span class="visually-hidden">Loading…</span>
+        </div>
+    </div>
+{% endif %}

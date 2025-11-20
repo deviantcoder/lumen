@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Count
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
@@ -33,15 +33,18 @@ def create_post(request):
 
 @login_required
 def post_preview(request, post_id):
-    qs = Post.objects.annotate(
-        liked=Exists(
-            Like.objects.filter(user=request.user, post=OuterRef('pk'))
-        ),
-        saved=Exists(
-            Save.objects.filter(user=request.user, post=OuterRef('pk'))
+    qs = (
+        Post.objects.annotate(
+            liked=Exists(
+                Like.objects.filter(user=request.user, post=OuterRef('pk'))
+            ),
+            saved=Exists(
+                Save.objects.filter(user=request.user, post=OuterRef('pk'))
+            ),
+            comments_count=Count('comments'),
+            likes_count=Count('likes'),
         )
     )
-
     post = get_object_or_404(qs, pk=post_id)
 
     comment_form = CommentForm()

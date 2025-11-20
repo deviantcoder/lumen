@@ -241,3 +241,7 @@ CACHES = {
         }
     }
 }
+
+# Pagination config
+
+PER_PAGE = 5 # items per page
