@@ -1,26 +1,21 @@
-{% load humanize %}
-{% load widget_tweaks %}
-{% load mptt_tags %}
+{% for comment in comments_page %}
+    {% include 'posts/partials/comment.html' with node=comment %}
+{% endfor %}
 
-<div class="col-md-6 d-flex flex-column ps-2" style="max-height: 85vh;">
-    <div class="flex-grow-1 mb-2 overflow-auto" id="comments_for_{{ post.pk }}" style="max-height: calc(90vh - 70px);">
-        {% recursetree post.comments.all %}
-            {% include 'posts/partials/comment.html' %}
-            {% if not node.is_leaf_node %}
-                <div class="ms-5">
-                    {{ children }}
-                </div>
-            {% endif %}
-        {% endrecursetree %}
+{% if comments_page.has_next %}
+    <!-- This element will replace itself with new content -->
+    <div class="comments-loading-trigger"
+        hx-get="{% url 'posts:post_preview' post.pk %}?page={{ comments_page.next_page_number }}"
+        hx-trigger="intersect once delay:300ms"
+        hx-target="this"
+        hx-swap="outerHTML"
+        hx-indicator="#comments-spinner-{{ comments_page.number }}">
+        
+        <!-- Loading spinner -->
+        <div id="comments-spinner-{{ comments_page.number }}" class="d-flex justify-content-center py-3">
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading more comments…</span>
+            </div>
+        </div>
     </div>
-    <form method="POST" class="d-flex sticky-bottom p-2 bg-blurred shadow-lg rounded-3"
-        hx-post="{% url 'posts:add_comment' post.pk %}"
-        hx-target="#comments_for_{{ post.pk }}"
-        hx-swap="afterbegin"
-        _="on htmx:afterRequest reset() me"
-    >
-        {% csrf_token %}
-        {% render_field comment_form.body class="form-control border-0 rounded-3 me-2 p-2" %}
-        <button type="submit" class="btn btn-primary rounded-3 px-3 fw-bold">Post</button>
-    </form>
-</div>
+{% endif %}

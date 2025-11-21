@@ -3,7 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef, Count
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
+from django.conf import settings
+from django.core.paginator import (
+    Paginator,
+    PageNotAnInteger,
+    EmptyPage
+)
 
 from .forms import PostForm, CommentForm, EditPostForm
 from .models import Post, Like, Save, Comment
@@ -33,8 +39,11 @@ def create_post(request):
 
 @login_required
 def post_preview(request, post_id):
-    qs = (
-        Post.objects.annotate(
+    post = (
+        Post.objects.filter(
+            pk=post_id
+        )
+        .annotate(
             liked=Exists(
                 Like.objects.filter(user=request.user, post=OuterRef('pk'))
             ),
@@ -44,17 +53,29 @@ def post_preview(request, post_id):
             comments_count=Count('comments'),
             likes_count=Count('likes'),
         )
-    )
-    post = get_object_or_404(qs, pk=post_id)
+        .prefetch_related('comments')
+    ).first()
 
-    comment_form = CommentForm()
+    if not post:
+        raise Http404()
+    
+    root_comments = post.comments.filter(level=0).order_by('-created')
+    paginator = Paginator(root_comments, per_page=10)
+    page = request.GET.get('page', 1)
+    comments_page = paginator.get_page(page)
+
+    if request.headers.get('HX-Request') and request.GET.get('page'):
+        template_name = 'posts/includes/comments_list.html'
+    else:
+        template_name = 'posts/partials/post_preview.html'
 
     context = {
         'post': post,
-        'comment_form': comment_form,
+        'comment_form': CommentForm(),
+        'comments_page': comments_page,
     }
 
-    return render(request, 'posts/partials/post_preview.html', context)
+    return render(request, template_name=template_name, context=context)
 
 
 @login_required
