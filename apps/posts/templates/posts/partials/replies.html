@@ -1,0 +1,10 @@
+{% load mptt_tags %}
+
+{% recursetree comments %}
+    {% include 'posts/partials/comment.html' %}
+    {% if not node.is_leaf_node %}
+        <div class="ms-5">
+            {{ children }}
+        </div>
+    {% endif %}
+{% endrecursetree %}

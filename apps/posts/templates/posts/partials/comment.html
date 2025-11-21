@@ -25,9 +25,13 @@
                 </a>
             {% endif %}
         </div>
-        {% if node.level == 0 and node.children.exists %}
+        {% if node.has_children %}
             <div class="d-flex justify-content-start mt-2">
-                <a href="" class="text-muted fw-semibold small text-decoration-none">
+                <a href="" class="text-muted fw-semibold small text-decoration-none"
+                    hx-get="{% url 'posts:load_replies' node.pk %}"
+                    hx-target="#replies-{{ node.pk }}"
+                    hx-swap="innerHTML"
+                >
                     View replies
                 </a>
             </div>
@@ -38,3 +42,4 @@
 {% if node.parent %}
     <div id="reply-form-{{ node.parent.pk }}" hx-swap-oob="delete"></div>
 {% endif %}
+<div id="replies-{{ node.pk }}" class="ms-5"></div>

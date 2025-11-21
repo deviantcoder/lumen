@@ -244,4 +244,5 @@ CACHES = {
 
 # Pagination config
 
-PER_PAGE = 5 # items per page
+POSTS_PER_PAGE = 5
+COMMENTS_PER_PAGE = 10

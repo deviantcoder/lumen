@@ -61,7 +61,7 @@ def feed(request):
     posts = get_feed_queryset(user=request.user)
 
     paginator = Paginator(
-        posts, getattr(settings, 'PER_PAGE', 5)
+        posts, getattr(settings, 'POSTS_PER_PAGE', 5)
     )
     page = request.GET.get('page', 1)
 

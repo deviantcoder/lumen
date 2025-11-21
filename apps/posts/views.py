@@ -53,14 +53,34 @@ def post_preview(request, post_id):
             comments_count=Count('comments'),
             likes_count=Count('likes'),
         )
-        .prefetch_related('comments')
+        .prefetch_related(
+            'media', 'tags', 'likes', 'comments'
+        )
+        .select_related(
+            'author', 'author__profile'
+        )
     ).first()
 
     if not post:
         raise Http404()
     
-    root_comments = post.comments.filter(level=0).order_by('-created')
-    paginator = Paginator(root_comments, per_page=10)
+    root_comments = (
+        post.comments.filter(
+            level=0
+        )
+        .order_by('-created')
+        .annotate(
+            has_children=Exists(
+                Comment.objects.filter(parent=OuterRef('pk'))
+            )
+        )
+    )
+
+    paginator = Paginator(
+        root_comments,
+        per_page=getattr(settings, 'COMMENTS_PER_PAGE', 10)
+    )
+
     page = request.GET.get('page', 1)
     comments_page = paginator.get_page(page)
 
@@ -188,6 +208,29 @@ def reply_form(request, post_id, comment_id):
     }
 
     return render(request, 'posts/partials/reply_form.html', context)
+
+
+@login_required
+def load_replies(request, parent_id):
+    parent = get_object_or_404(Comment, pk=parent_id)
+
+    children = (
+        parent.get_children()
+        .annotate(
+            has_children=Exists(
+                Comment.objects.filter(parent=OuterRef('pk'))
+            )
+        )
+        .select_related(
+            'author', 'author__profile'
+        )
+    )
+
+    context = {
+        'comments': children,
+    }
+
+    return render(request, 'posts/partials/replies.html', context)
 
 
 # ---------- SHARING ----------
