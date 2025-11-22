@@ -24,118 +24,52 @@ This project emphasizes scalability, security, and developer-friendly extensibil
 
 ## ✨ Core Features
 
-###  👤 User Management
+- **Modern Social Experience**  
+  Instagram-inspired feed, stories, likes, nested comments (up to 5 levels), saves/collections, and an Explore page with search.
 
-- Secure user registration, login, and profile editing (including bio, website, and avatar uploads).
-- Social authentication integrations with **Google** and **GitHub**.
-- Public profile viewing, including posts, followers, and following lists.
+- **User Profiles & Auth**  
+  Customizable profiles (avatar, bio, website), follow system, **Google** & **GitHub** social login.
 
----
+- **Real-Time Interaction**  
+  Instant private messaging with typing indicators and online status via **Django Channels**.  
+  Live like/unlike and comment loading powered by **HTMX**.
 
-###  📸 Content Creation
+- **Ephemeral Stories**  
+  24-hour stories (image/video) with replies, highlights/collections, and beautiful full-screen viewer.
 
-- Public profile viewing, including posts, followers, and following lists.
-- Explore page for discovering new content.
-- Basic search functionality for posts and user profiles.
+- **Performance & Scalability**  
+  Infinite scroll pagination (posts, comments, feeds), **Redis** caching, advanced filtering by **django-filter**, background tasks with **Celery + RabbitMQ** (image processing, email, cleanup).
 
----
-
-###  💬 Engagement Tools
-
-- Real-time like/unlike actions with HTMX-driven updates.
-- Post saving to private collection.
-- Nested commenting system supporting up to 5 levels of replies.
-
----
-
-###  💭 Real-Time Messaging
-
-- Instant one-on-one chats using **Django Channels** and **Daphne**.
-- Live typing indicators and user presence status (online/offline).
-- Seamless sharing of posts and stories directly within conversations.
-
----
-
-###  🎞️ Stories & Collections
-
-- Create 24-hour ephemeral stories with images or videos.
-- Story replies and in-chat sharing capabilities.
-- Persistent collections for archiving stories and posts on user profiles.
-- Interactive story viewer with progress bars, auto-advance, and responsive design.
-
----
-
-### ⚙️ Asynchronous Tasks (Celery + RabbitMQ)
-
-Background task handling is powered by **Celery** using **RabbitMQ** as the message broker, enhancing responsiveness and performance.
-- Image compression and resizing for posts and profile pictures.
-- Automatic deletion of user-uploaded media when a post or profile is deleted.
-- Sending an activation email upon user registration.
+- **Robust REST API** (Django REST Framework)  
+  Full JWT-secured API for posts, comments, stories, profiles, messaging, and collections — ready for mobile or SPA clients.
 
 ---
 
 ## 🔌 RESTful API
 
-Lumen provides a robust REST API built with **Django REST Framework**, enabling easy integration for mobile apps, SPAs, or external services. All endpoints are secured via **JWT token authentication**.
+Lumen provides a fully featured REST API built with **Django REST Framework**, enabling easy integration for mobile apps, SPAs, or external services. All endpoints are secured with **JWT token authentication**.
 
-The API supports:
+Main endpoints include:
 
-### ✅ Authentication & Security
-
-- **JWT-based** token authentication for stateless sessions.
-- Permission-based access.
-- Secure actions.
-
-### 👤 Profiles API
-
-- Fetch public user profiles.
-- Follow/unfollow users.
-- View followers and following lists.
-- Get authenticated user’s profile.
-
-### 📸 Posts API
-
-- Create, edit, and delete posts.
-- Upload media (images/videos).
-- Like / Unlike / Save posts.
-- Personalized feed, saved posts.
-
-### 💬 Comments API
-
-- Nested comments up to 5 levels.
-- Create comments or replies.
-- List comments for a post.
-- View full comment trees with children.
-
-### 📚 Stories API
-
-- Create stories (image or video).
-- Stories automatically expire after 24 hours.
-- View stories from users you follow.
-- View stories for a specific user.
-- Save a story to a collection.
-- Get your own stories separately.
-
-### 🗂 Collections API
-
-- Create personal collections to organize saved stories and posts.
-- Add or remove stories from collections.
-- List all collections for a specific user.
-- Private: only the owner can modify their collections.
-
+- **✅ Auth**: JWT login, signup, permissions.
+- **👤 Profiles**: View profiles, follow/unfollow, followers/following.
+- **📸 Posts**: Create/edit/delete posts, media upload, likes, saved posts, personalized feed.
+- **💬 Comments**: Nested comments, replies, full comment trees.
+- **📚 Stories**: 24h stories, view by user or following, save to collections.
+- **🗂 Collections**: Organize stories into private collections.
 
 ---
 
 ##  🛠️ Tech Stack
 
--  **Backend:** Python 3.13.7
--  **Framework:** Django 5.2.5
+-  **Backend:** Python 3.13.7, Django 5.2.5, Daphne 4.2.1
 -  **API:** Django REST Framework 3.16.1 
 -  **Async Tasks:** Celery 5.5.3, RabbitMQ 4.2.0
+-  **Caching**: Redis 8.4.0
 -  **Frontend:** Bootstrap 5.3.6, htmx 2.0.7, JavaScript
 -  **Realtime:** Django Channels + Daphne
--  **Auth:** Django built-in system with Social Auth
--  **Media Handling:** Pillow for image compression/resizing
+-  **Auth:** Django built-in auth + Social Auth
+-  **Media Handling:** Pillow
 -  **Database:** SQLite (dev) / PostgreSQL (prod)
 -  **Containerization**: Docker
 
@@ -147,25 +81,27 @@ The API supports:
 ```bash
 
 # Clone the repository
-
-git  clone  https://github.com/deviantcoder/lumen.git
-
-cd  lumen
+git clone https://github.com/deviantcoder/lumen.git
+cd lumen
 
 # Create a virtual environment
-
-python  -m  venv  venv
-
-source  venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# .venv\Scripts\activate   # Windows
 
 # Install dependencies
-
-pip  install  -r  requirements.txt
+pip install -r requirements.txt
 
 # Run migrations
+python manage.py migrate
 
-python  manage.py  migrate
+# Start development servers
 
-# Start development server
+# Terminal 1: Django + Daphne
+python manage.py runserver
 
-python  manage.py  runserver
+# Terminal 2: Celery worker
+celery -A core worker -l INFO
+
+# Terminal 3 (optional for dev): Redis (if not using Docker)
+docker compose up -d
