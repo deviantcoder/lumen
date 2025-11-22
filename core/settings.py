@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'apps.accounts.apps.AccountsConfig',
     'apps.profiles.apps.ProfilesConfig',
     'apps.posts.apps.PostsConfig',
-    # 'apps.feed.apps.FeedConfig',
     'apps.explore.apps.ExploreConfig',
     'apps.search.apps.SearchConfig',
     'apps.chat.apps.ChatConfig',
