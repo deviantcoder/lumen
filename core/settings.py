@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'channels',
     'rest_framework',
     'django_filters',
+    'django_elasticsearch_dsl',
 
     # project apps
     'apps.accounts.apps.AccountsConfig',
@@ -221,7 +222,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),   # TODO: change to 5-10 minutes
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
@@ -246,3 +247,12 @@ CACHES = {
 
 POSTS_PER_PAGE = 5
 COMMENTS_PER_PAGE = 10
+
+# Elasticsearch config
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'http://localhost:9200',
+    }
+}
+
