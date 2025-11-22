@@ -20,6 +20,7 @@ from django.core.paginator import (
 
 from .forms import PostForm, CommentForm, EditPostForm
 from .models import Post, Like, Save, Comment
+from .filters import PostFilter
 
 from apps.profiles.models import Follow
 from apps.chat.models import Message, Chat
@@ -69,10 +70,15 @@ def get_feed_queryset(user):
 
 @login_required
 def feed(request):
-    posts = get_feed_queryset(user=request.user)
+    queryset = get_feed_queryset(user=request.user)
+
+    posts_filter = PostFilter(
+        request.GET,
+        queryset=queryset
+    )
 
     paginator = Paginator(
-        posts, getattr(settings, 'POSTS_PER_PAGE', 5)
+        posts_filter.qs, getattr(settings, 'POSTS_PER_PAGE', 5)
     )
     page = request.GET.get('page', 1)
 
@@ -90,6 +96,7 @@ def feed(request):
 
     context = {
         'posts': posts,
+        'filter': posts_filter,
     }
 
     return render(request, template_name, context)

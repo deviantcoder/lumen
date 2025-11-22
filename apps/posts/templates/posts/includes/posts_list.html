@@ -63,6 +63,10 @@
             </div>
         </div>
     </div>
+{% empty %}
+    <div class="d-flex justify-content-center">
+        <span class="small fw-semibold text-muted">No posts available...</span>
+    </div>
 {% endfor %}
 {% if posts.has_next %}
     <div
