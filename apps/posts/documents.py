@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
-from .models import Post
+from .models import Post, Tag
 
 
 User = get_user_model()
@@ -16,6 +16,10 @@ class PostDocument(Document):
     created = fields.DateField()
     author_username = fields.KeywordField(
         attr='author.username'
+    )
+    tag_names = fields.KeywordField(
+        multi=True,
+        attr='tags.values_list("name", flat=True)'
     )
     
     class Index:
@@ -31,4 +35,4 @@ class PostDocument(Document):
             'id',
             'public_id',
         )
-        related_models = [User]
+        related_models = [User, Tag]

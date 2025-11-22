@@ -13,6 +13,7 @@
     <img  src="https://img.shields.io/badge/Redis-8.4.0-red?logo=redis&logoColor=white" />
     <img  src="https://img.shields.io/badge/Docker-28.5.2-blue?logo=docker&logoColor=white" />
     <img  src="https://img.shields.io/badge/SQLite-dev-cyan?logo=sqlite&logoColor=white" />
+    <img  src="https://img.shields.io/badge/Elasticsearch-9.2.1-blue?logo=elasticsearch&logoColor=white" />
 </p>
 
 ---

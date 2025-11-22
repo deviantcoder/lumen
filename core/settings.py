@@ -230,7 +230,6 @@ SIMPLE_JWT = {
 
 CELERY_BROKER_URL = 'amqp://admin:admin@localhost:5672//'
 
-
 # Cache config
 
 CACHES = {
