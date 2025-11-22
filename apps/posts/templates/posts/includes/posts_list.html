@@ -67,7 +67,7 @@
 {% if posts.has_next %}
     <div
         id="feed-loader-{{ posts.next_page_number }}"
-        hx-get="{% url 'feed:feed' %}?page={{ posts.next_page_number }}"
+        hx-get="{% url 'posts:feed' %}?page={{ posts.next_page_number }}"
         hx-trigger="revealed"
         hx-swap="outerHTML"
         class="feed-infinite-loader d-flex justify-content-center p-0"

@@ -7,5 +7,5 @@ app_name = 'feed'
 
 
 urlpatterns = [
-    path('', views.feed, name='feed'),
+    
 ]

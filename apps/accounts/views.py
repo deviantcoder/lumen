@@ -23,7 +23,7 @@ class LoginUserView(LoginView):
     template_name = 'accounts/login.html'
     form_class = LoginForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('feed:feed')
+    success_url = reverse_lazy('posts:feed')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -36,7 +36,7 @@ class LoginUserView(LoginView):
         else:
             messages.warning(self.request, 'Please verify your email before logging in.')
             logout(self.request)
-            return redirect(reverse_lazy('feed:feed'))
+            return redirect(reverse_lazy('posts:feed'))
     
     def form_invalid(self, form):
         messages.warning(self.request, 'Invalid email, username or password.')
@@ -44,7 +44,7 @@ class LoginUserView(LoginView):
 
 
 class LogoutUserView(LogoutView):
-    next_page = reverse_lazy('feed:feed')
+    next_page = reverse_lazy('posts:feed')
 
     def dispatch(self, request, *args, **kwargs):
         messages.success(request, "You've been logged out.")
@@ -58,7 +58,7 @@ class SignupUserView(generic.CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect(reverse_lazy('feed:feed'))
+            return redirect(reverse_lazy('posts:feed'))
 
         return super().dispatch(request, *args, **kwargs)
     
@@ -89,7 +89,7 @@ class SignupUserView(generic.CreateView):
 
 def activate_account(request, uidb64, token):
     if request.user.is_authenticated and request.user.email_verified:
-        return redirect(reverse_lazy('feed:feed'))
+        return redirect(reverse_lazy('posts:feed'))
 
     try:
         public_id_bytes = urlsafe_base64_decode(uidb64)

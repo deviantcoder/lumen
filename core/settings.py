@@ -42,12 +42,13 @@ INSTALLED_APPS = [
     'mptt',
     'channels',
     'rest_framework',
+    'django_filters',
 
     # project apps
     'apps.accounts.apps.AccountsConfig',
     'apps.profiles.apps.ProfilesConfig',
     'apps.posts.apps.PostsConfig',
-    'apps.feed.apps.FeedConfig',
+    # 'apps.feed.apps.FeedConfig',
     'apps.explore.apps.ExploreConfig',
     'apps.search.apps.SearchConfig',
     'apps.chat.apps.ChatConfig',

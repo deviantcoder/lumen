@@ -1,0 +1,35 @@
+{% extends '_base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-76 pb-76">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-10">
+            <div class="d-flex align-items-center justify-content-between mb-3 d-block d-md-none">
+                <div class="d-flex align-items-center">
+                    <img src="{% static 'img/logo.png' %}" class="navbar-logo me-3"></img>
+                    <span class="gradient-text fw-bold fs-5">Lumen</span>
+                </div>
+                <div>
+                    <a href="{% url 'chat:inbox' %}" class="text-decoration-none text-white"><i class="bi bi-chat-heart-fill fs-5"></i></a>
+                </div>
+            </div>
+            <div id="stories_list"
+                hx-get="{% url 'stories:stories_list' %}"
+                hx-trigger="load"
+                hx-target="#stories_list"
+                hx-swap="innerHTML"
+            >
+                <div class="text-muted small py-3 text-center">Loading stories...</div>
+            </div>
+            <div id="feed-container">
+                {% include 'posts/includes/posts_list.html' %}
+            </div>
+        </div>
+        {% include 'posts/includes/sidebar.html' %}
+    </div>
+</div>
+{% include 'posts/includes/mobile_nav.html' %}
+{% endblock content %}

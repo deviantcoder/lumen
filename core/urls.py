@@ -16,9 +16,9 @@ urlpatterns = [
 
     # apps
 
+    path('', include('apps.posts.urls')),
     path('accounts/', include('apps.accounts.urls')),
     path('accounts/social/', include('social_django.urls', namespace='social')),
-    path('posts/', include('apps.posts.urls')),
     path('profiles/', include('apps.profiles.urls')),
     path('explore/', include('apps.explore.urls')),
     path('explore/search/', include('apps.search.urls')),
