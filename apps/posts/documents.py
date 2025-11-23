@@ -17,10 +17,7 @@ class PostDocument(Document):
     author_username = fields.KeywordField(
         attr='author.username'
     )
-    tag_names = fields.KeywordField(
-        multi=True,
-        attr='tags.values_list("name", flat=True)'
-    )
+    tag_names = fields.KeywordField(multi=True)
     
     class Index:
         name = 'posts'
@@ -36,3 +33,8 @@ class PostDocument(Document):
             'public_id',
         )
         related_models = [User, Tag]
+
+    def prepare_tag_names(self, instance):
+        return list(
+            instance.tags.values_list('name', flat=True)
+        )
