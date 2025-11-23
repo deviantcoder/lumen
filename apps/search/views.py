@@ -4,8 +4,8 @@ from django.http import Http404
 
 from elastic_transport import ConnectionError
 
-from apps.posts.models import Post, Tag
-from apps.posts.documents import PostDocument
+from .documents.posts import PostDocument
+
 from apps.profiles.models import Profile
 
 

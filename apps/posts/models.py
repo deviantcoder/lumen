@@ -38,7 +38,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     
     caption = models.TextField(max_length=500, null=True, blank=True)
-    tags = models.ManyToManyField('Tag', related_name='tags', blank=True)
+    tags = models.ManyToManyField('Tag', related_name='posts', blank=True)
     status = models.CharField(max_length=10, choices=POST_STATUS.choices, default=POST_STATUS.ACTIVE)
 
     created = models.DateTimeField(auto_now_add=True)

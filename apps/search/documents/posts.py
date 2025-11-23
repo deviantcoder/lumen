@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
-from .models import Post, Tag
+from apps.posts.models import Post, Tag
 
 
 User = get_user_model()
@@ -33,6 +33,18 @@ class PostDocument(Document):
             'public_id',
         )
         related_models = [User, Tag]
+
+    def get_queryset(self):
+        return (
+            super().get_queryset().select_related('author')
+        )
+
+    def get_instances_from_related(self, related_instance):
+        if isinstance(related_instance, User):
+            return related_instance.posts.all()
+        elif isinstance(related_instance, Tag):
+            return related_instance.posts.all()
+        return None
 
     def prepare_tag_names(self, instance):
         return list(
