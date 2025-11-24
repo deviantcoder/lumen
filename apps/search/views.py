@@ -5,6 +5,7 @@ from django.http import Http404
 from elastic_transport import ConnectionError
 
 from .documents.posts import PostDocument
+from .documents.profiles import ProfileDocument
 
 from apps.profiles.models import Profile
 
@@ -46,18 +47,25 @@ def search(request):
         )
     )
 
-    profiles = (
-        Profile.objects.filter(
-            Q(user__username__icontains=search_query) |
-            Q(user__full_name__icontains=search_query)
+    es_profiles = (
+        ProfileDocument.search()
+        .query(
+            'multi_match',
+            query=search_query,
+            fields=[
+                'username^3',
+                'full_name^2',
+                'bio',
+            ],
+            fuzziness='AUTO'
         )
+        .to_queryset()
         .select_related('user')
-        .distinct()
     )
 
     context = {
         'posts': es_posts,
-        'profiles': profiles,
+        'profiles': es_profiles,
         'search_query': search_query,
     }
 

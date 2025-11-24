@@ -13,7 +13,6 @@ User = get_user_model()
 class PostDocument(Document):
 
     caption = fields.TextField()
-    created = fields.DateField()
     author_username = fields.KeywordField(
         attr='author.username'
     )
