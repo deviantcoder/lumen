@@ -4,8 +4,8 @@ from django.http import Http404
 
 from elastic_transport import ConnectionError
 
-from .documents.posts import PostDocument
-from .documents.profiles import ProfileDocument
+from apps.discovery.documents.posts import PostDocument
+from apps.discovery.documents.profiles import ProfileDocument
 
 from apps.profiles.models import Profile
 
@@ -16,7 +16,7 @@ def search(request):
     if not search_query:
         return render(
             request,
-            'search/search_results.html',
+            'discovery/search/search_results.html',
             {
                 'posts': [],
                 'profiles': [],
@@ -69,4 +69,4 @@ def search(request):
         'search_query': search_query,
     }
 
-    return render(request, 'search/search_results.html', context)
+    return render(request, 'discovery/search/search_results.html', context)

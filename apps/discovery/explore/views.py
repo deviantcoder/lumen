@@ -21,4 +21,4 @@ def explore(request):
         'posts': posts,
     }
 
-    return render(request, 'explore/explore.html', context)
+    return render(request, 'discovery/explore/explore.html', context)
