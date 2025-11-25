@@ -2,13 +2,10 @@ from django.shortcuts import render, redirect
 from django.db.models import Q, Count
 from django.http import Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
-from elastic_transport import ConnectionError
+from django.urls import reverse
 
 from apps.discovery.documents.posts import PostDocument
 from apps.discovery.documents.profiles import ProfileDocument
-
-from apps.profiles.models import Profile
 
 
 def search(request):
@@ -47,6 +44,7 @@ def search(request):
             likes_count=Count('likes'),
             comments_count=Count('comments')
         )
+        .order_by('-created')
     )
 
     es_profiles = (
@@ -86,7 +84,7 @@ def search(request):
         'posts': posts,
         'profiles': es_profiles,
         'search_query': search_query,
-        'load_url_name': 'discovery:search',
+        'load_url_name': reverse('discovery:search'),
     }
 
     return render(request, template_name, context)

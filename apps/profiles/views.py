@@ -5,6 +5,8 @@ from django.http import HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
 from django.db.models import Count
 from django.core.cache import cache
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.urls import reverse
 
 from apps.posts.models import Post
 
@@ -22,11 +24,6 @@ User = get_user_model()
 def profile(request, username: str):
     user = get_object_or_404(User, username=username)
 
-    posts = cache.get(f'user:{user.pk}:posts')
-    if posts is None:
-        posts = user.posts.all()
-        cache.set(f'user:{user.pk}:posts', posts, 60 * 15)
-
     is_following = None
 
     if user != request.user:
@@ -40,13 +37,12 @@ def profile(request, username: str):
         cache.set(f'user:{user.pk}:following_count', following_count, timeout=60 * 15)
 
     followers_count = cache.get(f'user:{user.pk}:followers_count')
-    if following_count is None:
+    if followers_count is None:
         followers_count = Follow.objects.filter(user=user).count()
         cache.set(f'user:{user.pk}:followers_count', following_count, timeout=60 * 15)
 
     context = {
         'profile': user.profile,
-        'posts': '',
         'is_following': is_following,
         'followers_count': followers_count,
         'following_count': following_count,
@@ -150,17 +146,21 @@ def toggle_follow(request, username):
 @login_required
 def get_user_posts(request, username):
     user = get_object_or_404(User, username=username)
+    posts = []
 
-    posts = (
-        user.posts.filter(
-            status=Post.POST_STATUS.ACTIVE
+    if not 'saved' in request.GET:
+        posts = (
+            user.posts.filter(
+                status=Post.POST_STATUS.ACTIVE
+            )
+            .order_by('-created')
+            .annotate(
+                likes_count=Count('likes'),
+                comments_count=Count('comments'),
+            )
+            .select_related('author', 'author__profile')
+            .prefetch_related('media')
         )
-        .order_by('-created')
-        .annotate(
-            likes_count=Count('likes'),
-            comments_count=Count('comments'),
-        )
-    )
     
     if 'saved' in request.GET and user == request.user:
         saved_posts_pks = user.saved_posts.values_list('post', flat=True)
@@ -175,8 +175,26 @@ def get_user_posts(request, username):
             )
         )
 
+    paginator = Paginator(
+        posts, per_page=6
+    )
+    page = request.GET.get('page', 1)
+
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
     context = {
         'posts': posts,
+        'load_url_name': reverse(
+            'profiles:get_user_posts',
+            kwargs={
+                'username': username,
+            }
+        )
     }
 
     return render(request, 'posts/partials/posts_grid.html', context)

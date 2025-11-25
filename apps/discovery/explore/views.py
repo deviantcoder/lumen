@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.urls import reverse
 
 from apps.posts.models import Post
 
@@ -38,7 +39,7 @@ def explore(request):
 
     context = {
         'posts': posts,
-        'load_url_name': 'discovery:explore'
+        'load_url_name': reverse('discovery:explore')
     }
 
     return render(request, template_name, context)
