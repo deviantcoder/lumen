@@ -46,3 +46,17 @@
         </a>
     </div>
 {% endfor %}
+{% if posts.has_next %}
+    <div
+        id="feed-loader-{{ posts.next_page_number }}"
+        hx-get="{% url 'discovery:explore' %}?page={{ posts.next_page_number }}"
+        hx-trigger="revealed"
+        hx-swap="outerHTML"
+        class="w-100 d-flex justify-content-center align-items-center p-4 feed-infinite-loader"
+        style="grid-column: 1 / -1;"
+    >
+        <div class="spinner-border text-light htmx-indicator" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading…</span>
+        </div>
+    </div>
+{% endif %}

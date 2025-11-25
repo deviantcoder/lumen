@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from apps.posts.models import Post
 
@@ -15,10 +16,28 @@ def explore(request):
             likes_count=Count('likes'),
             comments_count=Count('comments'),
         )
+        .order_by('-created')
     )
+
+    paginator = Paginator(
+        posts, per_page=6
+    )
+    page = request.GET.get('page', 1)
+
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    if request.htmx:
+        template_name = 'posts/partials/posts_grid.html'
+    else:
+        template_name = 'discovery/explore/explore.html'
 
     context = {
         'posts': posts,
     }
 
-    return render(request, 'discovery/explore/explore.html', context)
+    return render(request, template_name, context)

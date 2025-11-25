@@ -89,7 +89,7 @@ def feed(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
-    if request.headers.get('HX-Request'):
+    if request.htmx:
         template_name = 'posts/includes/posts_list.html'
     else:
         template_name = 'posts/feed.html'

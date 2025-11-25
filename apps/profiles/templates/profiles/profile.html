@@ -145,8 +145,14 @@ Profile
             </li>
         {% endif %}
     </ul>
-    <div class="posts-grid" id="posts" hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
-        hx-target="#posts" hx-swap="innerHTML" hx-trigger="load">
+    <div class="row justify-content-center">
+        <div class="posts-grid col-md-9" id="posts" 
+            hx-get="{% url 'profiles:get_user_posts' profile.user.username %}"
+            hx-target="#posts"
+            hx-swap="innerHTML"
+            hx-trigger="load"
+        >
+        </div>
     </div>
 </div>
 <script>
