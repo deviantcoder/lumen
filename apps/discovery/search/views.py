@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 from django.shortcuts import render, redirect
 from django.db.models import Q, Count
 from django.http import Http404
@@ -6,6 +8,8 @@ from django.urls import reverse
 
 from apps.discovery.documents.posts import PostDocument
 from apps.discovery.documents.profiles import ProfileDocument
+
+from apps.posts.filters import PostFilter
 
 
 def search(request):
@@ -63,8 +67,13 @@ def search(request):
         .select_related('user')
     )
 
+    posts_filter = PostFilter(
+        request.GET,
+        queryset=es_posts
+    )
+
     paginator = Paginator(
-        es_posts, per_page=6
+        posts_filter.qs, per_page=6
     )
     page = request.GET.get('page', 1)
 
@@ -80,11 +89,18 @@ def search(request):
     else:
         template_name = 'discovery/search/search_results.html'
 
+    filter_url_params = {
+        'query': search_query,
+        'page': page,
+    }
+
     context = {
         'posts': posts,
         'profiles': es_profiles,
         'search_query': search_query,
-        'load_url_name': reverse('discovery:search'),
+        'load_url': reverse('discovery:search'),
+        'filter': posts_filter,
+        'filter_url': f'{reverse('discovery:search')}?{urlencode(filter_url_params)}',
     }
 
     return render(request, template_name, context)

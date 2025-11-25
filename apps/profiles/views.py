@@ -189,7 +189,7 @@ def get_user_posts(request, username):
 
     context = {
         'posts': posts,
-        'load_url_name': reverse(
+        'load_url': reverse(
             'profiles:get_user_posts',
             kwargs={
                 'username': username,

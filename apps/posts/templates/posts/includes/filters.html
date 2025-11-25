@@ -15,8 +15,8 @@
     </div>
     <div class="collapse" id="filterCollapse">
         <form id="filterForm" method="GET"
-            hx-get="{% url 'posts:feed' %}"
-            hx-target="#feed-container"
+            hx-get="{{ filter_url }}"
+            hx-target="#posts"
             hx-swap="innerHTML"
         >
             <div class="d-flex align-items-center justify-content-between mb-2 gap-2">

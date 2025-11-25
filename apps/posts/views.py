@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import (
     Exists, OuterRef,
@@ -97,6 +98,7 @@ def feed(request):
     context = {
         'posts': posts,
         'filter': posts_filter,
+        'filter_url': reverse('posts:feed')
     }
 
     return render(request, template_name, context)

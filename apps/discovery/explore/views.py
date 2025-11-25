@@ -39,7 +39,7 @@ def explore(request):
 
     context = {
         'posts': posts,
-        'load_url_name': reverse('discovery:explore')
+        'load_url': reverse('discovery:explore')
     }
 
     return render(request, template_name, context)
