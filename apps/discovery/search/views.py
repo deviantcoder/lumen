@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q, Count
 from django.http import Http404
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from elastic_transport import ConnectionError
 
@@ -36,6 +37,7 @@ def search(request):
             ],
             fuzziness='AUTO'
         )
+        .extra(size=1000)
         .to_queryset()
         .select_related(
             'author', 'author__profile'
@@ -63,10 +65,28 @@ def search(request):
         .select_related('user')
     )
 
+    paginator = Paginator(
+        es_posts, per_page=6
+    )
+    page = request.GET.get('page', 1)
+
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    if request.htmx:
+        template_name = 'posts/partials/posts_grid.html'
+    else:
+        template_name = 'discovery/search/search_results.html'
+
     context = {
-        'posts': es_posts,
+        'posts': posts,
         'profiles': es_profiles,
         'search_query': search_query,
+        'load_url_name': 'discovery:search',
     }
 
-    return render(request, 'discovery/search/search_results.html', context)
+    return render(request, template_name, context)

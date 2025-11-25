@@ -38,6 +38,7 @@ def explore(request):
 
     context = {
         'posts': posts,
+        'load_url_name': 'discovery:explore'
     }
 
     return render(request, template_name, context)
