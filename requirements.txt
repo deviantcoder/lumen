@@ -15,10 +15,12 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1.2
 click-repl==0.3.0
 constantly==23.10.4
+cron_descriptor==2.0.6
 cryptography==45.0.7
 daphne==4.2.1
 defusedxml==0.7.1
 Django==5.2.5
+django-celery-beat==2.8.1
 django-debug-toolbar==6.0.0
 django-elasticsearch-dsl==9.0
 django-filter==25.2
@@ -26,6 +28,7 @@ django-htmx==1.25.0
 django-js-asset==3.1.2
 django-mptt==0.18.0
 django-redis==6.0.0
+django-timezone-field==7.1
 django-widget-tweaks==1.5.0
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
@@ -46,6 +49,7 @@ pyasn1_modules==0.4.2
 pycparser==2.22
 PyJWT==2.10.1
 pyOpenSSL==25.3.0
+python-crontab==3.3.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 python3-openid==3.2.0

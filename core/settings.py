@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'django_elasticsearch_dsl',
+    'django_celery_beat',
 
     # project apps
     'apps.accounts.apps.AccountsConfig',
@@ -228,6 +229,16 @@ SIMPLE_JWT = {
 # Celery config
 
 CELERY_BROKER_URL = 'amqp://admin:admin@localhost:5672//'
+
+# Celery Beat config
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    'delete-expired-stories': {
+        'task': 'apps.stories.tasks.delete_expired_stories',
+        'schedule': 86400.0,
+    },
+}
 
 # Cache config
 
