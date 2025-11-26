@@ -24,9 +24,10 @@
             <span class="fw-bold text-truncate">{{ profile.user.username }}</span>
         </div>
         <div class="w-100 w-sm-auto text-center text-sm-end">
-            <form method="POST" action="{% url 'profiles:update_profile_image' %}" enctype="multipart/form-data">
+            <form method="POST" action="{% url 'profiles:edit_profile' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="file" name="image" class="d-none" id="imageInput" accept="image/*" onchange="this.form.submit();">
+                <input name="update_image" class="d-none">
                 <button type="button" class="btn btn-sm btn-primary fw-bold rounded-3 px-3 px-sm-4"
                     onclick="document.getElementById('imageInput').click();"
                 >
@@ -40,8 +41,9 @@
         <h2 class="h6 fw-bold mb-3">Website</h2>
         <div class="card border-0 rounded-3">
             <div class="card-body">
-                <form method="POST" action="{% url 'profiles:update_profile_url' %}">
+                <form method="POST" action="{% url 'profiles:edit_profile' %}">
                     {% csrf_token %}
+                    <input name="update_url" class="d-none">
                     {% render_field url_form.url class="form-control mb-1 rounded-3" %}
                     <button type="submit" class="btn btn-primary fw-bold btn-sm rounded-3 mt-2 px-4">Update</button>
                 </form>
@@ -53,8 +55,9 @@
         <h2 class="h6 fw-bold mb-3">Bio</h2>
         <div class="card border-0 rounded-3">
             <div class="card-body">
-                <form method="POST" action="{% url 'profiles:update_profile_bio' %}">
+                <form method="POST" action="{% url 'profiles:edit_profile' %}">
                     {% csrf_token %}
+                    <input name="update_bio" class="d-none">
                     {% render_field bio_form.bio class="form-control mb-1 rounded-3" rows=3 %}
                     <input type="hidden" name="bio_form">
                     <button type="submit" class="btn btn-primary fw-bold btn-sm rounded-3 mt-2 px-4">Update</button>

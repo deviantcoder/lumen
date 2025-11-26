@@ -31,19 +31,31 @@ def profile(request, username: str):
             user=user, follower=request.user
         ).exists()
 
+    posts_count = cache.get(f'user:{user.pk}:posts_count')
+    if posts_count is None:
+        posts_count = user.posts.filter(status=Post.POST_STATUS.ACTIVE).count()
+        cache.set(
+            f'user:{user.pk}:posts_count', posts_count, timeout=60 * 15
+        )
+
     following_count = cache.get(f'user:{user.pk}:following_count')
     if following_count is None:
         following_count = Follow.objects.filter(follower=user).count()
-        cache.set(f'user:{user.pk}:following_count', following_count, timeout=60 * 15)
+        cache.set(
+            f'user:{user.pk}:following_count', following_count, timeout=60 * 15
+        )
 
     followers_count = cache.get(f'user:{user.pk}:followers_count')
     if followers_count is None:
         followers_count = Follow.objects.filter(user=user).count()
-        cache.set(f'user:{user.pk}:followers_count', following_count, timeout=60 * 15)
+        cache.set(
+            f'user:{user.pk}:followers_count', followers_count, timeout=60 * 15
+        )
 
     context = {
         'profile': user.profile,
         'is_following': is_following,
+        'posts_count': posts_count,
         'followers_count': followers_count,
         'following_count': following_count,
     }
@@ -61,6 +73,25 @@ def edit_profile(request):
     url_form = URLForm(instance=profile)
     bio_form = BioForm(instance=profile)
 
+    if request.method == 'POST':
+        if 'update_image' in request.POST:
+            new_image = request.FILES.get('image')
+            if new_image:
+                profile.image = new_image
+                profile.save(update_fields=['image'])
+        
+        if 'update_url' in request.POST:
+            form = URLForm(request.POST, instance=profile)
+            if form.is_valid():
+                form.save()
+        
+        if 'update_bio' in request.POST:
+            form = BioForm(request.POST, instance=profile)
+            if form.is_valid():
+                form.save()
+        
+        return redirect('profiles:edit_profile')
+
     context = {
         'profile': profile,
         'url_form': url_form,
@@ -68,51 +99,6 @@ def edit_profile(request):
     }
 
     return render(request, 'profiles/edit_profile.html', context)
-
-
-@require_http_methods(['POST'])
-@login_required
-def update_profile_image(request):
-    profile = request.user.profile
-
-    if request.method == 'POST':
-        new_image = request.FILES.get('image')
-
-        if new_image:
-            profile.image = new_image
-            profile.save(update_fields=['image'])
-
-            if request.htmx:
-                pass
-            return redirect('profiles:edit_profile')
-
-
-@require_http_methods(['POST'])
-@login_required
-def update_profile_url(request):
-    profile = request.user.profile
-
-    if request.method == 'POST':
-        form = URLForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            if request.htmx:
-                pass
-            return redirect('profiles:edit_profile')
-
-
-@require_http_methods(['POST'])
-@login_required
-def update_profile_bio(request):
-    profile = request.user.profile
-
-    if request.method == 'POST':
-        form = BioForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            if request.htmx:
-                pass
-            return redirect('profiles:edit_profile')
 
 
 # ---------- INTERACTIONS ----------

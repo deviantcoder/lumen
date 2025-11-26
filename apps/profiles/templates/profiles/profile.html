@@ -42,8 +42,8 @@ Profile
             <div class="row g-3 text-center text-md-start">
                 <div class="col-4">
                     <div class="border border-dark p-2 rounded-3 h-100 d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1">
-                        <span class="fw-bold">{{ posts.count }}</span>
-                        <span class="text-muted small">post{{ posts.count|pluralize:'s' }}</span>
+                        <span class="fw-bold">{{ posts_count }}</span>
+                        <span class="text-muted small">post{{ posts_count|pluralize:'s' }}</span>
                     </div>
                 </div>
                 <div class="col-4">
@@ -152,7 +152,9 @@ Profile
         hx-trigger="load"
     >
     </div>
-    <div class="posts-grid" id="posts"></div>
+    <div class="row justify-content-center">
+        <div class="posts-grid col-md-8" id="posts"></div>
+    </div>    
 </div>
 <script>
     document.querySelectorAll('.hx-tab').forEach(btn => {
