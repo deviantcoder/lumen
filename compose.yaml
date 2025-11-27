@@ -32,7 +32,21 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
 
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=lumen_db
+      - POSTGRES_USER=lumen_user
+      - POSTGRES_PASSWORD=lumen_pass
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
   rabbitmq_data:
   es_data:
   redis_data:
+  postgres_data:
