@@ -1,0 +1,21 @@
+{% for profile in suggestions %}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center">
+            <img src="{{ profile.image_or_default }}" class="suggestion-avatar me-2" alt="User avatar">
+            <div class="d-flex flex-column">
+                <a href="#" class="fw-bold small text-white text-decoration-none">{{ profile.user.username }}</a>
+                <span class="suggestion-detail">Followed by janesmith + 12 more</span>
+            </div>
+        </div>
+        <form method="POST" action="{% url 'profiles:toggle_follow' profile.username %}">
+            {% csrf_token %}
+            <button type="submit" class="suggestion-follow btn bg-transparent border-0 fw-bold text-primary p-0">
+                Follow
+            </button>
+        </form>
+    </div>
+{% empty %}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <span class="text-muted fw-semibold small">No suggestions for you right now</span>
+    </div>
+{% endfor %}

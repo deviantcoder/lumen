@@ -3,15 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.urls import reverse
+from django.db.models import QuerySet
 
 from apps.posts.models import Post
 
 from .forms import URLForm, BioForm
-from .models import Follow
+from .models import Follow, Profile
 
 
 User = get_user_model()
@@ -121,13 +122,16 @@ def toggle_follow(request, username):
         else:
             is_following = True
 
-        context = {
-            'target_user': target_user,
-            'is_following': is_following,
-        }
+        if request.htmx:
+            context = {
+                'target_user': target_user,
+                'is_following': is_following,
+            }
 
-        return render(request, 'profiles/partials/follow_button.html', context)
-    
+            return render(request, 'profiles/partials/follow_button.html', context)
+
+        return redirect(request.META.get('HTTP_REFERER') or '/')
+
 
 @login_required
 def get_user_posts(request, username):
@@ -212,3 +216,40 @@ def get_following(request, username):
     }
 
     return render(request, 'profiles/partials/following.html', context)
+
+
+@login_required
+def suggestions_list(request):
+    user = request.user
+    limit = 10
+
+    following_ids = user.following.values_list('user__id', flat=True)
+    
+    suggestions = (
+        Profile.objects.filter(
+            user__followers__follower__in=following_ids
+        )
+        .exclude(
+            user=user
+        )
+        .exclude(
+            user__id__in=following_ids
+        )
+        .annotate(
+            mutuals_count=Count(
+                'user__followers',
+                filter=Q(user__followers__follower__in=following_ids),
+                distinct=True
+            )
+        )
+        .select_related('user')
+        .order_by(
+            '-mutuals_count', '-user__created'
+        )[:limit]
+    )
+
+    context = {
+        'suggestions': suggestions,
+    }
+
+    return render(request, 'profiles/partials/suggestions_list.html', context)
