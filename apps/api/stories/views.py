@@ -13,7 +13,7 @@ from .serializers import (
     StorySerializer,
     CollectionSerializer
 )
-from .permissions import IsAuthorOrReadOnly
+from apps.api.permissions import IsAuthorOrReadOnly
 
 from apps.stories.models import Story, Collection
 
@@ -22,6 +22,10 @@ User = get_user_model()
 
 
 class StoryViewSet(ModelViewSet):
+
+    """
+    ViewSet for managing stories.
+    """
     
     serializer_class = StorySerializer
     authentication_classes = [JWTAuthentication]
@@ -82,6 +86,10 @@ class StoryViewSet(ModelViewSet):
 
 
 class CollectionViewSet(ModelViewSet):
+
+    """
+    ViewSet for managing story collections.
+    """
 
     serializer_class = CollectionSerializer
     authentication_classes = [JWTAuthentication]

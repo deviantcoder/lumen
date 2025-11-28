@@ -1,5 +1,4 @@
 import os
-import shutil
 import logging
 
 from django.dispatch import receiver
@@ -23,6 +22,12 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=PostMedia)
 def compress_media_file(sender, instance, **kwargs):
+
+    """
+    Signal to process and compress media files after a PostMedia
+    instance is saved, queueing a Celery task depending on file type.
+    """
+
     if getattr(instance, '_skip_signals', False):
         return
 
@@ -43,8 +48,7 @@ def compress_media_file(sender, instance, **kwargs):
                 )
             elif ext in ALLOWED_VIDEO_EXTENSIONS:
                 instance.media_type = PostMedia.MEDIA_TYPES.VIDEO
-
-                instance._save_signals = True
+                instance._skip_signals = True
                 instance.save(update_fields=['media_type'])
 
     except Exception as e:
@@ -55,6 +59,12 @@ def compress_media_file(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Post)
 def delete_post_media(sender, instance, *args, **kwargs):
+
+    """
+    Signal to delete all associated PostMedia files when a Post
+    instance is deleted, triggering a Celery task.
+    """
+
     try:
         delete_post_media_task.delay(instance.public_id)
     except Exception as e:

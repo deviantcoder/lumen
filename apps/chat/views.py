@@ -52,7 +52,6 @@ def chat(request, chat_id):
 
 @login_required
 def start_chat(request, username):
-
     current_user = request.user
     other_user = get_object_or_404(User, username=username)
 

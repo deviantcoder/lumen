@@ -12,6 +12,11 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 def delete_expired_stories():
+
+    """
+    Delete stories that have expired.
+    """
+
     now = timezone.now()
 
     expired_stories = Story.objects.filter(expires_at__lte=now)

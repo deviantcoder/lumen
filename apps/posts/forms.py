@@ -10,6 +10,7 @@ class MultipleFileInput(forms.ClearableFileInput):
 
 
 class MultipleFileField(forms.FileField):
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('widget', MultipleFileInput())
         super().__init__(*args, **kwargs)
@@ -25,6 +26,7 @@ class MultipleFileField(forms.FileField):
 
 
 class PostForm(forms.ModelForm):
+
     files = MultipleFileField(required=False)
     tags_ = forms.CharField(
         widget=forms.TextInput(),
@@ -65,8 +67,8 @@ class PostForm(forms.ModelForm):
         return post
 
 
-
 class CommentForm(forms.ModelForm):
+
     class Meta:
         model = Comment
         fields = ('body', 'parent')
@@ -77,6 +79,7 @@ class CommentForm(forms.ModelForm):
 
 
 class EditPostForm(forms.ModelForm):
+    
     tags_ = forms.CharField(
         widget=forms.TextInput(),
         required=False

@@ -12,6 +12,10 @@ from .models import Chat, Message
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
+    """
+    WebSocket consumer for handling chat messages and online status.
+    """
+
     async def connect(self):
         self.user = self.scope['user']
         self.chat_id = str(self.scope['url_route']['kwargs']['chat_id'])

@@ -19,7 +19,11 @@ from django.core.paginator import (
     EmptyPage
 )
 
-from .forms import PostForm, CommentForm, EditPostForm
+from .forms import (
+    PostForm,
+    CommentForm,
+    EditPostForm
+)
 from .models import Post, Like, Save, Comment
 from .filters import PostFilter
 
@@ -34,6 +38,12 @@ User = get_user_model()
 
 
 def get_feed_queryset(user):
+
+    """
+    Returns a queryset of posts for the feed, including posts from the user
+    and users they follow, annotated with like/save status and engagement scores.
+    """
+
     return (
         Post.objects.filter(
             Q(author=user) | Q(author__followers__follower=user)

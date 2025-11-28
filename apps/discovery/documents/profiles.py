@@ -12,6 +12,10 @@ User = get_user_model()
 @registry.register_document
 class ProfileDocument(Document):
 
+    """
+    Elasticsearch document for the Profile model.
+    """
+
     username = fields.TextField(
         attr='user.username'
     )

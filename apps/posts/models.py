@@ -91,6 +91,7 @@ class PostMedia(models.Model):
 
 
 class Tag(models.Model):
+
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
 
@@ -121,6 +122,7 @@ class Tag(models.Model):
 
 
 class Like(models.Model):
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='liked_posts')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
 
@@ -137,6 +139,7 @@ class Like(models.Model):
 
 
 class Save(models.Model):
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_posts')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='saves')
 

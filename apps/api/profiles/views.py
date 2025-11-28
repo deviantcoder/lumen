@@ -30,6 +30,10 @@ User = get_user_model()
 
 class CurrentUserProfileAPIView(RetrieveUpdateAPIView):
 
+    """
+    API view to retrieve and update the current user's profile.
+    """
+
     http_method_names = ['get', 'patch']
     serializer_class = ProfileSerializer
     authentication_classes = [JWTAuthentication]
@@ -57,6 +61,10 @@ class CurrentUserProfileAPIView(RetrieveUpdateAPIView):
 
 
 class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+
+    """
+    ViewSet for listing and retrieving user profiles.
+    """
 
     serializer_class = ProfileListSerializer
     authentication_classes = [JWTAuthentication]
@@ -169,6 +177,10 @@ class ProfileViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
 class ProfileFollowersAPIView(ListAPIView):
 
+    """
+    API view to list followers of a user profile.
+    """
+
     serializer_class = FollowerSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -180,6 +192,10 @@ class ProfileFollowersAPIView(ListAPIView):
 
 
 class ProfileFollowingAPIView(ListAPIView):
+
+    """
+    API view to list profiles being followed by a user profile.
+    """
     
     serializer_class = FollowingSerializer
     authentication_classes = [JWTAuthentication]

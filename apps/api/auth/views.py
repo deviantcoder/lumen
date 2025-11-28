@@ -7,7 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import (
-    RegisterSerializer, UserSerializer
+    RegisterSerializer,
+    UserSerializer
 )
 
 

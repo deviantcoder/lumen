@@ -9,6 +9,7 @@ from .models import Post
 
 
 class PostFilter(FilterSet):
+    
     """
     FilterSet for the Post model that provides date range filtering.
     """

@@ -6,7 +6,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -22,12 +22,17 @@ from .serializers import (
     PostMediaSerializer,
     CommentSerializer
 )
-from .permissions import IsAuthorOrReadOnly
+from apps.api.permissions import IsAuthorOrReadOnly
 
 from apps.posts.models import Post, Like, Save, Comment
+from apps.posts.views import get_feed_queryset
 
 
 class PostViewSet(ModelViewSet):
+
+    """
+    ViewSet for managing posts.
+    """
 
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
@@ -202,41 +207,17 @@ class PostViewSet(ModelViewSet):
     )
     def feed(self, request):
         user = request.user
-
-        queryset = (
-            self.get_queryset().filter(
-                Q(author=user) | Q(author__followers__follower=user)
-            )
-            .annotate(
-                priority_score=Case(
-                    When(author=user, then=100),
-                    default=10,
-                    output_field=IntegerField()
-                ),
-                time_score=Case(
-                    When(created__gte=timezone.now() - timedelta(hours=24), then=20),
-                    When(created__gte=timezone.now() - timedelta(days=7), then=10),
-                    When(created__gte=timezone.now() - timedelta(days=30), then=5),
-                    default=1,
-                    output_field=IntegerField()
-                ),
-            )
-            .annotate(
-                final_score=(
-                    F("priority_score") + F("time_score") + F("likes_count") + F("comments_count")
-                )
-            )
-            .order_by(
-                '-final_score', '-created'
-            )
-        )
-
+        queryset = get_feed_queryset(user)
         serializer = PostListSerializer(queryset, many=True)
 
         return Response(serializer.data)
 
 
 class CommentViewSet(ModelViewSet):
+
+    """
+    ViewSet for managing comments on posts.
+    """
 
     serializer_class = CommentSerializer
     authentication_classes = [JWTAuthentication]

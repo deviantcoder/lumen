@@ -3,7 +3,7 @@ from django import forms
 from .models import Profile
 
 
-class URLForm(forms.ModelForm):
+class ProfileURLForm(forms.ModelForm):
     
     class Meta:
         model = Profile
@@ -14,7 +14,7 @@ class URLForm(forms.ModelForm):
         self.fields['url'].widget.attrs.update({'placeholder': 'Website link'})
 
 
-class BioForm(forms.ModelForm):
+class ProfileBioForm(forms.ModelForm):
 
     class Meta:
         model = Profile

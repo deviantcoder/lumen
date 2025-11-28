@@ -5,7 +5,9 @@ from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 
 from utils.files import (
-    base_upload_to, ALLOWED_IMAGE_EXTENSIONS, validate_file_size
+    base_upload_to,
+    validate_file_size,
+    ALLOWED_IMAGE_EXTENSIONS
 )
 
 
@@ -19,6 +21,7 @@ def upload_to(instance, filename):
 
 
 class Profile(models.Model):
+
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='profile'
     )
@@ -62,6 +65,7 @@ class Profile(models.Model):
 
 
 class Follow(models.Model):
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
 

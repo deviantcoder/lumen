@@ -12,6 +12,10 @@ User = get_user_model()
 @registry.register_document
 class PostDocument(Document):
 
+    """
+    Elasticsearch document for the Post model.
+    """
+
     caption = fields.TextField()
     author_username = fields.KeywordField(
         attr='author.username'

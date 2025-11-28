@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.db.models import Q, Count
 from django.http import Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -13,6 +13,11 @@ from apps.posts.filters import PostFilter
 
 
 def search(request):
+    """
+    Search for posts and profiles based on a query string
+    using Elasticsearch.
+    """
+
     search_query = request.GET.get('query', '')
 
     if not search_query:

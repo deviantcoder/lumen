@@ -4,6 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    path('register/', views.RegisterAPIView.as_view(), name='register'),
-    path('me/', views.CurrentUserAPIView.as_view(), name='current_user'),
+    path('auth/register/', views.RegisterAPIView.as_view(), name='register'),
+    path('auth/me/', views.CurrentUserAPIView.as_view(), name='current_user'),
 ]

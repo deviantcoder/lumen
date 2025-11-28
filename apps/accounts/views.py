@@ -20,6 +20,7 @@ User = get_user_model()
 
 
 class LoginUserView(LoginView):
+
     template_name = 'accounts/login.html'
     form_class = LoginForm
     redirect_authenticated_user = True
@@ -44,6 +45,7 @@ class LoginUserView(LoginView):
 
 
 class LogoutUserView(LogoutView):
+
     next_page = reverse_lazy('posts:feed')
 
     def dispatch(self, request, *args, **kwargs):
@@ -52,6 +54,7 @@ class LogoutUserView(LogoutView):
 
 
 class SignupUserView(generic.CreateView):
+
     template_name = 'accounts/signup.html'
     form_class = SignupForm
     success_url = '/'
@@ -88,6 +91,11 @@ class SignupUserView(generic.CreateView):
 
 
 def activate_account(request, uidb64, token):
+
+    """
+    View to handle account activation via email link.
+    """
+
     if request.user.is_authenticated and request.user.email_verified:
         return redirect(reverse_lazy('posts:feed'))
 
@@ -117,6 +125,11 @@ def activate_account(request, uidb64, token):
 
 
 def check_username(request):
+    
+    """
+    AJAX view to check if a username is available during signup or profile update.
+    """
+
     LOWER_LIMIT = 5
     UPPER_LIMIT = 25
 

@@ -18,10 +18,8 @@ User = get_user_model()
 def generate_public_id():
     return shortuuid.uuid()
 
-
 def set_expiry_datetime(hours: int = 24):
     return timezone.now() + timedelta(hours=hours)
-
 
 def story_upload_to(instance, filename):
     return base_upload_to(instance, filename, base_dir='stories')

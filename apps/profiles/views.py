@@ -7,11 +7,10 @@ from django.db.models import Count, Q
 from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.urls import reverse
-from django.db.models import QuerySet
 
 from apps.posts.models import Post
 
-from .forms import URLForm, BioForm
+from .forms import ProfileURLForm, ProfileBioForm
 from .models import Follow, Profile
 
 
@@ -71,8 +70,8 @@ def profile(request, username: str):
 def edit_profile(request):
     profile = request.user.profile
 
-    url_form = URLForm(instance=profile)
-    bio_form = BioForm(instance=profile)
+    url_form = ProfileURLForm(instance=profile)
+    bio_form = ProfileBioForm(instance=profile)
 
     if request.method == 'POST':
         if 'update_image' in request.POST:
@@ -82,12 +81,12 @@ def edit_profile(request):
                 profile.save(update_fields=['image'])
         
         if 'update_url' in request.POST:
-            form = URLForm(request.POST, instance=profile)
+            form = ProfileURLForm(request.POST, instance=profile)
             if form.is_valid():
                 form.save()
         
         if 'update_bio' in request.POST:
-            form = BioForm(request.POST, instance=profile)
+            form = ProfileBioForm(request.POST, instance=profile)
             if form.is_valid():
                 form.save()
         

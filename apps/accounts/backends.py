@@ -7,6 +7,10 @@ User=  get_user_model()
 
 
 class UsernameOrEmailLoginBackend(ModelBackend):
+    """
+    Custom authentication backend to allow login with either username or email.
+    """
+
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             user = User.objects.get(

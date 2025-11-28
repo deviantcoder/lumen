@@ -77,7 +77,8 @@ def detect_image_processing_need(sender, instance, **kwargs):
 def queue_image_processing(sender, instance, created, **kwargs):
 
     """
-    Signal to queue profile image processing after saving if needed.
+    Signal to process and compress profile image after 
+    Profile instance is saved, queueing a Celery task if needed.
     """
 
     if getattr(instance, '_skip_signals', False):
@@ -92,7 +93,8 @@ def queue_image_processing(sender, instance, created, **kwargs):
 def queue_profile_media_delete(sender, instance, *args, **kwargs):
 
     """
-    Signal to queue profile media deletion after profile is deleted.
+    Signal to delete all associated profile files when a Profile
+    instance is deleted, triggering a Celery task.
     """
 
     try:
