@@ -224,6 +224,17 @@ def suggestions_list(request):
     limit = 10
 
     following_ids = user.following.values_list('user__id', flat=True)
+
+    cache_key = f'user:{user.id}:suggestions'
+    suggestions = cache.get(cache_key)
+
+    if suggestions is not None:
+        context = {
+            'suggestions': suggestions,
+        }
+        return render(
+            request, 'profiles/partials/suggestions_list.html', context
+        )
     
     suggestions = (
         Profile.objects.filter(
@@ -247,6 +258,8 @@ def suggestions_list(request):
             '-mutuals_count', '-user__created'
         )[:limit]
     )
+
+    cache.set(cache_key, suggestions, timeout=3600)
 
     context = {
         'suggestions': suggestions,
