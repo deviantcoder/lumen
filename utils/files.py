@@ -22,6 +22,11 @@ ALLOWED_VIDEO_EXTENSIONS = (
 )
 
 
+def get_file_ext(file_name: str) -> str:
+    ext = os.path.splitext(file_name)[-1].lower().lstrip('.')
+    return ext
+
+
 def base_upload_to(instance, filename, base_dir='uploads', id_attr='public_id'):
 
     """
@@ -126,3 +131,43 @@ def validate_file_size(file):
     
     if file.size > max_size_bytes:
         raise ValidationError(f'File size cannot exceed {max_size_mb}')
+
+
+def process_obj_media_file(
+        obj, file_field: str='file', quality: int=60, crop: bool=False, 
+        crop_size: int=500, skip_signals: bool=False
+    ):
+    try:
+        file = getattr(obj, file_field, None)
+        if not file or not file.name:
+            return
+
+        ext = get_file_ext(file.name)
+        
+        if ext not in ALLOWED_IMAGE_EXTENSIONS:
+            return
+        
+        if crop:
+            processed_image = crop_and_compress_image(
+                image=file, crop_size=crop_size, quality=quality
+            )
+        else:
+            processed_image = compress_image(
+                file=file, quality=quality
+            )
+
+        old_file_name = file.name
+
+        if file.storage.exists(old_file_name):
+            file.storage.delete(old_file_name)
+
+        if skip_signals:
+            obj._skip_signals = True
+
+        file.save(
+            file.name, processed_image, save=False
+        )
+
+        obj.save(update_fields=[file_field])
+    except Exception as e:
+        logger.warning(f'Exception during image processing: {e}')

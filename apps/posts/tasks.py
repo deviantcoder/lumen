@@ -10,7 +10,8 @@ from .models import PostMedia
 
 from utils.files import (
     ALLOWED_IMAGE_EXTENSIONS,
-    compress_image
+    compress_image,
+    process_obj_media_file
 )
 
 
@@ -29,25 +30,11 @@ def process_postmedia_image_task(self, postmedia_id=None, quality=60):
         instance = PostMedia.objects.get(pk=postmedia_id)
         if not instance.file:
             return
-        
-        ext = os.path.splitext(instance.file.name)[-1].lower().lstrip('.')
-        if ext not in ALLOWED_IMAGE_EXTENSIONS:
-            return
-        
-        processed_image = compress_image(
-            file=instance.file, quality=quality
+
+        process_obj_media_file(
+            obj=instance, file_field='file', quality=quality,
+            crop=False, skip_signals=True
         )
-
-        old_image_name = instance.file.name
-        if instance.file.storage.exists(old_image_name):
-            instance.file.storage.delete(old_image_name)
-
-        instance._skip_signals = True
-
-        instance.file.save(
-            instance.file.name, processed_image, save=False
-        )
-        instance.save(update_fields=['file'])
     except PostMedia.DoesNotExist:
         logger.error(
             f'Post: {postmedia_id} not found.'

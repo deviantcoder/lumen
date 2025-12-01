@@ -12,6 +12,7 @@ from .tasks import (
 )
 
 from utils.files import (
+    get_file_ext,
     ALLOWED_IMAGE_EXTENSIONS,
     ALLOWED_VIDEO_EXTENSIONS
 )
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 @receiver(post_save, sender=PostMedia)
-def compress_media_file(sender, instance, **kwargs):
+def compress_post_media_file(sender, instance, **kwargs):
 
     """
     Signal to process and compress media files after a PostMedia
@@ -33,7 +34,7 @@ def compress_media_file(sender, instance, **kwargs):
 
     try:
         if instance.file:
-            ext = os.path.splitext(instance.file.name)[-1].lower().lstrip('.')
+            ext = get_file_ext(file_name=instance.file.name)
 
             if ext in ALLOWED_IMAGE_EXTENSIONS:
                 instance.media_type = PostMedia.MEDIA_TYPES.IMAGE

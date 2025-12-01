@@ -1,3 +1,4 @@
+import os
 import logging
 
 from django.utils import timezone
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 def delete_expired_stories():
 
     """
-    Delete stories that have expired.
+    Celery task that deletes stories that have expired.
     """
 
     now = timezone.now()
