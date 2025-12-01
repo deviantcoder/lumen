@@ -15,7 +15,10 @@ from .tasks import (
     delete_profile_media_task
 )
 
-from utils.files import ALLOWED_IMAGE_EXTENSIONS
+from utils.files import (
+    ALLOWED_IMAGE_EXTENSIONS,
+    get_file_ext
+)
 
 
 logger = logging.getLogger(__name__)
@@ -36,61 +39,24 @@ def create_profile(sender, instance, created, **kwargs):
         )
 
 
-@receiver(pre_save, sender=Profile)
-def detect_image_processing_need(sender, instance, **kwargs):
-
-    """
-    Signal to detect if the profile image needs processing before saving.
-    """
-
-    if getattr(instance, '_skip_signals', False):
-        return
-
-    needs_processing = False
-
-    if not instance.pk:
-        if instance.image:
-            ext = os.path.splitext(instance.image.name)[-1].lower().lstrip('.')
-
-            if ext in ALLOWED_IMAGE_EXTENSIONS:
-                needs_processing = True
-    else:
-        old_image = (
-            sender.objects.filter(
-                pk=instance.pk
-            )
-            .values_list('image', flat=True)
-            .first()
-        )
-        
-        if instance.image and instance.image.name != old_image:
-            ext = os.path.splitext(instance.image.name)[-1].lower().lstrip('.')
-
-            if ext in ALLOWED_IMAGE_EXTENSIONS:
-                needs_processing = True
-
-    if needs_processing:
-        instance._needs_processing = True
-
-
 @receiver(post_save, sender=Profile)
-def queue_image_processing(sender, instance, created, **kwargs):
-
-    """
-    Signal to process and compress profile image after 
-    Profile instance is saved, queueing a Celery task if needed.
-    """
-
+def process_profile_image(sender, instance, **kwargs):
     if getattr(instance, '_skip_signals', False):
         return
-
-    if getattr(instance, '_needs_processing', False) and instance.image:
+    
+    if not instance.image:
+        return
+    
+    try:
         process_profile_image_task.delay(instance.pk)
-        del instance._needs_processing
+    except Exception as e:
+        logger.warning(
+            f'Image processing failed for profile: {instance.pk}: {e}'
+        )
 
 
 @receiver(post_delete, sender=Profile)
-def queue_profile_media_delete(sender, instance, *args, **kwargs):
+def delete_profile_media(sender, instance, *args, **kwargs):
 
     """
     Signal to delete all associated profile files when a Profile
@@ -100,4 +66,6 @@ def queue_profile_media_delete(sender, instance, *args, **kwargs):
     try:
         delete_profile_media_task.delay(instance.user.public_id)
     except Exception as e:
-        logger.warning(f'User media deletion failed: {e}')
+        logger.warning(
+            f'Profile media deletion failed for: {instance.pk}: {e}'
+        )

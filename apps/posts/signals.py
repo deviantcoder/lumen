@@ -69,4 +69,6 @@ def delete_post_media(sender, instance, *args, **kwargs):
     try:
         delete_post_media_task.delay(instance.public_id)
     except Exception as e:
-        logger.warning(f'Post media deletion failed: {e}')
+        logger.warning(
+            f'Post media deletion failed for: {instance.pk}: {e}'
+        )
