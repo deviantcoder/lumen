@@ -339,12 +339,24 @@ def save_story_to_collection(request, story_id):
         pks = request.POST.get('recipients', '')
         
         pk_list = [int(pk) for pk in pks.split(',') if pk.isdigit()]
+        was_saved = False
 
         if pk_list:
-            collections = Collection.objects.filter(owner=request.user, pk__in=pk_list)
+            collections = (
+                Collection.objects.filter(
+                    author=request.user, pk__in=pk_list
+                )
+                .prefetch_related('stories')
+            )
 
             for collection in collections:
-                collection.stories.add(story)
+                if story not in collection.stories.all():
+                    collection.stories.add(story)
+                    was_saved = True
+
+            if was_saved and story.expires_at is not None:
+                story.expires_at = None
+                story.save(update_fields=['expires_at'])
 
         response = HttpResponse(status=204)
         response['HX-Trigger'] = 'close'

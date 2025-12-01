@@ -58,7 +58,7 @@ class Story(models.Model):
     )
 
     created = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(default=set_expiry_datetime)
+    expires_at = models.DateTimeField(default=set_expiry_datetime, null=True, blank=True)
 
     public_id = models.CharField(max_length=22, unique=True, default=generate_public_id)
 
