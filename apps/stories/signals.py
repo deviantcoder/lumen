@@ -3,10 +3,11 @@ import shutil
 import logging
 
 from django.dispatch import receiver
-from django.db.models.signals import pre_save, post_delete
+from django.db.models.signals import pre_save, post_delete, post_save
 from django.db import transaction
 
 from .models import Story, Collection
+from .tasks import process_story_image_task, delete_story_media_task
 
 from utils.files import (
     ALLOWED_IMAGE_EXTENSIONS,
@@ -19,7 +20,7 @@ from utils.files import (
 logger = logging.getLogger(__name__)
 
 
-@receiver(pre_save, sender=Story)
+@receiver(post_save, sender=Story)
 def compress_story_media_file(sender, instance, **kwargs):
 
     """
@@ -59,10 +60,7 @@ def compress_story_media_file(sender, instance, **kwargs):
 @receiver(post_delete, sender=Story)
 def delete_story_media(sender, instance, *args, **kwargs):
     try:
-        path = f'media/stories/{str(instance.public_id)}'
-
-        if os.path.exists(path):
-            shutil.rmtree(path)
+        delete_story_media_task.delay(instance.public_id)
     except Exception as e:
         logger.warning(f'Story media deletion failed: {e}')
 
