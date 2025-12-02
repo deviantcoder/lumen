@@ -40,10 +40,10 @@ This project emphasizes scalability, security, and developer-friendly extensibil
   24-hour stories (image/video) with replies, highlights/collections, and beautiful full-screen viewer.
 
 - **Performance & Scalability**  
-  Infinite scroll pagination (posts, comments, feeds), **Redis** caching, advanced filtering by **django-filter**, background tasks with **Celery + RabbitMQ** (image processing, email, cleanup).
+  Infinite scroll pagination (posts, comments, feeds), **Redis** caching, advanced filtering by **django-filter**, background tasks with **Celery + RabbitMQ** (image processing, email, cleanup), search powered by **Elasticsearch**, **PostgreSQL** database.
 
 - **Robust REST API** (Django REST Framework)  
-  Full JWT-secured API for posts, comments, stories, profiles, messaging, and collections — ready for mobile or SPA clients.
+  Full **JWT-secured** API for posts, comments, stories, profiles, messaging, and collections — ready for mobile or SPA clients.
 
 ---
 
@@ -68,11 +68,12 @@ Main endpoints include:
 -  **API:** Django REST Framework 3.16.1 
 -  **Async Tasks:** Celery 5.5.3, RabbitMQ 4.2.0
 -  **Caching**: Redis 8.4.0
+-  **Search**: Elasticsearch 9.2.1
 -  **Frontend:** Bootstrap 5.3.6, htmx 2.0.7, JavaScript
 -  **Realtime:** Django Channels + Daphne
 -  **Auth:** Django built-in auth + Social Auth
 -  **Media Handling:** Pillow
--  **Database:** SQLite (dev) / PostgreSQL (prod)
+-  **Database:** SQLite (dev) / PostgreSQL 18 (prod)
 -  **Containerization**: Docker
 
 ---
@@ -97,13 +98,17 @@ pip install -r requirements.txt
 # Run migrations
 python manage.py migrate
 
-# Start development servers
+# Start development server
 
-# Terminal 1: Django + Daphne
+# Terminal 1: Django dev server (Daphne)
 python manage.py runserver
 
-# Terminal 2: Celery worker
+# Terminal 2: Docker compose (Redis, RabbitMQ, Elasticsearch, PostgreSQL)
+docker compose up -d
+
+# Terminal 3: Celery worker
 celery -A core worker -l INFO
 
-# Terminal 3 (optional for dev): Redis (if not using Docker)
-docker compose up -d
+# Terminal 4: Celery Beat
+
+celery -A core beat -l INFO
