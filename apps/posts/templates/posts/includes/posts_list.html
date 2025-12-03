@@ -43,7 +43,7 @@
             {% include 'posts/includes/post_controls.html' %}
             {% if post.caption %}
                 <div class="ps-2 mb-2">
-                    <a href="#" class="fw-bold me-2 text-decoration-none">{{ user.username }}</a>
+                    <a href="#" class="fw-bold me-2 text-decoration-none">{{ post.author.username }}</a>
                     {{ post.caption }}
                 </div>
             {% endif %}

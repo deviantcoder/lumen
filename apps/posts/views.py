@@ -46,7 +46,8 @@ def get_feed_queryset(user):
 
     return (
         Post.objects.filter(
-            Q(author=user) | Q(author__followers__follower=user)
+            Q(author=user) | Q(author__followers__follower=user),
+            status=Post.POST_STATUS.ACTIVE
         )
         .select_related('author', 'author__profile')
         .prefetch_related(

@@ -62,6 +62,44 @@ Main endpoints include:
 
 ---
 
+## 📸 UI Preview
+
+A quick look at Lumen's interface:
+
+#### Feed
+<p align="center">
+  <img src="assets/screenshots/feed.png" width="600" />
+  <img src="assets/screenshots/post.png" width="600" />
+</p>
+
+#### User Profile
+<p align="center">
+  <img src="assets/screenshots/profile.png" width="600" />
+</p>
+
+#### Messaging (Real-time Chat)
+<p align="center">
+  <img src="assets/screenshots/chat1.png" width="600" />
+  <img src="assets/screenshots/chat2.png" width="600" />
+</p>
+
+#### Story Viewer
+<p align="center">
+  <img src="assets/screenshots/stories.png" width="600" />
+</p>
+
+#### Explore
+<p align="center">
+  <img src="assets/screenshots/explore.png" width="600" />
+</p>
+
+#### Search
+<p align="center">
+  <img src="assets/screenshots/search.png" width="600" />
+</p>
+
+---
+
 ##  🛠️ Tech Stack
 
 -  **Backend:** Python 3.13.7, Django 5.2.5, Daphne 4.2.1
@@ -75,6 +113,14 @@ Main endpoints include:
 -  **Media Handling:** Pillow
 -  **Database:** SQLite (dev) / PostgreSQL 18 (prod)
 -  **Containerization**: Docker
+
+---
+
+## 🗺️ Database Schema Diagram
+
+<p align="center">
+  <img src="assets/db/db_diagram.png" width="600" />
+</p>
 
 ---
 

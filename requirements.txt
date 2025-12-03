@@ -23,6 +23,7 @@ Django==5.2.5
 django-celery-beat==2.8.1
 django-debug-toolbar==6.0.0
 django-elasticsearch-dsl==9.0
+django-extensions==4.1
 django-filter==25.2
 django-htmx==1.25.0
 django-js-asset==3.1.2
@@ -34,6 +35,7 @@ djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
 elastic-transport==9.2.0
 elasticsearch==9.2.0
+graphviz==0.21
 hiredis==3.3.0
 hyperlink==21.0.0
 idna==3.10
@@ -49,8 +51,10 @@ psycopg-binary==3.2.13
 pyasn1==0.6.1
 pyasn1_modules==0.4.2
 pycparser==2.22
+pydot==4.0.1
 PyJWT==2.10.1
 pyOpenSSL==25.3.0
+pyparsing==3.2.5
 python-crontab==3.3.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
