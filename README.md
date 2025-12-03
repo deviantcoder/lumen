@@ -42,8 +42,11 @@ This project emphasizes scalability, security, and developer-friendly extensibil
 - **Performance & Scalability**  
   Infinite scroll pagination (posts, comments, feeds), **Redis** caching, advanced filtering by **django-filter**, background tasks with **Celery + RabbitMQ** (image processing, email, cleanup), search powered by **Elasticsearch**, **PostgreSQL** database.
 
-- **Robust REST API** (Django REST Framework)  
-  Full **JWT-secured** API for posts, comments, stories, profiles, messaging, and collections — ready for mobile or SPA clients.
+- **Search**
+  Robust search functionality powered by **Elasticsearch**.
+
+- **REST API**
+  **JWT**-secured API for posts, comments, stories, profiles, messaging, and collections — ready for mobile or SPA clients.
 
 ---
 
